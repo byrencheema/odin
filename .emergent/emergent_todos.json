@@ -1,15 +1,11 @@
 [
   {
-    "content": "Frontend: Build complete ODIN application with MapCanvas, AIR bar, filters, info panels using bulk_file_writer",
+    "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
     "status": "completed"
   },
   {
-    "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
-    "status": "in_progress"
-  },
-  {
     "content": "Verify frontend compiles without errors using esbuild check",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Take screenshot of map + aircraft on preview URL",
