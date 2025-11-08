@@ -1,14 +1,10 @@
 [
   {
-    "content": "Verify frontend compiles without errors using esbuild check",
+    "content": "Take screenshot of map + aircraft on preview URL",
     "status": "completed"
   },
   {
-    "content": "Take screenshot of map + aircraft on preview URL",
-    "status": "in_progress"
-  },
-  {
     "content": "Call testing agent for Phase 1 validation (map render, clocks, aircraft, selection)",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
