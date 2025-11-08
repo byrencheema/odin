@@ -55,9 +55,28 @@ export default function App() {
 
   // Initialize map
   useEffect(() => {
-    if (map.current || !mapContainer.current) return;
+    if (map.current) {
+      console.log('Map already initialized, skipping');
+      return;
+    }
+    
+    if (!mapContainer.current) {
+      console.error('Map container ref not ready');
+      return;
+    }
+
+    console.log('Starting map initialization...', {
+      maplibregl: typeof maplibregl,
+      Map: typeof maplibregl?.Map,
+      container: mapContainer.current,
+      hasKey: !!MAPTILER_KEY
+    });
 
     try {
+      if (!maplibregl || !maplibregl.Map) {
+        throw new Error('MapLibre GL not loaded properly');
+      }
+
       map.current = new maplibregl.Map({
         container: mapContainer.current,
         style: {
@@ -99,6 +118,8 @@ export default function App() {
         attributionControl: false
       });
 
+      console.log('Map object created:', map.current);
+
       map.current.on('load', () => {
         console.log('MapLibre map loaded successfully');
         initializeCanvasOverlay();
@@ -110,13 +131,19 @@ export default function App() {
 
       console.log('MapLibre map initialized');
     } catch (error) {
-      console.error('Failed to initialize MapLibre:', error);
-      toast.error('Map initialization failed');
+      console.error('Failed to initialize MapLibre:', error, error.stack);
+      toast.error('Map initialization failed: ' + error.message);
     }
 
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
-      if (map.current) map.current.remove();
+      if (map.current) {
+        try {
+          map.current.remove();
+        } catch (e) {
+          console.error('Error removing map:', e);
+        }
+      }
     };
   }, []);
 
