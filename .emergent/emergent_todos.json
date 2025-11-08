@@ -1,15 +1,11 @@
 [
   {
-    "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
+    "content": "Verify frontend compiles without errors using esbuild check",
     "status": "completed"
   },
   {
-    "content": "Verify frontend compiles without errors using esbuild check",
-    "status": "in_progress"
-  },
-  {
     "content": "Take screenshot of map + aircraft on preview URL",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Call testing agent for Phase 1 validation (map render, clocks, aircraft, selection)",
