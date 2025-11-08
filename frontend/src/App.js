@@ -59,45 +59,45 @@ export default function App() {
 
     try {
       map.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: {
-        version: 8,
-        sources: {
-          'maptiler': {
-            type: 'raster',
-            tiles: [
-              `https://api.maptiler.com/maps/voyager/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
-            ],
-            tileSize: 256
-          }
-        },
-        layers: [
-          {
-            id: 'background',
-            type: 'background',
-            paint: { 'background-color': '#0A0B0C' }
-          },
-          {
-            id: 'maptiler-layer',
-            type: 'raster',
-            source: 'maptiler',
-            paint: {
-              'raster-opacity': 0.15,
-              'raster-brightness-min': 0,
-              'raster-brightness-max': 0.3,
-              'raster-contrast': -0.2,
-              'raster-saturation': -1
+        container: mapContainer.current,
+        style: {
+          version: 8,
+          sources: {
+            'maptiler': {
+              type: 'raster',
+              tiles: [
+                `https://api.maptiler.com/maps/voyager/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
+              ],
+              tileSize: 256
             }
-          }
-        ],
-        glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=' + MAPTILER_KEY
-      },
-      center: BAY_AREA_CENTER,
-      zoom: 8,
-      pitch: 0,
-      bearing: 0,
-      attributionControl: false
-    });
+          },
+          layers: [
+            {
+              id: 'background',
+              type: 'background',
+              paint: { 'background-color': '#0A0B0C' }
+            },
+            {
+              id: 'maptiler-layer',
+              type: 'raster',
+              source: 'maptiler',
+              paint: {
+                'raster-opacity': 0.15,
+                'raster-brightness-min': 0,
+                'raster-brightness-max': 0.3,
+                'raster-contrast': -0.2,
+                'raster-saturation': -1
+              }
+            }
+          ],
+          glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=' + MAPTILER_KEY
+        },
+        center: BAY_AREA_CENTER,
+        zoom: 8,
+        pitch: 0,
+        bearing: 0,
+        attributionControl: false
+      });
 
       map.current.on('load', () => {
         console.log('MapLibre map loaded successfully');
