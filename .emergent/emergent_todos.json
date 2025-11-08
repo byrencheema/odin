@@ -1,15 +1,11 @@
 [
   {
-    "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
+    "content": "Frontend: Build complete ODIN application with MapCanvas, AIR bar, filters, info panels using bulk_file_writer",
     "status": "completed"
   },
   {
-    "content": "Frontend: Build complete ODIN application with MapCanvas, AIR bar, filters, info panels using bulk_file_writer",
-    "status": "in_progress"
-  },
-  {
     "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Verify frontend compiles without errors using esbuild check",
