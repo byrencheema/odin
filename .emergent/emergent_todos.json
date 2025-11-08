@@ -1,7 +1,7 @@
 [
   {
     "content": "Web search: OpenSky Network API docs (bbox query, rate limits, response schema) and MapLibre GL JS best practices for custom canvas overlays",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Add REACT_APP_MAPTILER_KEY to frontend/.env with provided key (kl4paZ620eGeg7xYAUbL)",
