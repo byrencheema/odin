@@ -99,9 +99,20 @@ export default function App() {
       attributionControl: false
     });
 
-    map.current.on('load', () => {
-      initializeCanvasOverlay();
-    });
+      map.current.on('load', () => {
+        console.log('MapLibre map loaded successfully');
+        initializeCanvasOverlay();
+      });
+
+      map.current.on('error', (e) => {
+        console.error('MapLibre error:', e);
+      });
+
+      console.log('MapLibre map initialized');
+    } catch (error) {
+      console.error('Failed to initialize MapLibre:', error);
+      toast.error('Map initialization failed');
+    }
 
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
