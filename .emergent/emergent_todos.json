@@ -1,0 +1,62 @@
+[
+  {
+    "content": "Web search: OpenSky Network API docs (bbox query, rate limits, response schema) and MapLibre GL JS best practices for custom canvas overlays",
+    "status": "pending"
+  },
+  {
+    "content": "Add REACT_APP_MAPTILER_KEY to frontend/.env with provided key (kl4paZ620eGeg7xYAUbL)",
+    "status": "pending"
+  },
+  {
+    "content": "Backend: Create /api/air/opensky endpoint with OpenSky Network integration for Bay Area bbox",
+    "status": "pending"
+  },
+  {
+    "content": "Backend: Add caching logic for last good frame (5s TTL) and stale flag handling",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Install required packages (maplibre-gl, d3, topojson-client)",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Create MapCanvas component with MapLibre GL JS (MapTiler) + aircraft canvas overlay",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Implement aircraft rendering (oriented triangles, monospace labels, hover/selection)",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Add polling logic (1-2s interval) with smooth interpolation between updates",
+    "status": "pending"
+  },
+  {
+    "content": "Frontend: Create AIR bar with Region, live Local/UTC clocks, LIVE status badge, Wx/Runways placeholders",
+    "status": "pending"
+  },
+  {
+    "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
+    "status": "pending"
+  },
+  {
+    "content": "Verify frontend compiles without errors using esbuild check",
+    "status": "pending"
+  },
+  {
+    "content": "Take screenshot of map + aircraft on preview URL",
+    "status": "pending"
+  },
+  {
+    "content": "Call testing agent for Phase 1 validation (map render, clocks, aircraft, selection)",
+    "status": "pending"
+  }
+]
