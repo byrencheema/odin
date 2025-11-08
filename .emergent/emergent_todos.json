@@ -1,10 +1,6 @@
 [
   {
-    "content": "Take screenshot of map + aircraft on preview URL",
-    "status": "completed"
-  },
-  {
     "content": "Call testing agent for Phase 1 validation (map render, clocks, aircraft, selection)",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
