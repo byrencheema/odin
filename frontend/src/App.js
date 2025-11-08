@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import maplibregl from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { Separator } from './components/ui/separator';
 import { Checkbox } from './components/ui/checkbox';
 import { Switch } from './components/ui/switch';
