@@ -470,7 +470,7 @@ export default function App() {
           <FiltersPanel />
         </aside>
         <main className="relative" data-testid="map-canvas-area">
-          <div ref={mapContainer} className="w-full h-full" />
+          <div ref={mapContainer} className="w-full h-full" style={{ width: '100%', height: '100%' }} />
           {aircraft.length === 0 && showTraffic && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <p className="text-[#A9ADB1] text-sm opacity-60">Loading aircraft data...</p>
