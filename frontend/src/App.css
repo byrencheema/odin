@@ -1,3 +1,19 @@
+/* MapLibre GL styles */
+.maplibregl-map {
+    width: 100%;
+    height: 100%;
+}
+
+.maplibregl-canvas-container {
+    width: 100%;
+    height: 100%;
+}
+
+.maplibregl-canvas {
+    width: 100%;
+    height: 100%;
+}
+
 .App-logo {
     height: 40vmin;
     pointer-events: none;
