@@ -1,19 +1,11 @@
 [
   {
-    "content": "Backend: Create /api/air/opensky endpoint with OpenSky Network integration for Bay Area bbox",
-    "status": "completed"
-  },
-  {
-    "content": "Backend: Add caching logic for last good frame (5s TTL) and stale flag handling",
-    "status": "completed"
-  },
-  {
     "content": "Frontend: Install required packages (maplibre-gl, d3, topojson-client)",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
