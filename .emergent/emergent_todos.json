@@ -1,15 +1,11 @@
 [
   {
-    "content": "Frontend: Install required packages (maplibre-gl, d3, topojson-client)",
+    "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
     "status": "completed"
   },
   {
-    "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
-    "status": "in_progress"
-  },
-  {
     "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Frontend: Create MapCanvas component with MapLibre GL JS (MapTiler) + aircraft canvas overlay",
