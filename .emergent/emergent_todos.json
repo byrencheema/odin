@@ -1,27 +1,11 @@
 [
   {
-    "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
+    "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
     "status": "completed"
   },
   {
-    "content": "Frontend: Update index.css with NATO color tokens from design guidelines",
+    "content": "Frontend: Build complete ODIN application with MapCanvas, AIR bar, filters, info panels using bulk_file_writer",
     "status": "in_progress"
-  },
-  {
-    "content": "Frontend: Create MapCanvas component with MapLibre GL JS (MapTiler) + aircraft canvas overlay",
-    "status": "pending"
-  },
-  {
-    "content": "Frontend: Implement aircraft rendering (oriented triangles, monospace labels, hover/selection)",
-    "status": "pending"
-  },
-  {
-    "content": "Frontend: Add polling logic (1-2s interval) with smooth interpolation between updates",
-    "status": "pending"
-  },
-  {
-    "content": "Frontend: Create AIR bar with Region, live Local/UTC clocks, LIVE status badge, Wx/Runways placeholders",
-    "status": "pending"
   },
   {
     "content": "Test backend API with curl to verify OpenSky data fetch and normalization",
