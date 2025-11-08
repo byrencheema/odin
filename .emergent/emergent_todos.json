@@ -1,15 +1,11 @@
 [
   {
-    "content": "Web search: OpenSky Network API docs (bbox query, rate limits, response schema) and MapLibre GL JS best practices for custom canvas overlays",
+    "content": "Add REACT_APP_MAPTILER_KEY to frontend/.env with provided key (kl4paZ620eGeg7xYAUbL)",
     "status": "completed"
   },
   {
-    "content": "Add REACT_APP_MAPTILER_KEY to frontend/.env with provided key (kl4paZ620eGeg7xYAUbL)",
-    "status": "in_progress"
-  },
-  {
     "content": "Backend: Create /api/air/opensky endpoint with OpenSky Network integration for Bay Area bbox",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Backend: Add caching logic for last good frame (5s TTL) and stale flag handling",
