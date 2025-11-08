@@ -55,9 +55,10 @@ export default function App() {
 
   // Initialize map
   useEffect(() => {
-    if (map.current) return;
+    if (map.current || !mapContainer.current) return;
 
-    map.current = new maplibregl.Map({
+    try {
+      map.current = new maplibregl.Map({
       container: mapContainer.current,
       style: {
         version: 8,
