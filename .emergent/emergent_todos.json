@@ -1,19 +1,15 @@
 [
   {
-    "content": "Add REACT_APP_MAPTILER_KEY to frontend/.env with provided key (kl4paZ620eGeg7xYAUbL)",
+    "content": "Backend: Create /api/air/opensky endpoint with OpenSky Network integration for Bay Area bbox",
     "status": "completed"
   },
   {
-    "content": "Backend: Create /api/air/opensky endpoint with OpenSky Network integration for Bay Area bbox",
-    "status": "in_progress"
-  },
-  {
     "content": "Backend: Add caching logic for last good frame (5s TTL) and stale flag handling",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Frontend: Install required packages (maplibre-gl, d3, topojson-client)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Frontend: Add Google Fonts link (IBM Plex Sans, Azeret Mono) to index.html",
