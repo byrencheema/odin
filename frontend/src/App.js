@@ -776,7 +776,7 @@ export default function App() {
           }
         }, 'airspace-fill');
 
-        // Add facility markers layer with better styling
+        // Add facility markers layer (smaller and more subtle)
         map.current.addLayer({
           id: 'atc-facilities-markers',
           type: 'circle',
@@ -784,13 +784,13 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 8,
-              ['==', ['get', 'type'], 'tracon'], 12,
-              16  // center
+              ['==', ['get', 'type'], 'tower'], 5,  // Smaller towers
+              ['==', ['get', 'type'], 'tracon'], 7,  // Smaller TRACON
+              9  // Smaller center
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.95,
-            'circle-stroke-width': 3,
+            'circle-opacity': 0.9,
+            'circle-stroke-width': 2,
             'circle-stroke-color': '#0A0B0C',
             'circle-stroke-opacity': 0.8
           },
@@ -799,7 +799,7 @@ export default function App() {
           }
         });
         
-        // Add inner glow layer for towers
+        // Add subtle glow layer
         map.current.addLayer({
           id: 'atc-facilities-glow',
           type: 'circle',
@@ -807,12 +807,12 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 12,
-              ['==', ['get', 'type'], 'tracon'], 18,
-              24  // center
+              ['==', ['get', 'type'], 'tower'], 8,  // Smaller glow
+              ['==', ['get', 'type'], 'tracon'], 11,
+              14  // Smaller center glow
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.15,
+            'circle-opacity': 0.08,  // More subtle glow
             'circle-blur': 1
           },
           layout: {
