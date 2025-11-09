@@ -578,8 +578,20 @@ async def get_aircraft_trails(icao24: Optional[str] = None):
 
 @api_router.get("/airspace/boundaries")
 async def get_airspace_boundaries():
-    """Get Bay Area airspace boundary data as GeoJSON."""
+    """Return Bay Area airspace boundaries as GeoJSON"""
     return BAY_AREA_AIRSPACE
+
+
+@api_router.get("/atc/facilities/coverage")
+async def get_atc_coverage():
+    """Return ATC facility coverage circles as GeoJSON"""
+    return generate_coverage_geojson()
+
+
+@api_router.get("/atc/facilities/points")
+async def get_atc_facilities():
+    """Return ATC facility locations as GeoJSON points"""
+    return generate_facilities_points_geojson()
 
 
 # ===== Weather API Integration =====
