@@ -1,0 +1,7 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Aircraft silhouette pointing north (0°) -->
+  <path d="M16 4 L18 14 L22 14 L22 16 L18 16 L18 24 L20 26 L20 28 L16 27 L12 28 L12 26 L14 24 L14 16 L10 16 L10 14 L14 14 L16 4 Z" 
+        fill="white" 
+        stroke="white" 
+        stroke-width="1"/>
+</svg>
