@@ -11,7 +11,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const WELCOME_MESSAGE = "Hello! I'm ODIN Copilot. I can help you interpret aircraft movements, NOTAMs, and console status. What would you like to know?";
 
-export default function ChatView({ selectedAircraft }) {
+const ChatView = React.memo(function ChatView({ selectedAircraft }) {
   const [chatSessionId, setChatSessionId] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
