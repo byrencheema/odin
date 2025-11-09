@@ -71,6 +71,17 @@ async def get_status_checks():
 
 # ===== ODIN ATC Console - OpenSky Network Integration =====
 
+# OAuth2 Configuration
+OPENSKY_CLIENT_ID = os.environ.get('OPENSKY_CLIENT_ID')
+OPENSKY_CLIENT_SECRET = os.environ.get('OPENSKY_CLIENT_SECRET')
+OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"
+
+# Token cache (in-memory)
+oauth_token_cache = {
+    "access_token": None,
+    "expires_at": None
+}
+
 # Cache for OpenSky data (in-memory)
 opensky_cache = {
     "data": None,
