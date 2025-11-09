@@ -747,30 +747,24 @@ export default function App() {
           data: pointsData
         });
 
-        // Add coverage circle fill layer (very subtle)
-        map.current.addLayer({
-          id: 'atc-coverage-fill',
-          type: 'fill',
-          source: 'atc-coverage',
-          paint: {
-            'fill-color': ['get', 'color'],
-            'fill-opacity': 0.08  // More visible for debugging
-          },
-          layout: {
-            'visibility': showATCFacilities ? 'visible' : 'none'
-          }
-        });
-
-        // Add coverage circle outline layer (thinner and more transparent)
+        // Add coverage circle outline layer only (no fill - too cluttered)
         map.current.addLayer({
           id: 'atc-coverage-outline',
           type: 'line',
           source: 'atc-coverage',
           paint: {
             'line-color': ['get', 'color'],
-            'line-width': 2,  // Thicker for visibility
-            'line-opacity': 0.6,  // More visible
-            'line-dasharray': [4, 2]  // More visible dashes
+            'line-width': [
+              'case',
+              ['==', ['get', 'type'], 'tower'], 1,  // Thin for towers
+              0.5  // Very thin for TRACON/Center (barely visible)
+            ],
+            'line-opacity': [
+              'case',
+              ['==', ['get', 'type'], 'tower'], 0.4,  // Visible for towers
+              0.1  // Nearly invisible for TRACON/Center
+            ],
+            'line-dasharray': [3, 3]
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
