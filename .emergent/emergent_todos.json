@@ -1,34 +1,34 @@
 [
   {
-    "content": "Install ElevenLabs SDK in backend (elevenlabs)",
-    "status": "completed"
+    "content": "Create ATC facilities data with coordinates and coverage radii",
+    "status": "in_progress"
   },
   {
-    "content": "Add backend handoff endpoint with sector detection logic",
-    "status": "completed"
+    "content": "Add backend endpoint for ATC facilities GeoJSON",
+    "status": "pending"
   },
   {
-    "content": "Integrate ElevenLabs TTS API for audio generation",
-    "status": "completed"
+    "content": "Implement coverage circle generation (NM to degrees conversion)",
+    "status": "pending"
   },
   {
-    "content": "Add ElevenLabs API key to backend .env",
-    "status": "completed"
+    "content": "Add MapLibre layers for coverage circles (fill + outline)",
+    "status": "pending"
   },
   {
-    "content": "Update frontend App.js to add Handoff button in aircraft info panel",
-    "status": "completed"
+    "content": "Add facility markers with popups",
+    "status": "pending"
   },
   {
-    "content": "Implement handoff audio playback in frontend",
-    "status": "completed"
+    "content": "Add click handlers for facility information",
+    "status": "pending"
   },
   {
-    "content": "Restart backend service to load new code",
-    "status": "completed"
+    "content": "Fix chat rerender bug",
+    "status": "pending"
   },
   {
-    "content": "Test handoff feature end-to-end",
-    "status": "completed"
+    "content": "Test ATC visualization feature",
+    "status": "pending"
   }
 ]
