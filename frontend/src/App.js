@@ -1441,8 +1441,8 @@ export default function App() {
           <span className="text-sm text-[#A9ADB1]" data-testid="region-label">Bay Area</span>
         </div>
         <div className="hidden md:flex items-center gap-4">
-          <span className="font-['Azeret_Mono',monospace] text-sm" data-testid="clock-local">LCL {localTime}</span>
-          <span className="font-['Azeret_Mono',monospace] text-sm" data-testid="clock-utc">UTC {utcTime}</span>
+          <span ref={localTimeRef} className="font-['Azeret_Mono',monospace] text-sm" data-testid="clock-local">LCL --:--:--</span>
+          <span ref={utcTimeRef} className="font-['Azeret_Mono',monospace] text-sm" data-testid="clock-utc">UTC --:--:--</span>
           <span 
             className="text-xs px-2 py-1 rounded border border-[#3A3E43]" 
             style={{ color: getStatusColor() }}
