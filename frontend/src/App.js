@@ -13,7 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
 import { Button } from './components/ui/button';
 import { PanelLeft, Info } from 'lucide-react';
 import Aircraft3DModal from './components/Aircraft3DModal';
-import ChatView from './components/ChatView';
+import SimpleChatView from './components/SimpleChatView';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/ui/resizable';
 import '@/App.css';
 
