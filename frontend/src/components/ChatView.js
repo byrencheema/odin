@@ -98,8 +98,11 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
       const assistantMessage = response.data.message;
       setChatMessages((prev) => {
         const nextMessages = [...prev, assistantMessage];
-        const followUp =
-          response.data.predicted_follow_up || hydratePredictedFollowUp(nextMessages);
+        const followUp = response.data.predicted_follow_up || (() => {
+          // Inline hydration to avoid dependency
+          const latestAssistant = [...nextMessages].reverse().find((msg) => msg.role === 'assistant');
+          return latestAssistant?.metadata?.predicted_follow_up || null;
+        })();
         setPredictedFollowUp(followUp);
         return nextMessages;
       });
@@ -124,7 +127,7 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
     } finally {
       setIsSending(false);
     }
-  }, [chatInput, isSending, chatSessionId, includeContext, selectedAircraft, hydratePredictedFollowUp]);
+  }, [chatInput, isSending, chatSessionId, includeContext, selectedAircraft]);
 
   const handleResetSession = useCallback(async () => {
     if (!chatSessionId || isResetting) return;
