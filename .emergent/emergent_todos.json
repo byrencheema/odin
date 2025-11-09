@@ -1,6 +1,22 @@
 [
   {
-    "content": "Call testing agent for Phase 1 validation (map render, clocks, aircraft, selection)",
-    "status": "completed"
+    "content": "Add OpenSky OAuth2 credentials to backend/.env securely",
+    "status": "in_progress"
+  },
+  {
+    "content": "Implement OAuth2 token fetching logic in backend with 30min token refresh",
+    "status": "pending"
+  },
+  {
+    "content": "Update OpenSky API requests to use Bearer token authentication",
+    "status": "pending"
+  },
+  {
+    "content": "Test OpenSky API with OAuth2 authentication using curl",
+    "status": "pending"
+  },
+  {
+    "content": "Verify aircraft data is being fetched and displayed on map",
+    "status": "pending"
   }
 ]
