@@ -1,14 +1,14 @@
 [
   {
     "content": "Create LiveATC audio feeds data structure",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Update InfoPanel to show audio players for selected tower",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test tower selection with live audio",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
