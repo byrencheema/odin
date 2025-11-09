@@ -95,14 +95,16 @@ export default function App() {
     window.addEventListener('pointerup', restoreDrag, { once: true });
     window.addEventListener('pointercancel', restoreDrag, { once: true });
   }, []);
-  // Clock updates
+  // Clock updates - directly update DOM to avoid re-renders
   useEffect(() => {
     const updateClocks = () => {
       const now = new Date();
       const localStr = now.toLocaleTimeString('en-US', { hour12: false, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone });
       const utcStr = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'UTC' });
-      setLocalTime(localStr);
-      setUtcTime(utcStr);
+      
+      // Update DOM directly via refs - no re-render
+      if (localTimeRef.current) localTimeRef.current.textContent = `LCL ${localStr}`;
+      if (utcTimeRef.current) utcTimeRef.current.textContent = `UTC ${utcStr}`;
     };
     updateClocks();
     const interval = setInterval(updateClocks, 1000);
