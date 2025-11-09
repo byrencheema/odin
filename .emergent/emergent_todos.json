@@ -1,15 +1,11 @@
 [
   {
-    "content": "Review new features (chat UI, trails, boundaries, etc.)",
+    "content": "Restart both backend and frontend servers",
     "status": "completed"
   },
   {
-    "content": "Restart both backend and frontend servers",
-    "status": "in_progress"
-  },
-  {
     "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Test chat UI functionality",
