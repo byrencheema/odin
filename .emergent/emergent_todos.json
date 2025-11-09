@@ -1,18 +1,18 @@
 [
   {
     "content": "Remove current chat backend endpoints",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Create new simple chat endpoint with OpenRouter",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Rebuild chat frontend component from scratch",
-    "status": "pending"
+    "status": "completed"
   },
   {
-    "content": "Test working chat functionality",
-    "status": "pending"
+    "content": "Restart services and test chat",
+    "status": "in_progress"
   }
 ]
