@@ -35,7 +35,7 @@ const SimpleChatView = () => {
 
     try {
       // Send to backend
-      const response = await axios.post(`${API}/chat`, {
+      const response = await axios.post(`${API}/api/chat`, {
         message: userMessage,
         history: newMessages.slice(-10) // Send last 10 messages for context
       });
@@ -44,7 +44,9 @@ const SimpleChatView = () => {
       setMessages([...newMessages, { role: 'assistant', content: response.data.response }]);
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages([...newMessages, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
+      console.error('Error details:', error.response?.data || error.message);
+      const errorMsg = error.response?.data?.detail || error.message || 'Sorry, I encountered an error. Please try again.';
+      setMessages([...newMessages, { role: 'assistant', content: errorMsg }]);
     } finally {
       setLoading(false);
     }
