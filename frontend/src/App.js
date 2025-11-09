@@ -666,7 +666,7 @@ export default function App() {
           source: 'airspace',
           paint: {
             'fill-color': ['get', 'color'],
-            'fill-opacity': 0.15  // More visible
+            'fill-opacity': 0.05  // Very subtle
           },
           layout: {
             'visibility': showAirspace ? 'visible' : 'none'
@@ -680,9 +680,9 @@ export default function App() {
           source: 'airspace',
           paint: {
             'line-color': ['get', 'label_color'],
-            'line-width': 2,  // Thicker
-            'line-opacity': 0.8,  // More visible
-            'line-dasharray': [4, 2]
+            'line-width': 1,  // Thin
+            'line-opacity': 0.5,  // Subtle
+            'line-dasharray': [3, 2]
           },
           layout: {
             'visibility': showAirspace ? 'visible' : 'none'
