@@ -132,9 +132,10 @@ class AirPictureResponse(BaseModel):
     """Response model for air picture data"""
     aircraft: List[Aircraft]
     timestamp: int
-    data_status: str  # "ok", "stale", "unavailable"
+    data_status: str  # "ok", "stale", "unavailable", "simulated"
     aircraft_count: int
     bbox: Dict[str, float]
+    is_simulated: bool = False
 
 
 def normalize_opensky_state(state: List[Any]) -> Optional[Aircraft]:
