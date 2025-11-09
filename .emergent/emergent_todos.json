@@ -1,14 +1,18 @@
 [
   {
-    "content": "Reduce ATC coverage circle opacity and size",
-    "status": "completed"
+    "content": "Fix aircraft trails to show only historical path",
+    "status": "in_progress"
   },
   {
-    "content": "Make coverage fills more transparent",
-    "status": "completed"
+    "content": "Make trails thinner and more transparent",
+    "status": "pending"
   },
   {
-    "content": "Test visual improvements",
-    "status": "completed"
+    "content": "Change trails to dotted lines",
+    "status": "pending"
+  },
+  {
+    "content": "Test trail improvements",
+    "status": "pending"
   }
 ]
