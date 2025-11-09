@@ -28,7 +28,7 @@ export default function App() {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [localTime, setLocalTime] = useState('');
   const [utcTime, setUtcTime] = useState('');
-  
+
   // Filter states
   const [showRunways, setShowRunways] = useState(true);
   const [showTraffic, setShowTraffic] = useState(true);
@@ -293,7 +293,7 @@ export default function App() {
   // Poll for aircraft updates
   useEffect(() => {
     fetchAircraft();
-    const interval = setInterval(fetchAircraft, 2000);
+    const interval = setInterval(fetchAircraft, 10000);
     return () => clearInterval(interval);
   }, [fetchAircraft]);
 
