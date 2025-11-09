@@ -878,6 +878,59 @@ async def generate_handoff(request: HandoffRequest):
         raise HTTPException(status_code=500, detail=f"Handoff generation failed: {str(e)}")
 
 
+
+@api_router.post("/handoff/shift", response_model=ShiftHandoffResponse)
+async def generate_shift_handoff(request: ShiftHandoffRequest):
+    """
+    Generate ATC shift handoff briefing with voice synthesis via ElevenLabs.
+    Uses WEST checklist (Weather, Equipment, Situation, Traffic).
+    """
+    try:
+        # Generate shift briefing script
+        briefing_script = generate_shift_briefing(request)
+        logger.info(f"Generated shift briefing for {request.facility_name}")
+        
+        # Generate audio with ElevenLabs (if available)
+        audio_base64 = None
+        if elevenlabs_client:
+            try:
+                # Use a professional male voice suitable for ATC (Adam voice ID)
+                voice_id = "pNInz6obpgDQGcFmaJgB"  # Adam voice - clear, authoritative
+                
+                # Generate audio
+                audio_generator = elevenlabs_client.text_to_speech.convert(
+                    text=briefing_script,
+                    voice_id=voice_id,
+                    model_id="eleven_monolingual_v1",  # Fast, clear English
+                    output_format="mp3_44100_128"
+                )
+                
+                # Collect audio data
+                audio_data = b""
+                for chunk in audio_generator:
+                    audio_data += chunk
+                
+                # Convert to base64
+                import base64
+                audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                logger.info(f"Generated {len(audio_data)} bytes of audio for shift briefing")
+                
+            except Exception as e:
+                logger.error(f"Failed to generate audio with ElevenLabs: {e}")
+                # Continue without audio
+        
+        return ShiftHandoffResponse(
+            briefing_script=briefing_script,
+            facility=request.facility_name,
+            audio_base64=audio_base64,
+            status="ok" if audio_base64 else "no_audio"
+        )
+        
+    except Exception as e:
+        logger.error(f"Shift handoff generation failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Shift handoff generation failed: {str(e)}")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
