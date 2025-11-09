@@ -2,7 +2,7 @@
   <img src="frontend/public/odin-logo-white-text.png" alt="ODIN logo" width="320" />
 </p>
 
-# ODIN — Bay Area ATC Second Brain
+# ODIN
 
 ODIN is an operator-focused console that fuses live Bay Area aircraft surveillance, weather, ATC facility coverage, NOTAM intel, and an AI copilot into a single NATO-style surface. The system is designed to act as a "second brain" for tower and TRACON teams by keeping every critical layer one glance away while staying resilient when upstream feeds fail.
 
