@@ -165,6 +165,59 @@ def normalize_opensky_state(state: List[Any]) -> Optional[Aircraft]:
         return None
 
 
+async def get_opensky_token() -> Optional[str]:
+    """
+    Get valid OAuth2 access token for OpenSky Network API.
+    Tokens expire after 30 minutes, so we cache and refresh as needed.
+    """
+    global oauth_token_cache
+    
+    # Check if we have a valid cached token
+    now = datetime.now(timezone.utc).timestamp()
+    if oauth_token_cache["access_token"] and oauth_token_cache["expires_at"]:
+        if now < oauth_token_cache["expires_at"]:
+            logger.info("Using cached OpenSky OAuth2 token")
+            return oauth_token_cache["access_token"]
+    
+    # Need to fetch a new token
+    if not OPENSKY_CLIENT_ID or not OPENSKY_CLIENT_SECRET:
+        logger.error("OpenSky OAuth2 credentials not configured")
+        return None
+    
+    try:
+        logger.info("Fetching new OpenSky OAuth2 token...")
+        
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(
+                OPENSKY_TOKEN_URL,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                data={
+                    "grant_type": "client_credentials",
+                    "client_id": OPENSKY_CLIENT_ID,
+                    "client_secret": OPENSKY_CLIENT_SECRET
+                }
+            )
+            
+            if response.status_code == 200:
+                token_data = response.json()
+                access_token = token_data.get("access_token")
+                expires_in = token_data.get("expires_in", 1800)  # Default 30 minutes
+                
+                # Cache the token (subtract 60s buffer for safety)
+                oauth_token_cache["access_token"] = access_token
+                oauth_token_cache["expires_at"] = now + expires_in - 60
+                
+                logger.info(f"Successfully obtained OpenSky OAuth2 token (expires in {expires_in}s)")
+                return access_token
+            else:
+                logger.error(f"Failed to obtain OpenSky token: {response.status_code} - {response.text}")
+                return None
+                
+    except Exception as e:
+        logger.error(f"Error obtaining OpenSky OAuth2 token: {e}")
+        return None
+
+
 async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]:
     """Fetch aircraft data from OpenSky Network API"""
     try:
