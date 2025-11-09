@@ -35,9 +35,6 @@ export default function App() {
   
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const canvasOverlay = useRef(null);
-  const animationFrame = useRef(null);
-  const aircraftHistory = useRef({});
 
   // Clock updates
   useEffect(() => {
@@ -53,7 +50,69 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Initialize map
+  // Helper function to add aircraft layers after sprite loads
+  const addAircraftLayers = useCallback(() => {
+    if (!map.current) return;
+    
+    // Check if source and layers already exist (Strict Mode protection)
+    if (map.current.getSource('aircraft')) {
+      console.log('Aircraft layers already added, skipping');
+      return;
+    }
+
+    try {
+      // Add GeoJSON source
+      map.current.addSource('aircraft', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] }
+      });
+
+      // Add symbol layer for icons
+      map.current.addLayer({
+        id: 'aircraft-icons',
+        type: 'symbol',
+        source: 'aircraft',
+        layout: {
+          'icon-image': 'aircraft',
+          'icon-size': 0.8,
+          'icon-rotate': ['get', 'heading'],
+          'icon-rotation-alignment': 'map',
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true
+        },
+        paint: {
+          'icon-opacity': 1
+        }
+      });
+
+      // Add symbol layer for labels
+      map.current.addLayer({
+        id: 'aircraft-labels',
+        type: 'symbol',
+        source: 'aircraft',
+        layout: {
+          'text-field': ['get', 'label'],
+          'text-font': ['Open Sans Regular'],
+          'text-size': 11,
+          'text-offset': [0, 1.8],
+          'text-anchor': 'top',
+          'text-allow-overlap': false
+        },
+        paint: {
+          'text-color': '#E7E9EA',
+          'text-halo-color': '#0A0B0C',
+          'text-halo-width': 2,
+          'text-halo-blur': 1
+        }
+      });
+
+      console.log('🎨 Aircraft layers added');
+    } catch (error) {
+      console.error('Failed to add aircraft layers:', error);
+    }
+  }, []);
+
+  // Initialize map with FIX #1: Inline style object instead of external URL
   useEffect(() => {
     if (map.current) {
       console.log('Map already initialized, skipping');
@@ -65,21 +124,36 @@ export default function App() {
       return;
     }
 
-    console.log('Starting map initialization...', {
-      maplibregl: typeof maplibregl,
-      Map: typeof maplibregl?.Map,
-      container: mapContainer.current,
-      hasKey: !!MAPTILER_KEY
-    });
+    console.log('Starting map initialization...');
 
     try {
       if (!maplibregl || !maplibregl.Map) {
         throw new Error('MapLibre GL not loaded properly');
       }
 
+      // FIX #1: Use inline style object instead of external style URL
+      const styleObject = {
+        version: 8,
+        sources: {
+          'raster-tiles': {
+            type: 'raster',
+            tiles: [`https://api.maptiler.com/maps/voyager/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`],
+            tileSize: 256,
+            attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>'
+          }
+        },
+        layers: [{
+          id: 'simple-tiles',
+          type: 'raster',
+          source: 'raster-tiles',
+          minzoom: 0,
+          maxzoom: 22
+        }]
+      };
+
       map.current = new maplibregl.Map({
         container: mapContainer.current,
-        style: `https://api.maptiler.com/maps/voyager/style.json?key=${MAPTILER_KEY}`,
+        style: styleObject,
         center: BAY_AREA_CENTER,
         zoom: 8,
         pitch: 0,
@@ -87,123 +161,112 @@ export default function App() {
         attributionControl: false
       });
 
-      console.log('Map object created:', map.current);
+      console.log('✅ MapLibre map object created');
 
-      map.current.on('load', () => {
-        console.log('MapLibre map loaded successfully');
-        initializeCanvasOverlay();
+      // FIX #6: Load aircraft icon and add layers AFTER sprite loads
+      map.current.on('load', async () => {
+        console.log('🗺️ Map loaded');
+        
+        try {
+          // Load aircraft icon from SVG
+          const response = await fetch('/aircraft-icon.svg');
+          const svg = await response.text();
+          const img = new Image(32, 32);
+          
+          img.onload = () => {
+            if (!map.current) return;
+            
+            // Check if image already added (Strict Mode protection)
+            if (!map.current.hasImage('aircraft')) {
+              map.current.addImage('aircraft', img);
+              console.log('✈️ Aircraft icon loaded');
+            }
+            
+            // Now add layers after sprite is ready
+            addAircraftLayers();
+          };
+          
+          img.onerror = (err) => {
+            console.error('❌ Failed to load aircraft icon:', err);
+          };
+          
+          img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        } catch (error) {
+          console.error('Failed to fetch aircraft icon:', error);
+        }
       });
 
       map.current.on('error', (e) => {
         console.error('MapLibre error:', e);
       });
 
-      console.log('MapLibre map initialized');
     } catch (error) {
-      console.error('Failed to initialize MapLibre:', error, error.stack);
+      console.error('Failed to initialize MapLibre:', error);
       toast.error('Map initialization failed: ' + error.message);
     }
 
+    // FIX #2: Clear all refs to null in cleanup for React 19 Strict Mode
     return () => {
-      if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
       if (map.current) {
         try {
           map.current.remove();
+          map.current = null;  // CRITICAL: Clear ref for React 19
         } catch (e) {
           console.error('Error removing map:', e);
         }
       }
     };
-  }, []);
+  }, [addAircraftLayers]);
 
-  // Initialize canvas overlay for aircraft
-  const initializeCanvasOverlay = () => {
-    const canvas = document.createElement('canvas');
-    const container = map.current.getCanvasContainer();
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.pointerEvents = 'none';
-    container.appendChild(canvas);
-    canvasOverlay.current = canvas;
+  // FIX #6: Update aircraft layer with GeoJSON data (replaces canvas overlay)
+  const updateAircraftLayer = useCallback(() => {
+    if (!map.current || !map.current.getSource('aircraft') || !showTraffic) {
+      return;
+    }
 
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-    };
+    try {
+      // Convert aircraft to GeoJSON features
+      const features = aircraft
+        .filter(ac => ac.longitude && ac.latitude)
+        .map(ac => {
+          const callsign = (ac.callsign || ac.icao24).trim();
+          const alt = ac.baro_altitude ? Math.round(ac.baro_altitude * 3.28084) : '---';
+          const spd = ac.velocity ? Math.round(ac.velocity * 1.94384) : '---';
+          const label = `${callsign} | ${alt} | ${spd}`;
 
-    resize();
-    map.current.on('resize', resize);
-    map.current.on('move', () => drawAircraft());
-    map.current.on('zoom', () => drawAircraft());
+          return {
+            type: 'Feature',
+            id: ac.icao24,
+            geometry: {
+              type: 'Point',
+              coordinates: [ac.longitude, ac.latitude]
+            },
+            properties: {
+              icao24: ac.icao24,
+              callsign: callsign,
+              heading: ac.true_track || 0,
+              label: label,
+              selected: selectedAircraft && selectedAircraft.icao24 === ac.icao24
+            }
+          };
+        });
 
-    // Start animation loop
-    const animate = () => {
-      drawAircraft();
-      animationFrame.current = requestAnimationFrame(animate);
-    };
-    animate();
-  };
+      // Update source (MapLibre handles rendering)
+      map.current.getSource('aircraft').setData({
+        type: 'FeatureCollection',
+        features: features
+      });
+    } catch (error) {
+      console.error('Failed to update aircraft layer:', error);
+    }
+  }, [aircraft, showTraffic, selectedAircraft]);
 
-  // Draw aircraft on canvas
-  const drawAircraft = useCallback(() => {
-    if (!canvasOverlay.current || !map.current || !showTraffic) return;
+  // Update aircraft layer whenever data changes
+  useEffect(() => {
+    updateAircraftLayer();
+  }, [updateAircraftLayer]);
 
-    const canvas = canvasOverlay.current;
-    const ctx = canvas.getContext('2d');
-    const { width, height } = canvas.getBoundingClientRect();
-
-    ctx.clearRect(0, 0, width, height);
-
-    aircraft.forEach((ac) => {
-      if (!ac.longitude || !ac.latitude) return;
-
-      const point = map.current.project([ac.longitude, ac.latitude]);
-      const heading = (ac.true_track || 0) * Math.PI / 180;
-
-      // Draw oriented triangle
-      const size = 8;
-      const isSelected = selectedAircraft && selectedAircraft.icao24 === ac.icao24;
-      ctx.strokeStyle = isSelected ? '#4DD7E6' : '#E7E9EA';
-      ctx.lineWidth = isSelected ? 2 : 1.5;
-      ctx.fillStyle = 'transparent';
-
-      ctx.beginPath();
-      ctx.moveTo(
-        point.x + Math.cos(heading) * size,
-        point.y + Math.sin(heading) * size
-      );
-      ctx.lineTo(
-        point.x + Math.cos(heading + 2.6) * size,
-        point.y + Math.sin(heading + 2.6) * size
-      );
-      ctx.lineTo(
-        point.x + Math.cos(heading - 2.6) * size,
-        point.y + Math.sin(heading - 2.6) * size
-      );
-      ctx.closePath();
-      ctx.stroke();
-
-      // Draw label
-      const callsign = (ac.callsign || ac.icao24).trim();
-      const alt = ac.baro_altitude ? Math.round(ac.baro_altitude * 3.28084) : '---';
-      const spd = ac.velocity ? Math.round(ac.velocity * 1.94384) : '---';
-      const label = `${callsign} | ${alt} | ${spd}`;
-
-      ctx.font = "12px 'Azeret Mono', monospace";
-      ctx.fillStyle = isSelected ? '#4DD7E6' : '#E7E9EA';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(label, point.x + 12, point.y);
-    });
-  }, [aircraft, selectedAircraft, showTraffic]);
-
-  // Fetch aircraft data
+  // FIX #5: Remove lastUpdate from dependency array to fix polling cycle
   const fetchAircraft = useCallback(async () => {
     try {
       const response = await axios.get(`${API}/air/opensky`, { timeout: 8000 });
@@ -215,45 +278,53 @@ export default function App() {
 
       if (data.data_status === 'stale') {
         toast.warning('Aircraft data is stale', { id: 'stale-data' });
-      } else if (data.data_status === 'ok' && lastUpdate) {
+      } else if (data.data_status === 'ok') {
         toast.dismiss('stale-data');
       }
+
+      console.log(`✈️ Received ${data.aircraft_count} aircraft [${data.data_status}]`);
     } catch (error) {
       console.error('Failed to fetch aircraft:', error);
       setDataStatus('unavailable');
       toast.error('Aircraft data unavailable', { id: 'data-error' });
     }
-  }, [lastUpdate]);
+  }, []);  // FIX #5: Empty deps - function is stable, interval works correctly
 
   // Poll for aircraft updates
   useEffect(() => {
     fetchAircraft();
-    const interval = setInterval(fetchAircraft, 2000); // Poll every 2 seconds
+    const interval = setInterval(fetchAircraft, 2000);
     return () => clearInterval(interval);
   }, [fetchAircraft]);
 
-  // Handle aircraft selection (click on map)
+  // FIX #3 & #6: Handle aircraft selection with MapLibre queryRenderedFeatures
   useEffect(() => {
     if (!map.current) return;
 
     const handleClick = (e) => {
-      const { x, y } = e.point;
-      const clickRadius = 15;
+      const features = map.current.queryRenderedFeatures(e.point, {
+        layers: ['aircraft-icons']
+      });
 
-      for (const ac of aircraft) {
-        if (!ac.longitude || !ac.latitude) continue;
-        const point = map.current.project([ac.longitude, ac.latitude]);
-        const dist = Math.sqrt(Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2));
-        if (dist <= clickRadius) {
+      if (features.length > 0) {
+        const icao24 = features[0].properties.icao24;
+        const ac = aircraft.find(a => a.icao24 === icao24);
+        if (ac) {
           setSelectedAircraft(ac);
-          return;
         }
+      } else {
+        setSelectedAircraft(null);
       }
-      setSelectedAircraft(null);
     };
 
     map.current.on('click', handleClick);
-    return () => map.current.off('click', handleClick);
+    
+    // FIX #3: Add null check in cleanup
+    return () => {
+      if (map.current) {
+        map.current.off('click', handleClick);
+      }
+    };
   }, [aircraft]);
 
   const FiltersPanel = () => (
@@ -433,12 +504,12 @@ export default function App() {
         </div>
       </header>
 
-      {/* Desktop grid */}
-      <div className="hidden md:grid grid-cols-[18rem_minmax(0,1fr)_22rem] h-[calc(100vh-48px)]">
-        <aside className="border-r border-[#3A3E43] bg-[#0E0F11]" data-testid="filters-panel">
+      {/* FIX #4: Single responsive layout (not duplicate containers) */}
+      <div className="flex md:grid md:grid-cols-[18rem_minmax(0,1fr)_22rem] h-[calc(100vh-48px)]">
+        <aside className="hidden md:block border-r border-[#3A3E43] bg-[#0E0F11]" data-testid="filters-panel">
           <FiltersPanel />
         </aside>
-        <main className="relative" data-testid="map-canvas-area">
+        <main className="relative flex-1" data-testid="map-canvas-area">
           <div ref={mapContainer} className="w-full h-full" style={{ width: '100%', height: '100%' }} />
           {aircraft.length === 0 && showTraffic && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -446,14 +517,9 @@ export default function App() {
             </div>
           )}
         </main>
-        <aside className="border-l border-[#3A3E43] bg-[#0E0F11]" data-testid="info-panel">
+        <aside className="hidden md:block border-l border-[#3A3E43] bg-[#0E0F11]" data-testid="info-panel">
           <InfoPanel />
         </aside>
-      </div>
-
-      {/* Mobile map */}
-      <div className="md:hidden h-[calc(100vh-48px)]" data-testid="map-canvas-area-mobile">
-        <div ref={mapContainer} className="w-full h-full" />
       </div>
     </div>
   );
