@@ -771,7 +771,7 @@ export default function App() {
           }
         });
 
-        // Add facility markers layer
+        // Add facility markers layer - minimal and clean
         map.current.addLayer({
           id: 'atc-facilities-markers',
           type: 'circle',
@@ -779,22 +779,22 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 8,  // Larger for visibility
-              ['==', ['get', 'type'], 'tracon'], 12,
-              16  // Larger center
+              ['==', ['get', 'type'], 'tower'], 6,  // Small towers
+              ['==', ['get', 'type'], 'tracon'], 8,  // Medium TRACON
+              10  // Medium center
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.95,
-            'circle-stroke-width': 3,
+            'circle-opacity': 0.8,
+            'circle-stroke-width': 2,
             'circle-stroke-color': '#0A0B0C',
-            'circle-stroke-opacity': 0.9
+            'circle-stroke-opacity': 0.8
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
         });
         
-        // Add glow layer
+        // Add subtle glow layer
         map.current.addLayer({
           id: 'atc-facilities-glow',
           type: 'circle',
@@ -802,12 +802,12 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 14,  // Larger glow
-              ['==', ['get', 'type'], 'tracon'], 18,
-              24  // Larger center glow
+              ['==', ['get', 'type'], 'tower'], 10,  // Small glow
+              ['==', ['get', 'type'], 'tracon'], 12,
+              14  // Small center glow
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.2,  // More visible glow
+            'circle-opacity': 0.12,  // Subtle glow
             'circle-blur': 1
           },
           layout: {
