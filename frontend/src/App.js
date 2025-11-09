@@ -1396,7 +1396,7 @@ export default function App() {
             </button>
           ))}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 overflow-hidden">
           {infoView === 'flights' && renderFlightsView()}
           {infoView === 'chat' && renderChatView()}
           {infoView === 'notams' && renderNotamsView()}
