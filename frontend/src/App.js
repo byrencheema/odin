@@ -50,6 +50,7 @@ export default function App() {
   const [showRunways, setShowRunways] = useState(true);
   const [showTraffic, setShowTraffic] = useState(true);
   const [showWeather, setShowWeather] = useState(false);
+  const [showATCFacilities, setShowATCFacilities] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
