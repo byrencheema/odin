@@ -14,6 +14,22 @@
     height: 100%;
 }
 
+/* Cesium styles */
+.cesium-viewer {
+    width: 100%;
+    height: 100%;
+}
+
+.cesium-viewer-cesiumWidgetContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.cesium-widget-canvas {
+    width: 100%;
+    height: 100%;
+}
+
 .App-logo {
     height: 40vmin;
     pointer-events: none;

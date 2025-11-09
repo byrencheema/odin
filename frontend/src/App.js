@@ -12,6 +12,7 @@ import { Toaster, toast } from 'sonner';
 import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
 import { Button } from './components/ui/button';
 import { PanelLeft, Info } from 'lucide-react';
+import Aircraft3DModal from './components/Aircraft3DModal';
 import '@/App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -35,7 +36,11 @@ export default function App() {
   const [showWeather, setShowWeather] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [mapReady, setMapReady] = useState(false);
-  
+
+  // 3D modal state
+  const [show3DModal, setShow3DModal] = useState(false);
+  const [aircraft3D, setAircraft3D] = useState(null);
+
   const mapContainer = useRef(null);
   const map = useRef(null);
 
@@ -163,6 +168,11 @@ export default function App() {
         bearing: 0,
         attributionControl: false
       });
+
+      // Allow double-clicks to be used for opening the 3D modal instead of zooming
+      if (map.current.doubleClickZoom) {
+        map.current.doubleClickZoom.disable();
+      }
 
       console.log('✅ MapLibre map object created');
 
@@ -406,12 +416,29 @@ export default function App() {
       }
     };
 
+    const handleDoubleClick = (e) => {
+      const features = map.current.queryRenderedFeatures(e.point, {
+        layers: ['aircraft-icons']
+      });
+
+      if (features.length > 0) {
+        const icao24 = features[0].properties.icao24;
+        const ac = aircraft.find(a => a.icao24 === icao24);
+        if (ac) {
+          setAircraft3D(ac);
+          setShow3DModal(true);
+        }
+      }
+    };
+
     map.current.on('click', handleClick);
-    
+    map.current.on('dblclick', handleDoubleClick);
+
     // Guard cleanup in case map ref is already cleared
     return () => {
       if (map.current) {
         map.current.off('click', handleClick);
+        map.current.off('dblclick', handleDoubleClick);
       }
     };
   }, [aircraft]);
@@ -556,6 +583,13 @@ export default function App() {
   return (
     <div className="bg-[#0A0B0C] text-[#E7E9EA] min-h-screen">
       <Toaster theme="dark" richColors position="top-right" />
+
+      {/* 3D Aircraft Modal */}
+      <Aircraft3DModal
+        aircraft={aircraft3D}
+        open={show3DModal}
+        onClose={() => setShow3DModal(false)}
+      />
       
       {/* AIR Bar */}
       <header className="h-12 border-b border-[#3A3E43] flex items-center justify-between px-4" data-testid="air-bar">
