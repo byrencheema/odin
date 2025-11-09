@@ -1536,9 +1536,6 @@ export default function App() {
           </ResizablePanelGroup>
         </div>
       </div>
-      
-      {/* Hidden audio element for handoff playback */}
-      <audio ref={audioRef} style={{ display: 'none' }} />
     </div>
   );
 }
