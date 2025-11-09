@@ -1,11 +1,11 @@
 [
   {
     "content": "Reduce layer opacity for minimal appearance",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Remove or minimize large coverage circles",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Verify airspace boundaries accuracy",
@@ -13,6 +13,6 @@
   },
   {
     "content": "Test minimal appearance",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
