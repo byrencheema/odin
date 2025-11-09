@@ -1,19 +1,15 @@
 [
   {
-    "content": "Create aircraft simulation service with realistic flight patterns",
+    "content": "Add ENABLE_SIMULATION flag to backend/.env",
     "status": "completed"
   },
   {
-    "content": "Add ENABLE_SIMULATION flag to backend/.env",
-    "status": "in_progress"
-  },
-  {
     "content": "Update backend to use simulation when OpenSky fails",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test simulation with various aircraft counts",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Verify aircraft appear and move on map with simulation",
