@@ -1,14 +1,18 @@
 [
   {
-    "content": "Set ATC facilities and boundaries to default ON for debugging",
-    "status": "completed"
+    "content": "Reduce layer opacity for minimal appearance",
+    "status": "in_progress"
   },
   {
-    "content": "Take screenshots and verify layers visible",
-    "status": "completed"
+    "content": "Remove or minimize large coverage circles",
+    "status": "pending"
   },
   {
-    "content": "Debug layer loading issues",
-    "status": "completed"
+    "content": "Verify airspace boundaries accuracy",
+    "status": "pending"
+  },
+  {
+    "content": "Test minimal appearance",
+    "status": "pending"
   }
 ]
