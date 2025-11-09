@@ -717,6 +717,118 @@ export default function App() {
     loadAirspace();
   }, [mapReady, airspaceLoaded, showAirspace]);
 
+  // Load ATC facilities (towers, TRACON, center) with coverage circles
+  useEffect(() => {
+    if (!mapReady || atcFacilitiesLoaded) return;
+
+    const loadATCFacilities = async () => {
+      try {
+        // Load coverage circles
+        const coverageResponse = await axios.get(`${API}/atc/facilities/coverage`);
+        const coverageData = coverageResponse.data;
+
+        // Load facility points
+        const pointsResponse = await axios.get(`${API}/atc/facilities/points`);
+        const pointsData = pointsResponse.data;
+
+        if (!map.current) return;
+
+        // Add coverage circles source
+        map.current.addSource('atc-coverage', {
+          type: 'geojson',
+          data: coverageData
+        });
+
+        // Add facility points source
+        map.current.addSource('atc-facilities', {
+          type: 'geojson',
+          data: pointsData
+        });
+
+        // Add coverage circle fill layer
+        map.current.addLayer({
+          id: 'atc-coverage-fill',
+          type: 'fill',
+          source: 'atc-coverage',
+          paint: {
+            'fill-color': ['get', 'color'],
+            'fill-opacity': 0.08
+          },
+          layout: {
+            'visibility': showATCFacilities ? 'visible' : 'none'
+          }
+        }, 'airspace-fill');
+
+        // Add coverage circle outline layer
+        map.current.addLayer({
+          id: 'atc-coverage-outline',
+          type: 'line',
+          source: 'atc-coverage',
+          paint: {
+            'line-color': ['get', 'color'],
+            'line-width': 2,
+            'line-opacity': 0.6,
+            'line-dasharray': [4, 2]
+          },
+          layout: {
+            'visibility': showATCFacilities ? 'visible' : 'none'
+          }
+        }, 'airspace-fill');
+
+        // Add facility markers layer (circles)
+        map.current.addLayer({
+          id: 'atc-facilities-markers',
+          type: 'circle',
+          source: 'atc-facilities',
+          paint: {
+            'circle-radius': [
+              'case',
+              ['==', ['get', 'type'], 'tower'], 6,
+              ['==', ['get', 'type'], 'tracon'], 10,
+              14  // center
+            ],
+            'circle-color': ['get', 'color'],
+            'circle-opacity': 0.9,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#0A0B0C'
+          },
+          layout: {
+            'visibility': showATCFacilities ? 'visible' : 'none'
+          }
+        });
+
+        // Add facility labels
+        map.current.addLayer({
+          id: 'atc-facilities-labels',
+          type: 'symbol',
+          source: 'atc-facilities',
+          layout: {
+            'text-field': ['concat', ['get', 'id'], '\n', ['get', 'coverage_nm'], 'NM'],
+            'text-font': ['Open Sans Regular'],
+            'text-size': 11,
+            'text-offset': [0, -1.5],
+            'text-anchor': 'bottom',
+            'visibility': showATCFacilities ? 'visible' : 'none'
+          },
+          paint: {
+            'text-color': ['get', 'color'],
+            'text-halo-color': '#0A0B0C',
+            'text-halo-width': 2,
+            'text-opacity': 1
+          }
+        });
+
+        setAtcFacilitiesLoaded(true);
+        console.log('🗼 ATC facilities loaded');
+
+      } catch (error) {
+        console.error('Failed to load ATC facilities:', error);
+      }
+    };
+
+    loadATCFacilities();
+  }, [mapReady, atcFacilitiesLoaded, showATCFacilities]);
+
   // Phase 1: Emergency detection and alerts
   const emergencyAircraftRef = useRef(new Set());
 
