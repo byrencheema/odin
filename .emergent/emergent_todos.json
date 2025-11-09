@@ -1,18 +1,14 @@
 [
   {
-    "content": "Improve tower visual appearance on map",
-    "status": "completed"
+    "content": "Reduce ATC coverage circle opacity and size",
+    "status": "in_progress"
   },
   {
-    "content": "Add ATC facility details to right sidebar instead of popup",
-    "status": "completed"
+    "content": "Make coverage fills more transparent",
+    "status": "pending"
   },
   {
-    "content": "Fix chat rerendering on session request",
-    "status": "completed"
-  },
-  {
-    "content": "Test improvements",
-    "status": "completed"
+    "content": "Test visual improvements",
+    "status": "pending"
   }
 ]
