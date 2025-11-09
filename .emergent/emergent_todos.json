@@ -13,19 +13,19 @@
   },
   {
     "content": "Add MapLibre layers for coverage circles (fill + outline)",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add facility markers with popups",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Add click handlers for facility information",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Fix chat rerender bug",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Test ATC visualization feature",
