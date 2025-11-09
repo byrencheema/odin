@@ -27,6 +27,7 @@ const BAY_AREA_CENTER = [-122.4, 37.8];
 export default function App() {
   const [aircraft, setAircraft] = useState([]);
   const [selectedAircraft, setSelectedAircraft] = useState(null);
+  const [selectedATCFacility, setSelectedATCFacility] = useState(null);
   const [dataStatus, setDataStatus] = useState('ok');
   const [lastUpdate, setLastUpdate] = useState(null);
   const [localTime, setLocalTime] = useState('');
