@@ -396,7 +396,7 @@ const InfoPanel = ({
       infoView={infoView}
       selectedAircraft={selectedAircraft}
       selectedATCFacility={selectedATCFacility}
-      aircraftCount={aircraft.length}
+      aircraftCount={aircraft?.length || 0}
     />
   );
 
