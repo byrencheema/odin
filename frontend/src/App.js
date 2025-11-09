@@ -30,8 +30,9 @@ export default function App() {
   const [selectedATCFacility, setSelectedATCFacility] = useState(null);
   const [dataStatus, setDataStatus] = useState('ok');
   const [lastUpdate, setLastUpdate] = useState(null);
-  const [localTime, setLocalTime] = useState('');
-  const [utcTime, setUtcTime] = useState('');
+  // Use refs for clocks to avoid re-renders every second
+  const localTimeRef = useRef(null);
+  const utcTimeRef = useRef(null);
   
   // Handoff state
   const [handoffData, setHandoffData] = useState(null);
