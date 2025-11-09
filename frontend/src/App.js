@@ -1072,6 +1072,7 @@ export default function App() {
                   if (map.current.getLayer('atc-coverage-fill')) {
                     map.current.setLayoutProperty('atc-coverage-fill', 'visibility', visibility);
                     map.current.setLayoutProperty('atc-coverage-outline', 'visibility', visibility);
+                    map.current.setLayoutProperty('atc-facilities-glow', 'visibility', visibility);
                     map.current.setLayoutProperty('atc-facilities-markers', 'visibility', visibility);
                     map.current.setLayoutProperty('atc-facilities-labels', 'visibility', visibility);
                   }
