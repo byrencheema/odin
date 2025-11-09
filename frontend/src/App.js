@@ -1021,8 +1021,56 @@ export default function App() {
                   <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-squawk">{selectedAircraft.squawk}</div>
                 </div>
               )}
+              <Separator className="bg-[#3A3E43] mt-4" />
+              <Button 
+                onClick={generateHandoff}
+                disabled={handoffLoading}
+                className="w-full bg-[#4DD7E6] hover:bg-[#3AC5D5] text-[#0A0B0C] font-medium"
+                data-testid="handoff-button"
+              >
+                {handoffLoading ? 'Generating...' : 'Generate Handoff'}
+              </Button>
             </CardContent>
           </Card>
+          
+          {handoffData && (
+            <Card className="mt-4 bg-[#0E0F11] border-[#3A3E43]">
+              <CardHeader>
+                <div className="text-sm font-medium text-[#6BEA76]">Handoff Ready</div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">NEXT SECTOR</div>
+                  <div className="text-sm text-[#E7E9EA]" data-testid="handoff-sector">{handoffData.next_sector}</div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="handoff-frequency">{handoffData.next_frequency}</div>
+                </div>
+                <Separator className="bg-[#3A3E43]" />
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-2">HANDOFF SCRIPT</div>
+                  <div className="text-xs text-[#E7E9EA] leading-relaxed p-3 bg-[#0A0B0C] rounded border border-[#3A3E43]" data-testid="handoff-script">
+                    {handoffData.handoff_script}
+                  </div>
+                </div>
+                {handoffData.audio_base64 && (
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm"
+                      variant="outline"
+                      onClick={() => audioRef.current?.play()}
+                      className="flex-1 border-[#3A3E43] text-[#E7E9EA] hover:bg-[#3A3E43]"
+                      data-testid="replay-audio-button"
+                    >
+                      Replay Audio
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+          
           <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
             <p className="text-xs text-[#A9ADB1] italic">Future: AI copilot insights will appear here</p>
           </div>
