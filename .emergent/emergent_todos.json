@@ -1,11 +1,11 @@
 [
   {
     "content": "Add OpenSky OAuth2 credentials to backend/.env securely",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Implement OAuth2 token fetching logic in backend with 30min token refresh",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Update OpenSky API requests to use Bearer token authentication",
