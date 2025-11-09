@@ -497,10 +497,6 @@ export default function App() {
   const localTimeRef = useRef(null);
   const utcTimeRef = useRef(null);
   
-  // Handoff state
-  const [handoffData, setHandoffData] = useState(null);
-  const [handoffLoading, setHandoffLoading] = useState(false);
-  const audioRef = useRef(null);
   const [infoView, setInfoView] = useState('flights');
   const [notams, setNotams] = useState([]);
   const [notamMeta, setNotamMeta] = useState({
