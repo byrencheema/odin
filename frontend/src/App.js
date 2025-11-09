@@ -48,6 +48,11 @@ export default function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
+  // Phase 1 feature states
+  const [showTrails, setShowTrails] = useState(true);
+  const [showAirspace, setShowAirspace] = useState(true);
+  const [airspaceLoaded, setAirspaceLoaded] = useState(false);
+
   // 3D modal state
   const [show3DModal, setShow3DModal] = useState(false);
   const [aircraft3D, setAircraft3D] = useState(null);
@@ -119,6 +124,28 @@ export default function App() {
     }
   };
 
+  // Phase 1: Helper functions
+  const getAltitudeColor = (altitudeMeters) => {
+    if (!altitudeMeters) return '#6B7280'; // Gray for unknown
+
+    const altFeet = altitudeMeters * 3.28084;
+
+    if (altFeet < 5000) return '#60A5FA';      // Light blue - low
+    if (altFeet < 10000) return '#4DD7E6';     // Cyan - medium-low
+    if (altFeet < 18000) return '#6BEA76';     // Green - medium
+    if (altFeet < 30000) return '#FFC857';     // Yellow - medium-high
+    return '#E879F9';                          // Purple - high (FL300+)
+  };
+
+  const isEmergencySquawk = (squawk) => {
+    if (!squawk) return null;
+    const code = squawk.toString();
+    if (code === '7700') return 'emergency';
+    if (code === '7600') return 'radio-failure';
+    if (code === '7500') return 'hijack';
+    return null;
+  };
+
   // Helper function to add aircraft layers after sprite loads
   const addAircraftLayers = useCallback(() => {
     if (!map.current) return;
@@ -130,27 +157,96 @@ export default function App() {
     }
 
     try {
-      // Add GeoJSON source
+      // Add aircraft trails source and layer (FIRST - below everything)
+      map.current.addSource('aircraft-trails', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] }
+      });
+
+      map.current.addLayer({
+        id: 'aircraft-trails',
+        type: 'line',
+        source: 'aircraft-trails',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+          'visibility': showTrails ? 'visible' : 'none'
+        },
+        paint: {
+          'line-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'avg_altitude_m'],
+            0, '#60A5FA',        // Low altitude - light blue
+            5000, '#4DD7E6',     // Mid-low - cyan
+            10000, '#6BEA76',    // Mid - green
+            15000, '#FFC857'     // High - yellow
+          ],
+          'line-width': 2,
+          'line-opacity': 0.5
+        }
+      });
+
+      // Add GeoJSON source for aircraft
       map.current.addSource('aircraft', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] }
       });
 
-      // Add symbol layer for icons
+      // Add emergency pulse layer (animated circles)
+      map.current.addLayer({
+        id: 'aircraft-emergency-pulse',
+        type: 'circle',
+        source: 'aircraft',
+        filter: ['!=', ['get', 'emergency'], 'none'],
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 12,
+            14, 40
+          ],
+          'circle-color': [
+            'match',
+            ['get', 'emergency'],
+            'emergency', '#FF6B6B',
+            'hijack', '#DC2626',
+            'radio-failure', '#FFA500',
+            '#FF6B6B'
+          ],
+          'circle-opacity': 0.2,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': [
+            'match',
+            ['get', 'emergency'],
+            'emergency', '#FF6B6B',
+            'hijack', '#DC2626',
+            'radio-failure', '#FFA500',
+            '#FF6B6B'
+          ],
+          'circle-stroke-opacity': 0.7
+        }
+      });
+
+      // Add symbol layer for icons with emergency highlighting
       map.current.addLayer({
         id: 'aircraft-icons',
         type: 'symbol',
         source: 'aircraft',
         layout: {
           'icon-image': 'aircraft',
-          'icon-size': 0.8,
-          'icon-rotate': ['get', 'heading'],
+          'icon-size': [
+            'case',
+            ['!=', ['get', 'emergency'], 'none'], 1.1,  // Larger for emergencies
+            0.8
+          ],
+          'icon-rotate': ['-', ['get', 'heading'], 90],  // Subtract 90deg to compensate for SVG orientation
           'icon-rotation-alignment': 'map',
           'icon-allow-overlap': true,
           'icon-ignore-placement': true
         },
         paint: {
-          'icon-opacity': 1
+          'icon-opacity': 1,
+          'icon-color': ['get', 'altitudeColor']  // Use altitude-based color
         }
       });
 
@@ -162,24 +258,32 @@ export default function App() {
         layout: {
           'text-field': ['get', 'label'],
           'text-font': ['Open Sans Regular'],
-          'text-size': 11,
+          'text-size': [
+            'case',
+            ['!=', ['get', 'emergency'], 'none'], 12,  // Larger text for emergencies
+            11
+          ],
           'text-offset': [0, 1.8],
           'text-anchor': 'top',
           'text-allow-overlap': false
         },
         paint: {
-          'text-color': '#E7E9EA',
+          'text-color': [
+            'case',
+            ['!=', ['get', 'emergency'], 'none'], '#FF6B6B',  // Red text for emergencies
+            '#E7E9EA'
+          ],
           'text-halo-color': '#0A0B0C',
           'text-halo-width': 2,
           'text-halo-blur': 1
         }
       });
 
-      console.log('🎨 Aircraft layers added');
+      console.log('🎨 Aircraft layers, trails, and emergency indicators added');
     } catch (error) {
       console.error('Failed to add aircraft layers:', error);
     }
-  }, []);
+  }, [showTrails]);
 
   // Initialize MapLibre with inline style to avoid external style fetch
   useEffect(() => {
@@ -368,6 +472,10 @@ export default function App() {
           const spd = ac.velocity ? Math.round(ac.velocity * 1.94384) : '---';
           const label = `${callsign} | ${alt} | ${spd}`;
 
+          // Phase 1: Detect emergency and get altitude color
+          const emergencyType = isEmergencySquawk(ac.squawk);
+          const altitudeColor = getAltitudeColor(ac.baro_altitude);
+
           return {
             type: 'Feature',
             id: ac.icao24,
@@ -380,7 +488,9 @@ export default function App() {
               callsign: callsign,
               heading: ac.true_track || 0,
               label: label,
-              selected: selectedAircraft && selectedAircraft.icao24 === ac.icao24
+              selected: selectedAircraft && selectedAircraft.icao24 === ac.icao24,
+              emergency: emergencyType || 'none',
+              altitudeColor: altitudeColor
             }
           };
         });
@@ -430,6 +540,142 @@ export default function App() {
     const interval = setInterval(fetchAircraft, 10000);
     return () => clearInterval(interval);
   }, [fetchAircraft]);
+
+  // Phase 1: Fetch aircraft trails
+  const fetchTrails = useCallback(async () => {
+    if (!showTrails || !mapReady) return;
+
+    try {
+      const response = await axios.get(`${API}/air/trails`, { timeout: 5000 });
+
+      if (map.current && map.current.getSource('aircraft-trails')) {
+        map.current.getSource('aircraft-trails').setData(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch trails:', error);
+    }
+  }, [showTrails, mapReady]);
+
+  // Poll for trails
+  useEffect(() => {
+    if (!mapReady || !showTrails) return;
+
+    fetchTrails();
+    const interval = setInterval(fetchTrails, 10000);
+    return () => clearInterval(interval);
+  }, [mapReady, showTrails, fetchTrails]);
+
+  // Phase 1: Load airspace boundaries once
+  useEffect(() => {
+    if (!mapReady || airspaceLoaded) return;
+
+    const loadAirspace = async () => {
+      try {
+        const response = await axios.get(`${API}/airspace/boundaries`);
+        const airspaceData = response.data;
+
+        if (!map.current) return;
+
+        // Add source
+        map.current.addSource('airspace', {
+          type: 'geojson',
+          data: airspaceData
+        });
+
+        // Add fill layer
+        map.current.addLayer({
+          id: 'airspace-fill',
+          type: 'fill',
+          source: 'airspace',
+          paint: {
+            'fill-color': ['get', 'color'],
+            'fill-opacity': 0.12
+          },
+          layout: {
+            'visibility': showAirspace ? 'visible' : 'none'
+          }
+        }, 'aircraft-trails');
+
+        // Add outline layer
+        map.current.addLayer({
+          id: 'airspace-outline',
+          type: 'line',
+          source: 'airspace',
+          paint: {
+            'line-color': ['get', 'label_color'],
+            'line-width': 1.5,
+            'line-opacity': 0.6,
+            'line-dasharray': [3, 2]
+          },
+          layout: {
+            'visibility': showAirspace ? 'visible' : 'none'
+          }
+        }, 'aircraft-trails');
+
+        // Add labels
+        map.current.addLayer({
+          id: 'airspace-labels',
+          type: 'symbol',
+          source: 'airspace',
+          layout: {
+            'text-field': ['concat', ['get', 'name'], '\n', ['get', 'floor_ft'], '-', ['get', 'ceiling_ft'], 'ft'],
+            'text-font': ['Open Sans Regular'],
+            'text-size': 10,
+            'visibility': showAirspace ? 'visible' : 'none'
+          },
+          paint: {
+            'text-color': ['get', 'label_color'],
+            'text-halo-color': '#0A0B0C',
+            'text-halo-width': 2,
+            'text-opacity': 0.8
+          }
+        }, 'aircraft-trails');
+
+        setAirspaceLoaded(true);
+        console.log('🗺️ Airspace boundaries loaded');
+
+      } catch (error) {
+        console.error('Failed to load airspace:', error);
+      }
+    };
+
+    loadAirspace();
+  }, [mapReady, airspaceLoaded, showAirspace]);
+
+  // Phase 1: Emergency detection and alerts
+  const emergencyAircraftRef = useRef(new Set());
+
+  useEffect(() => {
+    aircraft.forEach(ac => {
+      const emergencyType = isEmergencySquawk(ac.squawk);
+      if (emergencyType && !emergencyAircraftRef.current.has(ac.icao24)) {
+        emergencyAircraftRef.current.add(ac.icao24);
+
+        const callsign = ac.callsign || ac.icao24;
+        const emergencyMessages = {
+          'emergency': `🚨 EMERGENCY: ${callsign} squawking 7700`,
+          'hijack': `🚨 HIJACK ALERT: ${callsign} squawking 7500`,
+          'radio-failure': `📻 RADIO FAILURE: ${callsign} squawking 7600`
+        };
+
+        toast.error(emergencyMessages[emergencyType], {
+          duration: 15000,
+          id: `emergency-${ac.icao24}`
+        });
+
+        console.warn(`🚨 ${emergencyMessages[emergencyType]}`);
+      }
+    });
+
+    // Cleanup - remove aircraft no longer in emergency
+    const currentEmergencies = new Set(
+      aircraft
+        .filter(ac => isEmergencySquawk(ac.squawk))
+        .map(ac => ac.icao24)
+    );
+
+    emergencyAircraftRef.current = currentEmergencies;
+  }, [aircraft]);
 
   useEffect(() => {
     if (!mapReady) return;
@@ -548,9 +794,47 @@ export default function App() {
         <Separator className="bg-[#3A3E43]" />
         <div>
           <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Traffic</h3>
+          <div className="space-y-2">
+            <label className="flex items-center gap-2">
+              <Checkbox checked={showTraffic} onCheckedChange={setShowTraffic} data-testid="traffic-checkbox" />
+              <span className="text-sm text-[#E7E9EA]">Show Aircraft</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <Checkbox
+                checked={showTrails}
+                onCheckedChange={(checked) => {
+                  setShowTrails(checked);
+                  if (map.current && map.current.getLayer('aircraft-trails')) {
+                    map.current.setLayoutProperty('aircraft-trails', 'visibility',
+                      checked ? 'visible' : 'none');
+                  }
+                }}
+                data-testid="trails-checkbox"
+              />
+              <span className="text-sm text-[#E7E9EA]">Show Trails</span>
+            </label>
+          </div>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airspace</h3>
           <label className="flex items-center gap-2">
-            <Checkbox checked={showTraffic} onCheckedChange={setShowTraffic} data-testid="traffic-checkbox" />
-            <span className="text-sm text-[#E7E9EA]">Show Aircraft</span>
+            <Checkbox
+              checked={showAirspace}
+              onCheckedChange={(checked) => {
+                setShowAirspace(checked);
+                if (map.current) {
+                  const visibility = checked ? 'visible' : 'none';
+                  if (map.current.getLayer('airspace-fill')) {
+                    map.current.setLayoutProperty('airspace-fill', 'visibility', visibility);
+                    map.current.setLayoutProperty('airspace-outline', 'visibility', visibility);
+                    map.current.setLayoutProperty('airspace-labels', 'visibility', visibility);
+                  }
+                }
+              }}
+              data-testid="airspace-checkbox"
+            />
+            <span className="text-sm text-[#E7E9EA]">Show Boundaries</span>
           </label>
         </div>
         <Separator className="bg-[#3A3E43]" />
@@ -559,25 +843,43 @@ export default function App() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm">Weather</Label>
-              <Switch 
-                checked={showWeather} 
+              <Switch
+                checked={showWeather}
                 onCheckedChange={(checked) => {
                   setShowWeather(checked);
                   if (map.current && map.current.getLayer('weather-layer')) {
-                    map.current.setLayoutProperty('weather-layer', 'visibility', 
+                    map.current.setLayoutProperty('weather-layer', 'visibility',
                       checked ? 'visible' : 'none');
                   }
                 }}
-                data-testid="weather-switch" 
+                data-testid="weather-switch"
               />
             </div>
-            <div className="flex items-center justify-between opacity-50">
-              <Label className="text-sm">Incidents</Label>
-              <Switch disabled data-testid="incidents-switch" />
+          </div>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Altitude Legend</h3>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#60A5FA'}} />
+              <span className="text-xs text-[#E7E9EA]">0-5k ft</span>
             </div>
-            <div className="flex items-center justify-between opacity-50">
-              <Label className="text-sm">Heatmap</Label>
-              <Switch disabled data-testid="heatmap-switch" />
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#4DD7E6'}} />
+              <span className="text-xs text-[#E7E9EA]">5-10k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#6BEA76'}} />
+              <span className="text-xs text-[#E7E9EA]">10-18k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#FFC857'}} />
+              <span className="text-xs text-[#E7E9EA]">18-30k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#E879F9'}} />
+              <span className="text-xs text-[#E7E9EA]">30k+ ft</span>
             </div>
           </div>
         </div>

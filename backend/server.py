@@ -16,6 +16,7 @@ from notam_engine import get_notam_engine
 from services.openrouter_client import OpenRouterClient, OpenRouterError
 from fastapi.responses import StreamingResponse
 import json
+from airspace_data import BAY_AREA_AIRSPACE
 
 
 ROOT_DIR = Path(__file__).parent
@@ -174,6 +175,11 @@ BAY_AREA_BBOX = {
     "lomin": -123.0,  # West
     "lomax": -121.2   # East
 }
+
+# Aircraft trail storage (in-memory)
+aircraft_trails = {}
+TRAIL_MAX_POSITIONS = 100  # Keep last 100 positions (~16 minutes at 10s intervals)
+TRAIL_CLEANUP_THRESHOLD = 1800  # Remove aircraft not seen for 30 minutes
 
 
 class Aircraft(BaseModel):
@@ -431,7 +437,38 @@ async def get_opensky_aircraft():
         opensky_cache["data"] = aircraft_list
         opensky_cache["timestamp"] = raw_data.get("time", current_timestamp)
         opensky_cache["is_stale"] = False
-        
+
+        # Update aircraft trails
+        global aircraft_trails
+        for aircraft in aircraft_list:
+            if aircraft.latitude is None or aircraft.longitude is None:
+                continue
+
+            if aircraft.icao24 not in aircraft_trails:
+                aircraft_trails[aircraft.icao24] = {
+                    "positions": [],
+                    "last_seen": current_timestamp
+                }
+
+            trail = aircraft_trails[aircraft.icao24]
+            trail["positions"].append((
+                current_timestamp,
+                aircraft.latitude,
+                aircraft.longitude,
+                aircraft.baro_altitude
+            ))
+            trail["last_seen"] = current_timestamp
+
+            # Limit trail length
+            if len(trail["positions"]) > TRAIL_MAX_POSITIONS:
+                trail["positions"] = trail["positions"][-TRAIL_MAX_POSITIONS:]
+
+        # Cleanup old aircraft trails
+        aircraft_trails = {
+            icao: data for icao, data in aircraft_trails.items()
+            if current_timestamp - data["last_seen"] < TRAIL_CLEANUP_THRESHOLD
+        }
+
         # Determine status based on global simulation flag
         global simulation_mode_active
         status_msg = "simulated" if simulation_mode_active else "ok"
@@ -469,13 +506,79 @@ async def get_aircraft_details(icao24: str):
     """Get details for a specific aircraft by ICAO24 hex code"""
     if not opensky_cache["data"]:
         raise HTTPException(status_code=404, detail="No aircraft data available")
-    
+
     # Find aircraft in cache
     for aircraft in opensky_cache["data"]:
         if aircraft.icao24.lower() == icao24.lower():
             return aircraft
-    
+
     raise HTTPException(status_code=404, detail=f"Aircraft {icao24} not found")
+
+
+@api_router.get("/air/trails")
+async def get_aircraft_trails(icao24: Optional[str] = None):
+    """
+    Get aircraft trail data as GeoJSON LineStrings.
+    If icao24 provided, return single trail. Otherwise return all trails.
+    """
+    def build_trail_feature(icao: str, trail_data: dict):
+        positions = trail_data["positions"]
+        if len(positions) < 2:
+            return None
+
+        # Build LineString coordinates [lon, lat]
+        coordinates = [
+            [pos[2], pos[1]]
+            for pos in positions
+        ]
+
+        # Calculate altitude gradient for color coding
+        altitudes = [pos[3] for pos in positions if pos[3] is not None]
+        avg_altitude = sum(altitudes) / len(altitudes) if altitudes else 0
+
+        return {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coordinates
+            },
+            "properties": {
+                "icao24": icao,
+                "point_count": len(positions),
+                "start_time": positions[0][0],
+                "end_time": positions[-1][0],
+                "avg_altitude_m": avg_altitude
+            }
+        }
+
+    if icao24:
+        # Single aircraft trail
+        trail_data = aircraft_trails.get(icao24.lower())
+        if not trail_data:
+            raise HTTPException(status_code=404, detail="Trail not found")
+
+        feature = build_trail_feature(icao24.lower(), trail_data)
+        if not feature:
+            return {"type": "FeatureCollection", "features": []}
+        return {"type": "FeatureCollection", "features": [feature]}
+
+    # All trails
+    features = []
+    for icao, trail_data in aircraft_trails.items():
+        feature = build_trail_feature(icao, trail_data)
+        if feature:
+            features.append(feature)
+
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    }
+
+
+@api_router.get("/airspace/boundaries")
+async def get_airspace_boundaries():
+    """Get Bay Area airspace boundary data as GeoJSON."""
+    return BAY_AREA_AIRSPACE
 
 
 # ===== Weather API Integration =====
@@ -569,7 +672,7 @@ class ChatSession(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     title: str = "New Conversation"
-    messages: List[ChatMessage] = []
+    messages: List[ChatMessage] = Field(default_factory=list)
     context_state: Optional[Dict[str, Any]] = None
     latency_stats: Optional[Dict[str, Any]] = None
 
@@ -619,6 +722,20 @@ Respond in JSON:
     "predicted_follow_up": "<suggested next question or action>"
   }
 }"""
+
+ODIN_WELCOME_MESSAGE = (
+    "Hello! I'm ODIN Copilot. I can help you interpret aircraft movements, NOTAMs, "
+    "and console status. What would you like to know?"
+)
+
+
+def build_welcome_message() -> ChatMessage:
+    """Create the default welcome assistant message for new sessions."""
+    return ChatMessage(
+        role="assistant",
+        content=ODIN_WELCOME_MESSAGE,
+        metadata={"type": "welcome"}
+    )
 
 
 def strip_internal_flags(context: Dict[str, Any]) -> Dict[str, Any]:
@@ -708,9 +825,11 @@ async def create_chat_session(input: ChatSessionCreate):
     """Create a new chat session."""
     session = ChatSession(title=input.title)
     
+    welcome_message = build_welcome_message()
+    session.messages.append(welcome_message)
+    
     # Store in MongoDB
     session_dict = session.model_dump()
-    session_dict['messages'] = []  # Store empty initially
     await db.conversations.insert_one(session_dict)
     
     logger.info(f"Created chat session: {session.session_id}")
@@ -915,11 +1034,12 @@ async def send_chat_message(request: ChatMessageRequest):
 @api_router.post("/chat/session/{session_id}/reset")
 async def reset_chat_session(session_id: str):
     """Clear conversation history for a session."""
+    welcome_message = build_welcome_message()
     result = await db.conversations.update_one(
         {"session_id": session_id},
         {
             "$set": {
-                "messages": [],
+                "messages": [welcome_message.model_dump()],
                 "updated_at": datetime.now(timezone.utc)
             }
         }
