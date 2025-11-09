@@ -57,7 +57,7 @@ export default function App() {
 
   // Phase 1 feature states
   const [showTrails, setShowTrails] = useState(false);
-  const [showAirspace, setShowAirspace] = useState(false);
+  const [showAirspace, setShowAirspace] = useState(true);
   const [airspaceLoaded, setAirspaceLoaded] = useState(false);
   const [atcFacilitiesLoaded, setAtcFacilitiesLoaded] = useState(false);
 
