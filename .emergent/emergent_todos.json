@@ -1,19 +1,19 @@
 [
   {
     "content": "Create ATC facilities data with coordinates and coverage radii",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add backend endpoint for ATC facilities GeoJSON",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Implement coverage circle generation (NM to degrees conversion)",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Add MapLibre layers for coverage circles (fill + outline)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Add facility markers with popups",
