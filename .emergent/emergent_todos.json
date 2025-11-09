@@ -1,11 +1,11 @@
 [
   {
     "content": "Change shift handoff button color from green to cyan",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Change ElevenLabs voice from male to female",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Add backend endpoint for audio transcription with Whisper",
