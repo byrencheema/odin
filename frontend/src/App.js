@@ -1023,6 +1023,25 @@ export default function App() {
             />
             <span className="text-sm text-[#E7E9EA]">Show Boundaries</span>
           </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <Checkbox
+              checked={showATCFacilities}
+              onCheckedChange={(checked) => {
+                setShowATCFacilities(checked);
+                if (map.current) {
+                  const visibility = checked ? 'visible' : 'none';
+                  if (map.current.getLayer('atc-coverage-fill')) {
+                    map.current.setLayoutProperty('atc-coverage-fill', 'visibility', visibility);
+                    map.current.setLayoutProperty('atc-coverage-outline', 'visibility', visibility);
+                    map.current.setLayoutProperty('atc-facilities-markers', 'visibility', visibility);
+                    map.current.setLayoutProperty('atc-facilities-labels', 'visibility', visibility);
+                  }
+                }
+              }}
+              data-testid="atc-facilities-checkbox"
+            />
+            <span className="text-sm text-[#E7E9EA]">Show ATC Facilities</span>
+          </label>
         </div>
         <Separator className="bg-[#3A3E43]" />
         <div>
