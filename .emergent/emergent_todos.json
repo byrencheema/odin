@@ -1,26 +1,30 @@
 [
   {
-    "content": "Fix aircraft SVG icon (replaced with clean simple SVG)",
+    "content": "Install ElevenLabs SDK in backend (elevenlabs)",
     "status": "completed"
   },
   {
-    "content": "Change aircraft trails to transparent dotted lines",
+    "content": "Add backend handoff endpoint with sector detection logic",
     "status": "in_progress"
   },
   {
-    "content": "Search for accurate Bay Area ATC airspace circles data",
+    "content": "Integrate ElevenLabs TTS API for audio generation",
     "status": "pending"
   },
   {
-    "content": "Replace airspace boxes with circles",
+    "content": "Add ElevenLabs API key to backend .env",
     "status": "pending"
   },
   {
-    "content": "Audit and identify missing API keys",
+    "content": "Update frontend App.js to add Handoff button in aircraft info panel",
     "status": "pending"
   },
   {
-    "content": "Restart servers and verify all features work",
+    "content": "Implement handoff audio playback in frontend",
+    "status": "pending"
+  },
+  {
+    "content": "Test handoff feature end-to-end",
     "status": "pending"
   }
 ]
