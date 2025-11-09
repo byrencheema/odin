@@ -1,14 +1,22 @@
 [
   {
-    "content": "Create LiveATC audio feeds data structure",
-    "status": "completed"
+    "content": "View backend handoff endpoint implementation",
+    "status": "in_progress"
   },
   {
-    "content": "Update InfoPanel to show audio players for selected tower",
-    "status": "completed"
+    "content": "Update backend to generate shift handoff briefing using WEST checklist",
+    "status": "pending"
   },
   {
-    "content": "Test tower selection with live audio",
-    "status": "completed"
+    "content": "Add shift handoff button to SimpleChatView component",
+    "status": "pending"
+  },
+  {
+    "content": "Remove handoff button from Flights tab in App.js",
+    "status": "pending"
+  },
+  {
+    "content": "Test shift handoff generation with audio playback",
+    "status": "pending"
   }
 ]
