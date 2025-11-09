@@ -77,11 +77,20 @@ OPENSKY_CLIENT_ID = os.environ.get('OPENSKY_CLIENT_ID')
 OPENSKY_CLIENT_SECRET = os.environ.get('OPENSKY_CLIENT_SECRET')
 OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"
 
+# Simulation Configuration
+ENABLE_SIMULATION = os.environ.get('ENABLE_SIMULATION', 'false').lower() == 'true'
+SIMULATION_AIRCRAFT_COUNT = int(os.environ.get('SIMULATION_AIRCRAFT_COUNT', '15'))
+
 # Token cache (in-memory)
 oauth_token_cache = {
     "access_token": None,
     "expires_at": None
 }
+
+# Simulation mode tracking
+simulation_mode_active = False
+simulation_fail_count = 0
+MAX_FAIL_COUNT = 3  # Switch to simulation after 3 consecutive failures
 
 # Cache for OpenSky data (in-memory)
 opensky_cache = {
