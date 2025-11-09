@@ -6,12 +6,13 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 import uuid
 from datetime import datetime, timezone
 import httpx
 import asyncio
 from aircraft_simulator import get_simulator, reset_simulator
+from notam_engine import get_notam_engine
 
 
 ROOT_DIR = Path(__file__).parent
@@ -39,6 +40,31 @@ class StatusCheck(BaseModel):
 
 class StatusCheckCreate(BaseModel):
     client_name: str
+
+
+class Notam(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str
+    category: str
+    location: str
+    number: str
+    classification: str
+    start: str
+    end: str
+    condition: str
+    emission: int
+    received_at: datetime
+    is_new: bool
+
+
+class NotamFeedResponse(BaseModel):
+    notams: List[Notam]
+    sequence: int
+    last_updated: datetime
+    cadence_seconds: float
+    total_catalog: int
+    window_size: int
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
@@ -70,15 +96,45 @@ async def get_status_checks():
     return status_checks
 
 
+@api_router.get("/notams", response_model=NotamFeedResponse)
+async def get_notam_feed():
+    engine = get_notam_engine()
+    feed_snapshot = await engine.get_feed()
+
+    last_updated_raw = feed_snapshot.get("last_updated")
+    last_updated = (
+        datetime.fromisoformat(last_updated_raw)
+        if isinstance(last_updated_raw, str)
+        else last_updated_raw
+    )
+
+    notam_items = [
+        Notam(**item) if not isinstance(item, Notam) else item
+        for item in feed_snapshot.get("notams", [])
+    ]
+
+    return NotamFeedResponse(
+        notams=notam_items,
+        sequence=feed_snapshot.get("sequence", 0),
+        last_updated=last_updated or datetime.now(timezone.utc),
+        cadence_seconds=float(feed_snapshot.get("cadence_seconds", 0)),
+        total_catalog=int(feed_snapshot.get("total_catalog", len(notam_items))),
+        window_size=int(feed_snapshot.get("window_size", len(notam_items))),
+    )
+
+
 # ===== ODIN ATC Console - OpenSky Network Integration =====
 
 # OAuth2 Configuration
-OPENSKY_CLIENT_ID = os.environ.get('OPENSKY_CLIENT_ID')
-OPENSKY_CLIENT_SECRET = os.environ.get('OPENSKY_CLIENT_SECRET')
+OPENSKY_CLIENT_ID = os.environ.get('OPENSKY_CLIENT_ID') or os.environ.get('CLIENT_ID')
+OPENSKY_CLIENT_SECRET = os.environ.get('OPENSKY_CLIENT_SECRET') or os.environ.get('CLIENT_SECRET')
 OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"
+OPENSKY_API_URL = "https://opensky-network.org/api/states/all"
+OPENSKY_TOKEN_CACHE_SECONDS = 1500  # ~25 minutes
+OPENSKY_TOKEN_REFRESH_BUFFER_SECONDS = 60
 
 # Simulation Configuration
-ENABLE_SIMULATION = os.environ.get('ENABLE_SIMULATION', 'false').lower() == 'true'
+ENABLE_SIMULATION = False
 SIMULATION_AIRCRAFT_COUNT = int(os.environ.get('SIMULATION_AIRCRAFT_COUNT', '15'))
 
 # Token cache (in-memory)
@@ -176,65 +232,12 @@ def normalize_opensky_state(state: List[Any]) -> Optional[Aircraft]:
         return None
 
 
-async def get_opensky_token() -> Optional[str]:
-    """
-    Get valid OAuth2 access token for OpenSky Network API.
-    Tokens expire after 30 minutes, so we cache and refresh as needed.
-    """
-    global oauth_token_cache
-    
-    # Check if we have a valid cached token
-    now = datetime.now(timezone.utc).timestamp()
-    if oauth_token_cache["access_token"] and oauth_token_cache["expires_at"]:
-        if now < oauth_token_cache["expires_at"]:
-            logger.info("Using cached OpenSky OAuth2 token")
-            return oauth_token_cache["access_token"]
-    
-    # Need to fetch a new token
-    if not OPENSKY_CLIENT_ID or not OPENSKY_CLIENT_SECRET:
-        logger.error("OpenSky OAuth2 credentials not configured")
-        return None
-    
-    try:
-        logger.info("Fetching new OpenSky OAuth2 token...")
-        
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.post(
-                OPENSKY_TOKEN_URL,
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-                data={
-                    "grant_type": "client_credentials",
-                    "client_id": OPENSKY_CLIENT_ID,
-                    "client_secret": OPENSKY_CLIENT_SECRET
-                }
-            )
-            
-            if response.status_code == 200:
-                token_data = response.json()
-                access_token = token_data.get("access_token")
-                expires_in = token_data.get("expires_in", 1800)  # Default 30 minutes
-                
-                # Cache the token (subtract 60s buffer for safety)
-                oauth_token_cache["access_token"] = access_token
-                oauth_token_cache["expires_at"] = now + expires_in - 60
-                
-                logger.info(f"Successfully obtained OpenSky OAuth2 token (expires in {expires_in}s)")
-                return access_token
-            else:
-                logger.error(f"Failed to obtain OpenSky token: {response.status_code} - {response.text}")
-                return None
-                
-    except Exception as e:
-        logger.error(f"Error obtaining OpenSky OAuth2 token: {e}")
-        return None
-
-
 async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]:
     """
     Fetch aircraft data from OpenSky Network API with OAuth2 authentication.
     Falls back to simulation if API is unavailable or simulation is enabled.
     """
-    global simulation_mode_active, simulation_fail_count
+    global simulation_mode_active, simulation_fail_count, oauth_token_cache
     
     # If simulation is explicitly enabled, use it immediately
     if ENABLE_SIMULATION and not simulation_mode_active:
@@ -248,80 +251,128 @@ async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]
         simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
         return simulator.get_current_state()
     
-    # Try real OpenSky API
-    try:
-        # Get valid OAuth2 token
-        access_token = await get_opensky_token()
+    params = {
+        "lamin": bbox["lamin"],
+        "lamax": bbox["lamax"],
+        "lomin": bbox["lomin"],
+        "lomax": bbox["lomax"]
+    }
+    
+    async def _get_access_token(force_refresh: bool = False) -> Tuple[Optional[str], bool]:
+        """
+        Retrieve and cache OpenSky OAuth token with ~25 minute TTL.
+        Returns a tuple of (token, fatal_error_flag). When fatal_error_flag is True,
+        callers should not retry and should fail over to simulation immediately.
+        """
+        global oauth_token_cache
+        now_ts = datetime.now(timezone.utc).timestamp()
+        
+        if not force_refresh:
+            cached_token = oauth_token_cache.get("access_token")
+            expires_at = oauth_token_cache.get("expires_at")
+            if cached_token and expires_at and now_ts < expires_at:
+                logger.debug("Using cached OpenSky OAuth token")
+                return cached_token, False
+        
+        if not OPENSKY_CLIENT_ID or not OPENSKY_CLIENT_SECRET:
+            logger.error("OpenSky OAuth credentials are not configured")
+            return None, True
+        
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.post(
+                    OPENSKY_TOKEN_URL,
+                    headers={"Content-Type": "application/x-www-form-urlencoded"},
+                    data={
+                        "grant_type": "client_credentials",
+                        "client_id": OPENSKY_CLIENT_ID,
+                        "client_secret": OPENSKY_CLIENT_SECRET
+                    }
+                )
+        except httpx.RequestError as exc:
+            logger.error(f"Error obtaining OpenSky OAuth token: {exc}")
+            return None, False
+        
+        if response.status_code != 200:
+            logger.error(f"Failed to obtain OpenSky token: {response.status_code} - {response.text}")
+            return None, response.status_code in {400, 401, 403}
+        
+        token_payload = response.json()
+        access_token = token_payload.get("access_token")
         if not access_token:
-            logger.error("Failed to obtain OpenSky OAuth2 token")
-            simulation_fail_count += 1
-            if simulation_fail_count >= MAX_FAIL_COUNT:
-                logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} failures")
-                simulation_mode_active = True
-                simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
-                return simulator.get_current_state()
-            return None
+            logger.error("OpenSky token response did not include an access token")
+            return None, True
         
-        url = "https://opensky-network.org/api/states/all"
-        params = {
-            "lamin": bbox["lamin"],
-            "lamax": bbox["lamax"],
-            "lomin": bbox["lomin"],
-            "lomax": bbox["lomax"]
-        }
-        
-        headers = {
-            "Authorization": f"Bearer {access_token}"
-        }
-        
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(url, params=params, headers=headers)
+        expires_in = int(token_payload.get("expires_in", 1800))
+        capped_expires_in = min(expires_in, OPENSKY_TOKEN_CACHE_SECONDS)
+        cache_seconds = max(capped_expires_in - OPENSKY_TOKEN_REFRESH_BUFFER_SECONDS, 60)
+        cache_seconds = min(cache_seconds, capped_expires_in)  # Never cache longer than the token is valid
+        oauth_token_cache["access_token"] = access_token
+        oauth_token_cache["expires_at"] = datetime.now(timezone.utc).timestamp() + cache_seconds
+        logger.info("Fetched new OpenSky OAuth token")
+        return access_token, False
+    
+    last_error_message = None
+    fatal_failure = False
+    
+    try:
+        for attempt in range(2):  # Attempt once, refresh token and retry on 401
+            access_token, fatal_token_error = await _get_access_token(force_refresh=(attempt == 1))
+            if not access_token:
+                last_error_message = "Unable to acquire OpenSky OAuth token"
+                fatal_failure = fatal_token_error
+                if fatal_failure:
+                    logger.error("Fatal token acquisition error encountered; failing over to simulation")
+                break
+            
+            try:
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    response = await client.get(
+                        OPENSKY_API_URL,
+                        params=params,
+                        headers={"Authorization": f"Bearer {access_token}"}
+                    )
+            except httpx.TimeoutException:
+                last_error_message = "OpenSky API request timed out"
+                logger.error(last_error_message)
+                break
+            except httpx.RequestError as exc:
+                last_error_message = f"OpenSky API request error: {exc}"
+                logger.error(last_error_message)
+                break
             
             if response.status_code == 200:
-                # Success! Reset fail count
                 simulation_fail_count = 0
                 logger.info("Successfully fetched data from OpenSky API")
                 return response.json()
-            elif response.status_code == 401:
-                logger.error("OpenSky API returned 401 Unauthorized - token may have expired")
-                # Clear cached token to force refresh on next request
+            
+            if response.status_code == 401 and attempt == 0:
+                logger.warning("OpenSky API returned 401 Unauthorized; refreshing token and retrying once")
                 oauth_token_cache["access_token"] = None
                 oauth_token_cache["expires_at"] = None
-                simulation_fail_count += 1
-                if simulation_fail_count >= MAX_FAIL_COUNT:
-                    logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} auth failures")
-                    simulation_mode_active = True
-                    simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
-                    return simulator.get_current_state()
-                return None
-            else:
-                logger.error(f"OpenSky API returned status {response.status_code}")
-                simulation_fail_count += 1
-                if simulation_fail_count >= MAX_FAIL_COUNT:
-                    logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} failures")
-                    simulation_mode_active = True
-                    simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
-                    return simulator.get_current_state()
-                return None
-                
-    except httpx.TimeoutException:
-        logger.error("OpenSky API request timed out")
+                continue
+            
+            last_error_message = f"OpenSky API returned status {response.status_code}: {response.text}"
+            logger.error(last_error_message)
+            break
+    except Exception as exc:
+        last_error_message = f"Unexpected OpenSky API error: {exc}"
+        logger.error(last_error_message)
+    
+    # Handle failure by optionally transitioning to simulation mode
+    if fatal_failure:
+        simulation_fail_count = max(simulation_fail_count, MAX_FAIL_COUNT)
+    else:
         simulation_fail_count += 1
-        if simulation_fail_count >= MAX_FAIL_COUNT:
-            logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} timeouts")
-            simulation_mode_active = True
-            simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
-            return simulator.get_current_state()
-        return None
-    except Exception as e:
-        logger.error(f"OpenSky API error: {e}")
-        simulation_fail_count += 1
-        if simulation_fail_count >= MAX_FAIL_COUNT:
-            logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} errors")
-            simulation_mode_active = True
-            simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
-            return simulator.get_current_state()
-        return None
+    logger.warning(f"OpenSky fetch failed (attempt {simulation_fail_count}): {last_error_message}")
+    
+    if simulation_fail_count >= MAX_FAIL_COUNT:
+        logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} consecutive failures")
+        simulation_mode_active = True
+        simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+        return simulator.get_current_state()
+    
+    return None
 
 
 @api_router.get("/air/opensky", response_model=AirPictureResponse)
