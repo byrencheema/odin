@@ -371,14 +371,16 @@ async def get_opensky_aircraft():
         opensky_cache["timestamp"] = raw_data.get("time", current_timestamp)
         opensky_cache["is_stale"] = False
         
-        logger.info(f"Successfully fetched {len(aircraft_list)} aircraft")
+        status_msg = "simulated" if simulation_mode_active else "ok"
+        logger.info(f"Successfully fetched {len(aircraft_list)} aircraft [{status_msg}]")
         
         return AirPictureResponse(
             aircraft=aircraft_list,
             timestamp=opensky_cache["timestamp"],
-            data_status="ok",
+            data_status=status_msg,
             aircraft_count=len(aircraft_list),
-            bbox=BAY_AREA_BBOX
+            bbox=BAY_AREA_BBOX,
+            is_simulated=simulation_mode_active
         )
     
     # If fetch failed but we have stale cache, return it
