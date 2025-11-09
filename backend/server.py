@@ -657,8 +657,8 @@ if not OPENROUTER_API_KEY:
     logger.warning("OpenRouter API key not configured - chat will be unavailable")
 
 
-# Chat Models
-class ChatMessage(BaseModel):
+# Simple Chat Models
+class SimpleChatRequest(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     role: str  # "user", "assistant", "system"
