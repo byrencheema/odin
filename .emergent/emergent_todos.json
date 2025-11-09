@@ -1,14 +1,14 @@
 [
   {
-    "content": "Add ODIN head icon as favicon",
-    "status": "completed"
+    "content": "Set ATC facilities and boundaries to default ON for debugging",
+    "status": "in_progress"
   },
   {
-    "content": "Debug ATC towers not showing on map",
-    "status": "completed"
+    "content": "Take screenshots and verify layers visible",
+    "status": "pending"
   },
   {
-    "content": "Debug boundaries not showing on map",
-    "status": "completed"
+    "content": "Debug layer loading issues",
+    "status": "pending"
   }
 ]
