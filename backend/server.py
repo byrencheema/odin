@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, timezone
 import httpx
 import asyncio
+from aircraft_simulator import get_simulator, reset_simulator
 
 
 ROOT_DIR = Path(__file__).parent
