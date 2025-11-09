@@ -839,9 +839,9 @@ async def generate_handoff(request: HandoffRequest):
         audio_base64 = None
         if elevenlabs_client:
             try:
-                # Use a professional male voice suitable for ATC (Adam voice ID)
-                # Adam is known for clear, authoritative delivery
-                voice_id = "pNInz6obpgDQGcFmaJgB"  # Adam voice
+                # Use a professional female voice suitable for ATC (Rachel voice ID)
+                # Rachel is known for clear, authoritative delivery
+                voice_id = "21m00Tcm4TlvDq8ikWAM"  # Rachel voice
                 
                 # Generate audio
                 audio_generator = elevenlabs_client.text_to_speech.convert(
@@ -894,8 +894,8 @@ async def generate_shift_handoff(request: ShiftHandoffRequest):
         audio_base64 = None
         if elevenlabs_client:
             try:
-                # Use a professional male voice suitable for ATC (Adam voice ID)
-                voice_id = "pNInz6obpgDQGcFmaJgB"  # Adam voice - clear, authoritative
+                # Use a professional female voice suitable for ATC (Rachel voice ID)
+                voice_id = "21m00Tcm4TlvDq8ikWAM"  # Rachel voice - clear, authoritative
                 
                 # Generate audio
                 audio_generator = elevenlabs_client.text_to_speech.convert(
