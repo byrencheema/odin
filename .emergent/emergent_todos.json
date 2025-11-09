@@ -1,14 +1,6 @@
 [
   {
-    "content": "Add shift handoff button to SimpleChatView component",
-    "status": "completed"
-  },
-  {
-    "content": "Remove handoff button from Flights tab in App.js",
-    "status": "completed"
-  },
-  {
     "content": "Test shift handoff generation with audio playback",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
