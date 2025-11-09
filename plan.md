@@ -452,7 +452,7 @@ Goal: Finalize MVP polish and expose stubs for roadmap features.
 - **Production-ready:** OAuth2 implementation ready for real data when API is available
 
 ### Current Deployment:
-- Preview URL: https://code-navigator-19.preview.emergentagent.com
+- Preview URL: https://skywatcher-7.preview.emergentagent.com
 - Backend: Supervisor-managed FastAPI on port 8001
 - Frontend: Supervisor-managed React dev server on port 3000
 - Database: MongoDB running but not yet used
@@ -605,7 +605,7 @@ SIMULATION_AIRCRAFT_COUNT="20"
 
 **Frontend (`/app/frontend/.env`):**
 ```
-REACT_APP_BACKEND_URL=https://code-navigator-19.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://skywatcher-7.preview.emergentagent.com
 WDS_SOCKET_PORT=443
 REACT_APP_ENABLE_VISUAL_EDITS=false
 ENABLE_HEALTH_CHECK=false
