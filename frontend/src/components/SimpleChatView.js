@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -7,13 +7,67 @@ import { Loader2 } from 'lucide-react';
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
-const SimpleChatView = () => {
+const SimpleChatView = ({
+  infoView = 'flights',
+  selectedAircraft = null,
+  selectedATCFacility = null,
+}) => {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: "Hello! I'm ODIN Copilot. Ask me about aircraft, airspace, or ATC procedures." }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
+
+  const consoleContext = useMemo(() => {
+    const context = {
+      active_panel: infoView || 'flights',
+      focus: 'none'
+    };
+
+    if (selectedAircraft) {
+      context.focus = 'aircraft';
+      context.selected_aircraft = {
+        icao24: selectedAircraft.icao24,
+        callsign: selectedAircraft.callsign || null,
+        origin_country: selectedAircraft.origin_country || null,
+      };
+    } else if (selectedATCFacility) {
+      context.focus = 'atc_facility';
+      context.selected_atc_facility = {
+        id: selectedATCFacility.id,
+        type: selectedATCFacility.type,
+        name: selectedATCFacility.name,
+      };
+    }
+
+    return context;
+  }, [infoView, selectedAircraft, selectedATCFacility]);
+
+  const contextPreface = useMemo(() => {
+    if (!consoleContext) return '';
+
+    const lines = [
+      `Active panel: ${consoleContext.active_panel}`,
+      `Focus: ${consoleContext.focus}`,
+    ];
+
+    if (consoleContext.focus === 'aircraft' && consoleContext.selected_aircraft) {
+      const { icao24, callsign, origin_country } = consoleContext.selected_aircraft;
+      lines.push(`Aircraft ICAO24: ${icao24}`);
+      if (callsign) lines.push(`Callsign: ${callsign}`);
+      if (origin_country) lines.push(`Origin country: ${origin_country}`);
+    }
+
+    if (consoleContext.focus === 'atc_facility' && consoleContext.selected_atc_facility) {
+      const { id, type, name } = consoleContext.selected_atc_facility;
+      lines.push(`ATC Facility: ${name || id}`);
+      lines.push(`Facility ID: ${id}`);
+      lines.push(`Facility Type: ${type}`);
+    }
+
+    return `[[Console Context]]\n${lines.join('\n')}`;
+  }, [consoleContext]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -35,9 +89,14 @@ const SimpleChatView = () => {
 
     try {
       // Send to backend
+      const enrichedMessage = contextPreface
+        ? `${contextPreface}\n\nUser: ${userMessage}`
+        : userMessage;
+
       const response = await axios.post(`${API}/api/chat`, {
-        message: userMessage,
-        history: newMessages.slice(-10) // Send last 10 messages for context
+        message: enrichedMessage,
+        history: newMessages.slice(-10), // Send last 10 messages for context
+        console_context: consoleContext,
       });
 
       // Add assistant response

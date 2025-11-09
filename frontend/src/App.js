@@ -24,6 +24,465 @@ const API = `${BACKEND_URL}/api`;
 // Bay Area center
 const BAY_AREA_CENTER = [-122.4, 37.8];
 
+const formatTimestamp = (value) => {
+  if (!value) {
+    return '—';
+  }
+
+  try {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '—';
+    }
+    return date.toLocaleString('en-US', {
+      hour12: false,
+      month: '2-digit',
+      day: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch (error) {
+    console.error('Failed to format timestamp', error);
+    return '—';
+  }
+};
+
+const FiltersPanel = ({
+  mapRef,
+  showRunways,
+  setShowRunways,
+  showTraffic,
+  setShowTraffic,
+  showTrails,
+  setShowTrails,
+  showAirspace,
+  setShowAirspace,
+  showATCFacilities,
+  setShowATCFacilities,
+  showWeather,
+  setShowWeather,
+}) => {
+  const updateLayerVisibility = (layerIds, visible) => {
+    const mapInstance = mapRef?.current;
+    if (!mapInstance) return;
+
+    layerIds.forEach((layerId) => {
+      if (mapInstance.getLayer(layerId)) {
+        mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+      }
+    });
+  };
+  const toBoolean = (value) => value === true;
+
+  return (
+    <ScrollArea className="h-full p-4" data-testid="filters-panel-scroll">
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airports / Runways</h3>
+          <label className="flex items-center gap-2">
+            <Checkbox checked={showRunways} onCheckedChange={setShowRunways} data-testid="runways-checkbox" />
+            <span className="text-sm text-[#E7E9EA]">Show Runways</span>
+          </label>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Traffic</h3>
+          <div className="space-y-2">
+            <label className="flex items-center gap-2">
+              <Checkbox checked={showTraffic} onCheckedChange={setShowTraffic} data-testid="traffic-checkbox" />
+              <span className="text-sm text-[#E7E9EA]">Show Aircraft</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <Checkbox
+                checked={showTrails}
+                onCheckedChange={(checked) => {
+                  const nextValue = toBoolean(checked);
+                  setShowTrails(nextValue);
+                  updateLayerVisibility(['aircraft-trails'], nextValue);
+                }}
+                data-testid="trails-checkbox"
+              />
+              <span className="text-sm text-[#E7E9EA]">Show Trails</span>
+            </label>
+          </div>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airspace</h3>
+          <label className="flex items-center gap-2">
+            <Checkbox
+              checked={showAirspace}
+              onCheckedChange={(checked) => {
+                const nextValue = toBoolean(checked);
+                setShowAirspace(nextValue);
+                updateLayerVisibility(
+                  ['airspace-fill', 'airspace-outline', 'airspace-labels'],
+                  nextValue
+                );
+              }}
+              data-testid="airspace-checkbox"
+            />
+            <span className="text-sm text-[#E7E9EA]">Show Boundaries</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <Checkbox
+              checked={showATCFacilities}
+              onCheckedChange={(checked) => {
+                const nextValue = toBoolean(checked);
+                setShowATCFacilities(nextValue);
+                updateLayerVisibility(
+                  [
+                    'atc-coverage-fill',
+                    'atc-coverage-outline',
+                    'atc-facilities-glow',
+                    'atc-facilities-markers',
+                    'atc-facilities-labels'
+                  ],
+                  nextValue
+                );
+              }}
+              data-testid="atc-facilities-checkbox"
+            />
+            <span className="text-sm text-[#E7E9EA]">Show ATC Facilities</span>
+          </label>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Layers</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm">Weather</Label>
+              <Switch
+                checked={showWeather}
+                onCheckedChange={(checked) => {
+                  const nextValue = toBoolean(checked);
+                  setShowWeather(nextValue);
+                  updateLayerVisibility(['weather-layer'], nextValue);
+                }}
+                data-testid="weather-switch"
+              />
+            </div>
+          </div>
+        </div>
+        <Separator className="bg-[#3A3E43]" />
+        <div>
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Altitude Legend</h3>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#60A5FA'}} />
+              <span className="text-xs text-[#E7E9EA]">0-5k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#4DD7E6'}} />
+              <span className="text-xs text-[#E7E9EA]">5-10k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#6BEA76'}} />
+              <span className="text-xs text-[#E7E9EA]">10-18k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#FFC857'}} />
+              <span className="text-xs text-[#E7E9EA]">18-30k ft</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#E879F9'}} />
+              <span className="text-xs text-[#E7E9EA]">30k+ ft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ScrollArea>
+  );
+};
+
+const InfoPanel = ({
+  infoView,
+  onInfoViewChange,
+  selectedAircraft,
+  selectedATCFacility,
+  notams,
+  notamMeta,
+  generateHandoff,
+  handoffLoading,
+  handoffData,
+  audioRef,
+}) => {
+  const renderFlightsView = () => {
+    if (selectedATCFacility) {
+      const typeLabel = selectedATCFacility.type === 'tower' ? 'Tower' :
+                       selectedATCFacility.type === 'tracon' ? 'TRACON' : 'Center';
+      const typeColor = selectedATCFacility.type === 'tower' ? '#4DD7E6' :
+                       selectedATCFacility.type === 'tracon' ? '#FF6B6B' : '#6BEA76';
+
+      return (
+        <ScrollArea className="h-full p-4" data-testid="atc-facility-info">
+          <Card className="bg-[#0E0F11] border-[#3A3E43]">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="font-['Azeret_Mono',monospace] text-lg" style={{color: typeColor}} data-testid="facility-id">
+                  {selectedATCFacility.id}
+                </div>
+                <div className="text-xs px-2 py-1 rounded" style={{backgroundColor: typeColor, color: '#0A0B0C'}}>
+                  {typeLabel.toUpperCase()}
+                </div>
+              </div>
+              <div className="text-sm text-[#E7E9EA] mt-2">{selectedATCFacility.name}</div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-frequency">
+                    {selectedATCFacility.frequency}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">COVERAGE</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-coverage">
+                    {selectedATCFacility.coverage_nm} NM
+                  </div>
+                </div>
+              </div>
+              <Separator className="bg-[#3A3E43]" />
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ELEVATION</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="facility-elevation">
+                  {selectedATCFacility.elevation_ft} ft MSL
+                </div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">TYPE</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="facility-type">
+                  {typeLabel} ({selectedATCFacility.type.toUpperCase()})
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
+            <p className="text-xs text-[#A9ADB1] italic">
+              {selectedATCFacility.type === 'tower' && 'Controls aircraft on the ground and in the immediate vicinity of the airport.'}
+              {selectedATCFacility.type === 'tracon' && 'Provides radar services to aircraft arriving and departing within terminal airspace.'}
+              {selectedATCFacility.type === 'center' && 'Provides en-route air traffic control services for aircraft at higher altitudes.'}
+            </p>
+          </div>
+        </ScrollArea>
+      );
+    }
+
+    if (!selectedAircraft) {
+      return (
+        <div className="h-full flex items-center justify-center text-[#A9ADB1] px-4" data-testid="info-empty">
+          <p className="text-center text-sm">Click an aircraft or ATC facility to view details</p>
+        </div>
+      );
+    }
+
+    const callsign = (selectedAircraft.callsign || selectedAircraft.icao24).trim();
+    const alt = selectedAircraft.baro_altitude ? Math.round(selectedAircraft.baro_altitude * 3.28084) : '---';
+    const spd = selectedAircraft.velocity ? Math.round(selectedAircraft.velocity * 1.94384) : '---';
+    const hdg = selectedAircraft.true_track ? Math.round(selectedAircraft.true_track) : '---';
+    const vspd = selectedAircraft.vertical_rate ? Math.round(selectedAircraft.vertical_rate * 196.85) : '---';
+
+    return (
+      <ScrollArea className="h-full p-4" data-testid="aircraft-info">
+        <Card className="bg-[#0E0F11] border-[#3A3E43]">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="font-['Azeret_Mono',monospace] text-lg text-[#4DD7E6]" data-testid="info-callsign">
+                {callsign}
+              </div>
+              <div className="text-xs text-[#A9ADB1]" data-testid="info-icao">{selectedAircraft.icao24.toUpperCase()}</div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ALTITUDE</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-altitude">{alt} ft</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">SPEED</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-speed">{spd} kts</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">HEADING</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-heading">{hdg}°</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">V/S</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-vspd">{vspd} fpm</div>
+              </div>
+            </div>
+            <Separator className="bg-[#3A3E43]" />
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ORIGIN</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="info-origin">{selectedAircraft.origin_country}</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ON GROUND</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="info-ground">{selectedAircraft.on_ground ? 'Yes' : 'No'}</div>
+              </div>
+              {selectedAircraft.squawk && (
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">SQUAWK</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-squawk">{selectedAircraft.squawk}</div>
+                </div>
+              )}
+            </div>
+            <Separator className="bg-[#3A3E43] mt-4" />
+            <Button 
+              onClick={generateHandoff}
+              disabled={handoffLoading}
+              className="w-full bg-[#4DD7E6] hover:bg-[#3AC5D5] text-[#0A0B0C] font-medium"
+              data-testid="handoff-button"
+            >
+              {handoffLoading ? 'Generating...' : 'Generate Handoff'}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {handoffData && (
+          <Card className="mt-4 bg-[#0E0F11] border-[#3A3E43]">
+            <CardHeader>
+              <div className="text-sm font-medium text-[#6BEA76]">Handoff Ready</div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">NEXT SECTOR</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="handoff-sector">{handoffData.next_sector}</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="handoff-frequency">{handoffData.next_frequency}</div>
+              </div>
+              <Separator className="bg-[#3A3E43]" />
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-2">HANDOFF SCRIPT</div>
+                <div className="text-xs text-[#E7E9EA] leading-relaxed p-3 bg-[#0A0B0C] rounded border border-[#3A3E43]" data-testid="handoff-script">
+                  {handoffData.handoff_script}
+                </div>
+              </div>
+              {handoffData.audio_base64 && (
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    onClick={() => audioRef.current?.play()}
+                    className="flex-1 border-[#3A3E43] text-[#E7E9EA] hover:bg-[#3A3E43]"
+                    data-testid="replay-audio-button"
+                  >
+                    Replay Audio
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
+          <p className="text-xs text-[#A9ADB1] italic">Future: AI copilot insights will appear here</p>
+        </div>
+      </ScrollArea>
+    );
+  };
+
+  const renderChatView = () => (
+    <SimpleChatView
+      infoView={infoView}
+      selectedAircraft={selectedAircraft}
+      selectedATCFacility={selectedATCFacility}
+    />
+  );
+
+  const renderNotamsView = () => (
+    <ScrollArea className="h-full p-4" data-testid="notam-feed">
+      <Card className="bg-[#0E0F11] border-[#3A3E43]">
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-xs uppercase tracking-[0.25em] text-[#A9ADB1] mb-1">NOTAM Feed</div>
+              <div className="font-['Azeret_Mono',monospace] text-[#4DD7E6] text-lg">Bay Area Cluster</div>
+            </div>
+            <div className="text-xs text-right text-[#A9ADB1] font-['Azeret_Mono',monospace]">
+              #{String(notamMeta.sequence || 0).padStart(4, '0')}
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#A9ADB1]">
+            <span>Last update {formatTimestamp(notamMeta.lastUpdated)}</span>
+            <span>Cadence ~{notamMeta.cadenceSeconds ? notamMeta.cadenceSeconds.toFixed(1) : '5.0'}s</span>
+            <span>Catalog {notamMeta.totalCatalog || notams.length}</span>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {notams.length === 0 ? (
+            <div className="text-sm text-[#A9ADB1] italic">Waiting for NOTAM activity...</div>
+          ) : (
+            notams.map((item) => (
+              <div
+                key={`${item.id}-${item.emission}`}
+                className="border-l-2 border-[#4DD7E6]/40 pl-3"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-['Azeret_Mono',monospace] text-sm text-[#E7E9EA]">
+                    {item.location} · {item.number}
+                  </span>
+                  <span className="text-xs text-[#A9ADB1] uppercase tracking-wide">{item.classification}</span>
+                </div>
+                <div className="mt-1 text-xs text-[#A9ADB1] uppercase tracking-wide">
+                  {item.category}
+                </div>
+                <div className="mt-2 text-sm text-[#E7E9EA] leading-5">{item.condition}</div>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-[#A9ADB1] font-['Azeret_Mono',monospace]">
+                  <div>Start {item.start || '—'}</div>
+                  <div>End {item.end || '—'}</div>
+                  <div className={item.is_new ? 'text-[#6BEA76]' : ''}>
+                    Emission #{String(item.emission || 0).padStart(4, '0')}
+                  </div>
+                  <div>{formatTimestamp(item.received_at)}</div>
+                </div>
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
+    </ScrollArea>
+  );
+
+  const tabs = [
+    { id: 'flights', label: 'Flights' },
+    { id: 'chat', label: 'Chat' },
+    { id: 'notams', label: 'NOTAMs' },
+  ];
+
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center gap-2 border-b border-[#3A3E43] px-4 py-3">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => onInfoViewChange(tab.id)}
+            className={`rounded-md px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+              infoView === tab.id
+                ? 'bg-[#1A1C1F] text-[#E7E9EA] border border-[#4DD7E6]/60'
+                : 'text-[#A9ADB1] hover:text-[#E7E9EA]'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div className="flex-1 overflow-hidden">
+        {infoView === 'flights' && renderFlightsView()}
+        {infoView === 'chat' && renderChatView()}
+        {infoView === 'notams' && renderNotamsView()}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [aircraft, setAircraft] = useState([]);
   const [selectedAircraft, setSelectedAircraft] = useState(null);
@@ -110,30 +569,6 @@ export default function App() {
     const interval = setInterval(updateClocks, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const formatTimestamp = (value) => {
-    if (!value) {
-      return '—';
-    }
-
-    try {
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) {
-        return '—';
-      }
-      return date.toLocaleString('en-US', {
-        hour12: false,
-        month: '2-digit',
-        day: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch (error) {
-      console.error('Failed to format timestamp', error);
-      return '—';
-    }
-  };
 
   // Phase 1: Helper functions
   const getAltitudeColor = (altitudeMeters) => {
@@ -936,13 +1371,26 @@ export default function App() {
   }, [fetchNotams]);
 
   useEffect(() => {
+    if (infoView !== 'notams') {
+      return undefined;
+    }
+
+    fetchNotams();
+  }, [infoView, fetchNotams]);
+
+  useEffect(() => {
+    if (infoView !== 'notams') {
+      return undefined;
+    }
+
     const intervalMs = Math.max(
       (notamMeta.cadenceSeconds ? notamMeta.cadenceSeconds * 1000 : 5000),
       3500
     );
+
     const interval = setInterval(fetchNotams, intervalMs);
     return () => clearInterval(interval);
-  }, [fetchNotams, notamMeta.cadenceSeconds]);
+  }, [fetchNotams, notamMeta.cadenceSeconds, infoView]);
 
   // Handle aircraft selection via MapLibre features
   useEffect(() => {
@@ -1006,403 +1454,6 @@ export default function App() {
       }
     };
   }, [aircraft]);
-
-  const FiltersPanel = () => (
-    <ScrollArea className="h-full p-4" data-testid="filters-panel-scroll">
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airports / Runways</h3>
-          <label className="flex items-center gap-2">
-            <Checkbox checked={showRunways} onCheckedChange={setShowRunways} data-testid="runways-checkbox" />
-            <span className="text-sm text-[#E7E9EA]">Show Runways</span>
-          </label>
-        </div>
-        <Separator className="bg-[#3A3E43]" />
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Traffic</h3>
-          <div className="space-y-2">
-            <label className="flex items-center gap-2">
-              <Checkbox checked={showTraffic} onCheckedChange={setShowTraffic} data-testid="traffic-checkbox" />
-              <span className="text-sm text-[#E7E9EA]">Show Aircraft</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <Checkbox
-                checked={showTrails}
-                onCheckedChange={(checked) => {
-                  setShowTrails(checked);
-                  if (map.current && map.current.getLayer('aircraft-trails')) {
-                    map.current.setLayoutProperty('aircraft-trails', 'visibility',
-                      checked ? 'visible' : 'none');
-                  }
-                }}
-                data-testid="trails-checkbox"
-              />
-              <span className="text-sm text-[#E7E9EA]">Show Trails</span>
-            </label>
-          </div>
-        </div>
-        <Separator className="bg-[#3A3E43]" />
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airspace</h3>
-          <label className="flex items-center gap-2">
-            <Checkbox
-              checked={showAirspace}
-              onCheckedChange={(checked) => {
-                setShowAirspace(checked);
-                if (map.current) {
-                  const visibility = checked ? 'visible' : 'none';
-                  if (map.current.getLayer('airspace-fill')) {
-                    map.current.setLayoutProperty('airspace-fill', 'visibility', visibility);
-                    map.current.setLayoutProperty('airspace-outline', 'visibility', visibility);
-                    map.current.setLayoutProperty('airspace-labels', 'visibility', visibility);
-                  }
-                }
-              }}
-              data-testid="airspace-checkbox"
-            />
-            <span className="text-sm text-[#E7E9EA]">Show Boundaries</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <Checkbox
-              checked={showATCFacilities}
-              onCheckedChange={(checked) => {
-                setShowATCFacilities(checked);
-                if (map.current) {
-                  const visibility = checked ? 'visible' : 'none';
-                  if (map.current.getLayer('atc-coverage-fill')) {
-                    map.current.setLayoutProperty('atc-coverage-fill', 'visibility', visibility);
-                    map.current.setLayoutProperty('atc-coverage-outline', 'visibility', visibility);
-                    map.current.setLayoutProperty('atc-facilities-glow', 'visibility', visibility);
-                    map.current.setLayoutProperty('atc-facilities-markers', 'visibility', visibility);
-                    map.current.setLayoutProperty('atc-facilities-labels', 'visibility', visibility);
-                  }
-                }
-              }}
-              data-testid="atc-facilities-checkbox"
-            />
-            <span className="text-sm text-[#E7E9EA]">Show ATC Facilities</span>
-          </label>
-        </div>
-        <Separator className="bg-[#3A3E43]" />
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Layers</h3>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm">Weather</Label>
-              <Switch
-                checked={showWeather}
-                onCheckedChange={(checked) => {
-                  setShowWeather(checked);
-                  if (map.current && map.current.getLayer('weather-layer')) {
-                    map.current.setLayoutProperty('weather-layer', 'visibility',
-                      checked ? 'visible' : 'none');
-                  }
-                }}
-                data-testid="weather-switch"
-              />
-            </div>
-          </div>
-        </div>
-        <Separator className="bg-[#3A3E43]" />
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Altitude Legend</h3>
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#60A5FA'}} />
-              <span className="text-xs text-[#E7E9EA]">0-5k ft</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#4DD7E6'}} />
-              <span className="text-xs text-[#E7E9EA]">5-10k ft</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#6BEA76'}} />
-              <span className="text-xs text-[#E7E9EA]">10-18k ft</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#FFC857'}} />
-              <span className="text-xs text-[#E7E9EA]">18-30k ft</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{backgroundColor: '#E879F9'}} />
-              <span className="text-xs text-[#E7E9EA]">30k+ ft</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ScrollArea>
-  );
-
-  const InfoPanel = () => {
-    const renderFlightsView = () => {
-      // Show ATC facility details if selected
-      if (selectedATCFacility) {
-        const typeLabel = selectedATCFacility.type === 'tower' ? 'Tower' : 
-                         selectedATCFacility.type === 'tracon' ? 'TRACON' : 'Center';
-        const typeColor = selectedATCFacility.type === 'tower' ? '#4DD7E6' : 
-                         selectedATCFacility.type === 'tracon' ? '#FF6B6B' : '#6BEA76';
-        
-        return (
-          <ScrollArea className="h-full p-4" data-testid="atc-facility-info">
-            <Card className="bg-[#0E0F11] border-[#3A3E43]">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="font-['Azeret_Mono',monospace] text-lg" style={{color: typeColor}} data-testid="facility-id">
-                    {selectedATCFacility.id}
-                  </div>
-                  <div className="text-xs px-2 py-1 rounded" style={{backgroundColor: typeColor, color: '#0A0B0C'}}>
-                    {typeLabel.toUpperCase()}
-                  </div>
-                </div>
-                <div className="text-sm text-[#E7E9EA] mt-2">{selectedATCFacility.name}</div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
-                    <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-frequency">
-                      {selectedATCFacility.frequency}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[#A9ADB1] text-xs mb-1">COVERAGE</div>
-                    <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-coverage">
-                      {selectedATCFacility.coverage_nm} NM
-                    </div>
-                  </div>
-                </div>
-                <Separator className="bg-[#3A3E43]" />
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">ELEVATION</div>
-                  <div className="text-sm text-[#E7E9EA]" data-testid="facility-elevation">
-                    {selectedATCFacility.elevation_ft} ft MSL
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">TYPE</div>
-                  <div className="text-sm text-[#E7E9EA]" data-testid="facility-type">
-                    {typeLabel} ({selectedATCFacility.type.toUpperCase()})
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
-              <p className="text-xs text-[#A9ADB1] italic">
-                {selectedATCFacility.type === 'tower' && 'Controls aircraft on the ground and in the immediate vicinity of the airport.'}
-                {selectedATCFacility.type === 'tracon' && 'Provides radar services to aircraft arriving and departing within terminal airspace.'}
-                {selectedATCFacility.type === 'center' && 'Provides en-route air traffic control services for aircraft at higher altitudes.'}
-              </p>
-            </div>
-          </ScrollArea>
-        );
-      }
-      
-      if (!selectedAircraft) {
-        return (
-          <div className="h-full flex items-center justify-center text-[#A9ADB1] px-4" data-testid="info-empty">
-            <p className="text-center text-sm">Click an aircraft or ATC facility to view details</p>
-          </div>
-        );
-      }
-
-      const callsign = (selectedAircraft.callsign || selectedAircraft.icao24).trim();
-      const alt = selectedAircraft.baro_altitude ? Math.round(selectedAircraft.baro_altitude * 3.28084) : '---';
-      const spd = selectedAircraft.velocity ? Math.round(selectedAircraft.velocity * 1.94384) : '---';
-      const hdg = selectedAircraft.true_track ? Math.round(selectedAircraft.true_track) : '---';
-      const vspd = selectedAircraft.vertical_rate ? Math.round(selectedAircraft.vertical_rate * 196.85) : '---';
-
-      return (
-        <ScrollArea className="h-full p-4" data-testid="aircraft-info">
-          <Card className="bg-[#0E0F11] border-[#3A3E43]">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="font-['Azeret_Mono',monospace] text-lg text-[#4DD7E6]" data-testid="info-callsign">
-                  {callsign}
-                </div>
-                <div className="text-xs text-[#A9ADB1]" data-testid="info-icao">{selectedAircraft.icao24.toUpperCase()}</div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">ALTITUDE</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-alt">{alt} ft</div>
-                </div>
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">SPEED</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-spd">{spd} kts</div>
-                </div>
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">HEADING</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-hdg">{hdg}°</div>
-                </div>
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">V/S</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-vspd">{vspd} fpm</div>
-                </div>
-              </div>
-              <Separator className="bg-[#3A3E43]" />
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">ORIGIN</div>
-                <div className="text-sm text-[#E7E9EA]" data-testid="info-origin">{selectedAircraft.origin_country}</div>
-              </div>
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">ON GROUND</div>
-                <div className="text-sm text-[#E7E9EA]" data-testid="info-ground">{selectedAircraft.on_ground ? 'Yes' : 'No'}</div>
-              </div>
-              {selectedAircraft.squawk && (
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">SQUAWK</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-squawk">{selectedAircraft.squawk}</div>
-                </div>
-              )}
-              <Separator className="bg-[#3A3E43] mt-4" />
-              <Button 
-                onClick={generateHandoff}
-                disabled={handoffLoading}
-                className="w-full bg-[#4DD7E6] hover:bg-[#3AC5D5] text-[#0A0B0C] font-medium"
-                data-testid="handoff-button"
-              >
-                {handoffLoading ? 'Generating...' : 'Generate Handoff'}
-              </Button>
-            </CardContent>
-          </Card>
-          
-          {handoffData && (
-            <Card className="mt-4 bg-[#0E0F11] border-[#3A3E43]">
-              <CardHeader>
-                <div className="text-sm font-medium text-[#6BEA76]">Handoff Ready</div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">NEXT SECTOR</div>
-                  <div className="text-sm text-[#E7E9EA]" data-testid="handoff-sector">{handoffData.next_sector}</div>
-                </div>
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
-                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="handoff-frequency">{handoffData.next_frequency}</div>
-                </div>
-                <Separator className="bg-[#3A3E43]" />
-                <div>
-                  <div className="text-[#A9ADB1] text-xs mb-2">HANDOFF SCRIPT</div>
-                  <div className="text-xs text-[#E7E9EA] leading-relaxed p-3 bg-[#0A0B0C] rounded border border-[#3A3E43]" data-testid="handoff-script">
-                    {handoffData.handoff_script}
-                  </div>
-                </div>
-                {handoffData.audio_base64 && (
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm"
-                      variant="outline"
-                      onClick={() => audioRef.current?.play()}
-                      className="flex-1 border-[#3A3E43] text-[#E7E9EA] hover:bg-[#3A3E43]"
-                      data-testid="replay-audio-button"
-                    >
-                      Replay Audio
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-          
-          <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
-            <p className="text-xs text-[#A9ADB1] italic">Future: AI copilot insights will appear here</p>
-          </div>
-        </ScrollArea>
-      );
-    };
-
-    const renderChatView = () => (
-      <SimpleChatView />
-    );
-
-    const renderNotamsView = () => (
-      <ScrollArea className="h-full p-4" data-testid="notam-feed">
-        <Card className="bg-[#0E0F11] border-[#3A3E43]">
-          <CardHeader className="pb-4">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-xs uppercase tracking-[0.25em] text-[#A9ADB1] mb-1">NOTAM Feed</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#4DD7E6] text-lg">Bay Area Cluster</div>
-              </div>
-              <div className="text-xs text-right text-[#A9ADB1] font-['Azeret_Mono',monospace]">
-                #{String(notamMeta.sequence || 0).padStart(4, '0')}
-              </div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#A9ADB1]">
-              <span>Last update {formatTimestamp(notamMeta.lastUpdated)}</span>
-              <span>Cadence ~{notamMeta.cadenceSeconds ? notamMeta.cadenceSeconds.toFixed(1) : '5.0'}s</span>
-              <span>Catalog {notamMeta.totalCatalog || notams.length}</span>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {notams.length === 0 ? (
-              <div className="text-sm text-[#A9ADB1] italic">Waiting for NOTAM activity...</div>
-            ) : (
-              notams.map((item) => (
-                <div
-                  key={`${item.id}-${item.emission}`}
-                  className="border-l-2 border-[#4DD7E6]/40 pl-3"
-                >
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-['Azeret_Mono',monospace] text-sm text-[#E7E9EA]">
-                      {item.location} · {item.number}
-                    </span>
-                    <span className="text-xs text-[#A9ADB1] uppercase tracking-wide">{item.classification}</span>
-                  </div>
-                  <div className="mt-1 text-xs text-[#A9ADB1] uppercase tracking-wide">
-                    {item.category}
-                  </div>
-                  <div className="mt-2 text-sm text-[#E7E9EA] leading-5">{item.condition}</div>
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-[#A9ADB1] font-['Azeret_Mono',monospace]">
-                    <div>Start {item.start || '—'}</div>
-                    <div>End {item.end || '—'}</div>
-                    <div className={item.is_new ? 'text-[#6BEA76]' : ''}>
-                      Emission #{String(item.emission || 0).padStart(4, '0')}
-                    </div>
-                    <div>{formatTimestamp(item.received_at)}</div>
-                  </div>
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </ScrollArea>
-    );
-
-    const tabs = [
-      { id: 'flights', label: 'Flights' },
-      { id: 'chat', label: 'Chat' },
-      { id: 'notams', label: 'NOTAMs' },
-    ];
-
-    return (
-      <div className="flex h-full flex-col">
-        <div className="flex items-center gap-2 border-b border-[#3A3E43] px-4 py-3">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setInfoView(tab.id)}
-              className={`rounded-md px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
-                infoView === tab.id
-                  ? 'bg-[#1A1C1F] text-[#E7E9EA] border border-[#4DD7E6]/60'
-                  : 'text-[#A9ADB1] hover:text-[#E7E9EA]'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex-1 overflow-hidden">
-          {infoView === 'flights' && renderFlightsView()}
-          {infoView === 'chat' && renderChatView()}
-          {infoView === 'notams' && renderNotamsView()}
-        </div>
-      </div>
-    );
-  };
 
   const getStatusColor = () => {
     switch (dataStatus) {
@@ -1478,7 +1529,21 @@ export default function App() {
                 className="h-full overflow-hidden rounded-lg border border-[#3A3E43] bg-[#0E0F11] shadow-xl pointer-events-auto"
                 data-testid="filters-panel"
               >
-                <FiltersPanel />
+                <FiltersPanel
+                  mapRef={map}
+                  showRunways={showRunways}
+                  setShowRunways={setShowRunways}
+                  showTraffic={showTraffic}
+                  setShowTraffic={setShowTraffic}
+                  showTrails={showTrails}
+                  setShowTrails={setShowTrails}
+                  showAirspace={showAirspace}
+                  setShowAirspace={setShowAirspace}
+                  showATCFacilities={showATCFacilities}
+                  setShowATCFacilities={setShowATCFacilities}
+                  showWeather={showWeather}
+                  setShowWeather={setShowWeather}
+                />
               </div>
             </ResizablePanel>
 
@@ -1501,7 +1566,18 @@ export default function App() {
                 className="h-full overflow-hidden rounded-lg border border-[#3A3E43] bg-[#0E0F11] shadow-xl pointer-events-auto"
                 data-testid="info-panel"
               >
-                <InfoPanel />
+                <InfoPanel
+                  infoView={infoView}
+                  onInfoViewChange={setInfoView}
+                  selectedAircraft={selectedAircraft}
+                  selectedATCFacility={selectedATCFacility}
+                  notams={notams}
+                  notamMeta={notamMeta}
+                  generateHandoff={generateHandoff}
+                  handoffLoading={handoffLoading}
+                  handoffData={handoffData}
+                  audioRef={audioRef}
+                />
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
