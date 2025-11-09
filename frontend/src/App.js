@@ -1529,10 +1529,7 @@ export default function App() {
                   selectedATCFacility={selectedATCFacility}
                   notams={notams}
                   notamMeta={notamMeta}
-                  generateHandoff={generateHandoff}
-                  handoffLoading={handoffLoading}
-                  handoffData={handoffData}
-                  audioRef={audioRef}
+                  aircraft={aircraft}
                 />
               </div>
             </ResizablePanel>
