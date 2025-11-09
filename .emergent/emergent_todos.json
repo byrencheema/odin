@@ -1,14 +1,14 @@
 [
   {
     "content": "Debug InfoPanel constant re-rendering issue",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Fix state causing re-renders",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test typing in chat without interruption",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
