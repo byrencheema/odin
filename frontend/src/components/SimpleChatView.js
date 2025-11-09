@@ -216,15 +216,28 @@ const SimpleChatView = ({
             Send
           </Button>
         </div>
-        <Button
-          onClick={() => setMessages([{ role: 'assistant', content: "Hello! I'm ODIN Copilot. Ask me about aircraft, airspace, or ATC procedures." }])}
-          variant="ghost"
-          size="sm"
-          className="mt-2 text-[#A9ADB1] hover:text-[#E7E9EA]"
-        >
-          Clear Chat
-        </Button>
+        <div className="flex gap-2 mt-2">
+          <Button
+            onClick={handleShiftHandoff}
+            disabled={handoffLoading}
+            className="flex-1 bg-[#6BEA76] hover:bg-[#5AD966] text-[#0A0B0C] font-medium"
+            data-testid="shift-handoff-button"
+          >
+            {handoffLoading ? 'Generating...' : 'Automate Shift Handoff'}
+          </Button>
+          <Button
+            onClick={() => setMessages([{ role: 'assistant', content: "Hello! I'm ODIN Copilot. Ask me about aircraft, airspace, or ATC procedures." }])}
+            variant="ghost"
+            size="sm"
+            className="text-[#A9ADB1] hover:text-[#E7E9EA]"
+          >
+            Clear
+          </Button>
+        </div>
       </div>
+      
+      {/* Hidden audio element for shift handoff playback */}
+      <audio ref={audioRef} style={{ display: 'none' }} />
     </div>
   );
 };
