@@ -5,19 +5,19 @@
   },
   {
     "content": "Add backend handoff endpoint with sector detection logic",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Integrate ElevenLabs TTS API for audio generation",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Add ElevenLabs API key to backend .env",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Update frontend App.js to add Handoff button in aircraft info panel",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Implement handoff audio playback in frontend",
