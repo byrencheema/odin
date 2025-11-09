@@ -1,14 +1,14 @@
 [
   {
-    "content": "Debug InfoPanel constant re-rendering issue",
-    "status": "completed"
+    "content": "Create LiveATC audio feeds data structure",
+    "status": "in_progress"
   },
   {
-    "content": "Fix state causing re-renders",
-    "status": "completed"
+    "content": "Update InfoPanel to show audio players for selected tower",
+    "status": "pending"
   },
   {
-    "content": "Test typing in chat without interruption",
-    "status": "completed"
+    "content": "Test tower selection with live audio",
+    "status": "pending"
   }
 ]
