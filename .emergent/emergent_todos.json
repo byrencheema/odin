@@ -1,18 +1,10 @@
 [
   {
-    "content": "Implement OAuth2 token fetching logic in backend with 30min token refresh",
-    "status": "completed"
-  },
-  {
-    "content": "Update OpenSky API requests to use Bearer token authentication",
-    "status": "completed"
-  },
-  {
     "content": "Test OpenSky API with OAuth2 authentication using curl",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Verify aircraft data is being fetched and displayed on map",
-    "status": "pending"
+    "status": "completed"
   }
 ]
