@@ -134,7 +134,7 @@ OPENSKY_TOKEN_CACHE_SECONDS = 1500  # ~25 minutes
 OPENSKY_TOKEN_REFRESH_BUFFER_SECONDS = 60
 
 # Simulation Configuration
-ENABLE_SIMULATION = False
+ENABLE_SIMULATION = os.environ.get('ENABLE_SIMULATION', 'false').lower() == 'true'
 SIMULATION_AIRCRAFT_COUNT = int(os.environ.get('SIMULATION_AIRCRAFT_COUNT', '15'))
 
 # Token cache (in-memory)
