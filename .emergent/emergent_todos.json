@@ -1,15 +1,11 @@
 [
   {
-    "content": "Restart both backend and frontend servers",
+    "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
     "status": "completed"
   },
   {
-    "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
-    "status": "in_progress"
-  },
-  {
     "content": "Test chat UI functionality",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Verify no bugs or errors in console",
