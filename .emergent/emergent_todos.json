@@ -5,10 +5,10 @@
   },
   {
     "content": "Remove handoff button from Flights tab in App.js",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Test shift handoff generation with audio playback",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
