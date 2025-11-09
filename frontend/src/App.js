@@ -1416,7 +1416,7 @@ export default function App() {
 
   const getStatusText = () => {
     switch (dataStatus) {
-      case 'ok': return 'LIVE · 2s tick';
+      case 'ok': return 'LIVE';
       case 'stale': return 'STALE';
       case 'unavailable': return 'OFFLINE';
       default: return 'INIT';
