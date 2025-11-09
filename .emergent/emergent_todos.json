@@ -5,10 +5,10 @@
   },
   {
     "content": "Debug ATC towers not showing on map",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Debug boundaries not showing on map",
-    "status": "pending"
+    "status": "completed"
   }
 ]
