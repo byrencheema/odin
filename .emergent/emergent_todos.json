@@ -1,6 +1,26 @@
 [
   {
-    "content": "Verify aircraft appear and move on map with simulation",
-    "status": "completed"
+    "content": "Pull latest changes from remote odin repo",
+    "status": "in_progress"
+  },
+  {
+    "content": "Review new features (chat UI, trails, boundaries, etc.)",
+    "status": "pending"
+  },
+  {
+    "content": "Restart both backend and frontend servers",
+    "status": "pending"
+  },
+  {
+    "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
+    "status": "pending"
+  },
+  {
+    "content": "Test chat UI functionality",
+    "status": "pending"
+  },
+  {
+    "content": "Verify no bugs or errors in console",
+    "status": "pending"
   }
 ]

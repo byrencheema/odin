@@ -96,3 +96,12 @@ frontend/node_modules/.cache/default-development/2.pack
 # Environment files
 *.env
 *.env.*
+<<<<<<< HEAD
+=======
+frontend/node_modules/.cache/default-development/4.pack
+-e 
+# Environment files
+*.env
+*.env.*
+frontend/node_modules/.cache/default-development/7.pack
+>>>>>>> 2f466ce (auto-commit for a0fbf5ee-41b4-4d1a-8cc7-b977c53a9685)
