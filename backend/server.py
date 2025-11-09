@@ -17,6 +17,7 @@ from services.openrouter_client import OpenRouterClient, OpenRouterError
 from fastapi.responses import StreamingResponse
 import json
 from airspace_data import BAY_AREA_AIRSPACE
+from atc_facilities import generate_coverage_geojson, generate_facilities_points_geojson
 
 
 ROOT_DIR = Path(__file__).parent
