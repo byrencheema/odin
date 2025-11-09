@@ -473,6 +473,11 @@ async def get_opensky_aircraft():
         # Determine status based on global simulation flag
         global simulation_mode_active
         status_msg = "simulated" if simulation_mode_active else "ok"
+        
+        # Cap aircraft count at 40 for performance
+        MAX_AIRCRAFT = 40
+        aircraft_list = aircraft_list[:MAX_AIRCRAFT]
+        
         logger.info(f"Successfully fetched {len(aircraft_list)} aircraft [{status_msg}]")
         
         return AirPictureResponse(
