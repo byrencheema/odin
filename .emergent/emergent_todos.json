@@ -17,11 +17,15 @@
   },
   {
     "content": "Update frontend App.js to add Handoff button in aircraft info panel",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Implement handoff audio playback in frontend",
-    "status": "pending"
+    "status": "completed"
+  },
+  {
+    "content": "Restart backend service to load new code",
+    "status": "in_progress"
   },
   {
     "content": "Test handoff feature end-to-end",
