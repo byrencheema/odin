@@ -220,7 +220,7 @@ const SimpleChatView = ({
           <Button
             onClick={handleShiftHandoff}
             disabled={handoffLoading}
-            className="flex-1 bg-[#6BEA76] hover:bg-[#5AD966] text-[#0A0B0C] font-medium"
+            className="flex-1 bg-[#4DD7E6] hover:bg-[#3AC5D5] text-[#0A0B0C] font-medium"
             data-testid="shift-handoff-button"
           >
             {handoffLoading ? 'Generating...' : 'Automate Shift Handoff'}
