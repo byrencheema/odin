@@ -582,73 +582,72 @@ export default function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
   
-  const handleSendChatMessage = async () => {
-        if (!chatInput.trim() || isSending || !chatSessionId) return;
-        
-        const userMessage = chatInput.trim();
-        setChatInput('');
-        setIsSending(true);
-        
-        // Add optimistic user message
-        const optimisticMsg = {
-          role: 'user',
-          content: userMessage,
-          timestamp: new Date().toISOString()
-        };
-        setChatMessages(prev => [...prev, optimisticMsg]);
-        
-        // Prepare context
-        const consoleContext = includeContext ? {
-          selected_aircraft_icao: selectedAircraft?.icao24,
-          include_notams: true
-        } : null;
-        
-        try {
-          // Non-streaming for now (streaming can be added later)
-          const response = await axios.post(`${API}/chat/message`, {
-            session_id: chatSessionId,
-            user_message: userMessage,
-            console_context: consoleContext,
-            stream: false
-          });
-          
-          // Add assistant message
-          setChatMessages(prev => [...prev, response.data.message]);
-          
-          // Update predicted follow-up
-          if (response.data.predicted_follow_up) {
-            setPredictedFollowUp(response.data.predicted_follow_up);
-          }
-          
-        } catch (error) {
-          console.error('Failed to send message:', error);
-          toast.error('Failed to send message');
-          
-          // Add error message
-          setChatMessages(prev => [...prev, {
-            role: 'assistant',
-            content: 'I\'m temporarily unable to process your request. Please try again in a moment.',
-            timestamp: new Date().toISOString(),
-            metadata: { error: true }
-          }]);
-        } finally {
-          setIsSending(false);
-        }
-      };
+    if (!chatInput.trim() || isSending || !chatSessionId) return;
+    
+    const userMessage = chatInput.trim();
+    setChatInput('');
+    setIsSending(true);
+    
+    // Add optimistic user message
+    const optimisticMsg = {
+      role: 'user',
+      content: userMessage,
+      timestamp: new Date().toISOString()
+    };
+    setChatMessages(prev => [...prev, optimisticMsg]);
+    
+    // Prepare context
+    const consoleContext = includeContext ? {
+      selected_aircraft_icao: selectedAircraft?.icao24,
+      include_notams: true
+    } : null;
+    
+    try {
+      // Non-streaming for now (streaming can be added later)
+      const response = await axios.post(`${API}/chat/message`, {
+        session_id: chatSessionId,
+        user_message: userMessage,
+        console_context: consoleContext,
+        stream: false
+      });
       
-      const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleSendMessage();
-        }
-      };
+      // Add assistant message
+      setChatMessages(prev => [...prev, response.data.message]);
       
-      const formatTimestamp = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-      };
+      // Update predicted follow-up
+      if (response.data.predicted_follow_up) {
+        setPredictedFollowUp(response.data.predicted_follow_up);
+      }
       
-      return (
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      toast.error('Failed to send message');
+      
+      // Add error message
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'I\'m temporarily unable to process your request. Please try again in a moment.',
+        timestamp: new Date().toISOString(),
+        metadata: { error: true }
+      }]);
+    } finally {
+      setIsSending(false);
+    }
+  };
+  
+  const handleChatKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendChatMessage();
+    }
+  };
+  
+  const formatChatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
+  const renderChatView = () => (
         <div className="h-full flex flex-col">
           {/* Messages */}
           <ScrollArea className="flex-1 p-4" data-testid="chat-messages">
