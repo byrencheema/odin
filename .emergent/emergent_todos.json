@@ -1,6 +1,34 @@
 [
   {
-    "content": "Test shift handoff generation with audio playback",
-    "status": "completed"
+    "content": "Change shift handoff button color from green to cyan",
+    "status": "in_progress"
+  },
+  {
+    "content": "Change ElevenLabs voice from male to female",
+    "status": "pending"
+  },
+  {
+    "content": "Add backend endpoint for audio transcription with Whisper",
+    "status": "pending"
+  },
+  {
+    "content": "Add backend endpoint for summary generation",
+    "status": "pending"
+  },
+  {
+    "content": "Add AI Summarization button to tower audio feeds",
+    "status": "pending"
+  },
+  {
+    "content": "Implement audio recording from live stream",
+    "status": "pending"
+  },
+  {
+    "content": "Add toggle state for Start/Stop listening",
+    "status": "pending"
+  },
+  {
+    "content": "Test audio summarization feature",
+    "status": "pending"
   }
 ]
