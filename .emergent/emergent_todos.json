@@ -1,14 +1,18 @@
 [
   {
-    "content": "Remove rounded corners from all UI components",
-    "status": "completed"
+    "content": "Remove current chat backend endpoints",
+    "status": "in_progress"
   },
   {
-    "content": "Update CSS variables for sharp corners",
-    "status": "completed"
+    "content": "Create new simple chat endpoint with OpenRouter",
+    "status": "pending"
   },
   {
-    "content": "Test sharp tactical appearance",
-    "status": "completed"
+    "content": "Rebuild chat frontend component from scratch",
+    "status": "pending"
+  },
+  {
+    "content": "Test working chat functionality",
+    "status": "pending"
   }
 ]
