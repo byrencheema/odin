@@ -1,18 +1,18 @@
 [
   {
-    "content": "Reduce layer opacity for minimal appearance",
-    "status": "completed"
+    "content": "Debug ATC facilities disappearing after few minutes",
+    "status": "in_progress"
   },
   {
-    "content": "Remove or minimize large coverage circles",
-    "status": "completed"
+    "content": "Check useEffect cleanup and dependencies",
+    "status": "pending"
   },
   {
-    "content": "Verify airspace boundaries accuracy",
-    "status": "completed"
+    "content": "Fix layer persistence issue",
+    "status": "pending"
   },
   {
-    "content": "Test minimal appearance",
-    "status": "completed"
+    "content": "Test layer stability over time",
+    "status": "pending"
   }
 ]
