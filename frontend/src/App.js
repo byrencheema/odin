@@ -1311,7 +1311,7 @@ export default function App() {
     };
 
     const renderChatView = () => (
-      <ChatView selectedAircraft={selectedAircraft} />
+      <SimpleChatView />
     );
 
     const renderNotamsView = () => (
