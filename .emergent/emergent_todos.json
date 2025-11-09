@@ -1,10 +1,14 @@
 [
   {
-    "content": "Set all layer toggles to default off (unchecked)",
-    "status": "completed"
+    "content": "Add ODIN head icon as favicon",
+    "status": "in_progress"
   },
   {
-    "content": "Test all toggle buttons work correctly",
-    "status": "completed"
+    "content": "Debug ATC towers not showing on map",
+    "status": "pending"
+  },
+  {
+    "content": "Debug boundaries not showing on map",
+    "status": "pending"
   }
 ]
