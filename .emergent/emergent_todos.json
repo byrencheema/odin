@@ -1,10 +1,6 @@
 [
   {
-    "content": "Test simulation with various aircraft counts",
-    "status": "completed"
-  },
-  {
     "content": "Verify aircraft appear and move on map with simulation",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
