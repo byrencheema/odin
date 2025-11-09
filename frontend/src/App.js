@@ -825,9 +825,8 @@ export default function App() {
             </ResizablePanel>
 
             <ResizableHandle
-              withHandle
               onPointerDown={handleResizePointerDown}
-              className="pointer-events-auto w-1 bg-[#3A3E43] hover:bg-[#4DD7E6]/70 transition-colors"
+              className="pointer-events-auto w-1 opacity-0"
             />
 
             <ResizablePanel defaultSize={52} minSize={20} className="pointer-events-none">
@@ -835,9 +834,8 @@ export default function App() {
             </ResizablePanel>
 
             <ResizableHandle
-              withHandle
               onPointerDown={handleResizePointerDown}
-              className="pointer-events-auto w-1 bg-[#3A3E43] hover:bg-[#4DD7E6]/70 transition-colors"
+              className="pointer-events-auto w-1 opacity-0"
             />
 
             <ResizablePanel defaultSize={26} minSize={16} maxSize={45} className="pointer-events-none">
