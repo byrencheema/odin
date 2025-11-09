@@ -11,13 +11,16 @@ const SimpleChatView = ({
   infoView = 'flights',
   selectedAircraft = null,
   selectedATCFacility = null,
+  aircraftCount = 0,
 }) => {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: "Hello! I'm ODIN Copilot. Ask me about aircraft, airspace, or ATC procedures." }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [handoffLoading, setHandoffLoading] = useState(false);
   const scrollRef = useRef(null);
+  const audioRef = useRef(null);
 
   const consoleContext = useMemo(() => {
     const context = {
