@@ -1,15 +1,11 @@
 [
   {
-    "content": "View backend handoff endpoint implementation",
+    "content": "Update backend to generate shift handoff briefing using WEST checklist",
     "status": "completed"
   },
   {
-    "content": "Update backend to generate shift handoff briefing using WEST checklist",
-    "status": "in_progress"
-  },
-  {
     "content": "Add shift handoff button to SimpleChatView component",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Remove handoff button from Flights tab in App.js",
