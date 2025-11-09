@@ -40,8 +40,17 @@ export default function App() {
   const [showRunways, setShowRunways] = useState(true);
   const [showTraffic, setShowTraffic] = useState(true);
   
+  // Chat states
+  const [chatSessionId, setChatSessionId] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [predictedFollowUp, setPredictedFollowUp] = useState(null);
+  const [includeContext, setIncludeContext] = useState(true);
+  
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const chatEndRef = useRef(null);
 
   const handleResizePointerDown = useCallback(() => {
     if (!map.current || !map.current.dragPan) {
