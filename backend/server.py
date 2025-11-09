@@ -371,6 +371,8 @@ async def get_opensky_aircraft():
         opensky_cache["timestamp"] = raw_data.get("time", current_timestamp)
         opensky_cache["is_stale"] = False
         
+        # Determine status based on global simulation flag
+        global simulation_mode_active
         status_msg = "simulated" if simulation_mode_active else "ok"
         logger.info(f"Successfully fetched {len(aircraft_list)} aircraft [{status_msg}]")
         
