@@ -648,105 +648,102 @@ export default function App() {
   };
 
   const renderChatView = () => (
-        <div className="h-full flex flex-col">
-          {/* Messages */}
-          <ScrollArea className="flex-1 p-4" data-testid="chat-messages">
-            <div className="space-y-4">
-              {chatMessages.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                      msg.role === 'user'
-                        ? 'bg-[#1A1C1F] border border-[#4DD7E6]/40 text-[#E7E9EA]'
-                        : 'bg-[#0E0F11] border border-[#3A3E43] text-[#E7E9EA]'
-                    }`}
-                  >
-                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
-                    <div className="text-xs text-[#A9ADB1] mt-1 font-['Azeret_Mono',monospace]">
-                      {formatTimestamp(msg.timestamp)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              
-              {/* Streaming indicator */}
-              {isSending && (
-                <div className="flex justify-start">
-                  <div className="bg-[#0E0F11] border border-[#3A3E43] rounded-lg px-3 py-2">
-                    <div className="flex items-center gap-2 text-[#A9ADB1]">
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-                        <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
-                      </div>
-                      <span className="text-xs">Thinking...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div ref={chatEndRef} />
-            </div>
-          </ScrollArea>
-          
-          {/* Quick Actions */}
-          {predictedFollowUp && (
-            <div className="px-4 py-2 border-t border-[#3A3E43]">
-              <button
-                onClick={() => {
-                  setChatInput(predictedFollowUp);
-                  setPredictedFollowUp(null);
-                }}
-                className="text-xs px-3 py-1.5 rounded-md bg-[#1A1C1F] border border-[#4DD7E6]/40 text-[#4DD7E6] hover:bg-[#1E2024] transition-colors"
+    <div className="h-full flex flex-col">
+      {/* Messages */}
+      <ScrollArea className="flex-1 p-4" data-testid="chat-messages">
+        <div className="space-y-4">
+          {chatMessages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[80%] rounded-lg px-3 py-2 ${
+                  msg.role === 'user'
+                    ? 'bg-[#1A1C1F] border border-[#4DD7E6]/40 text-[#E7E9EA]'
+                    : 'bg-[#0E0F11] border border-[#3A3E43] text-[#E7E9EA]'
+                }`}
               >
-                💡 {predictedFollowUp}
-              </button>
+                <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
+                <div className="text-xs text-[#A9ADB1] mt-1 font-['Azeret_Mono',monospace]">
+                  {formatChatTimestamp(msg.timestamp)}
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {/* Streaming indicator */}
+          {isSending && (
+            <div className="flex justify-start">
+              <div className="bg-[#0E0F11] border border-[#3A3E43] rounded-lg px-3 py-2">
+                <div className="flex items-center gap-2 text-[#A9ADB1]">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
+                    <div className="w-2 h-2 bg-[#4DD7E6] rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                  </div>
+                  <span className="text-xs">Thinking...</span>
+                </div>
+              </div>
             </div>
           )}
           
-          {/* Composer */}
-          <div className="border-t border-[#3A3E43] p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <label className="flex items-center gap-2 text-xs text-[#A9ADB1]">
-                <input
-                  type="checkbox"
-                  checked={includeContext}
-                  onChange={(e) => setIncludeContext(e.target.checked)}
-                  className="rounded"
-                />
-                Include current selection
-              </label>
-            </div>
-            <div className="flex gap-2">
-              <textarea
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Ask about aircraft, NOTAMs, or console status..."
-                disabled={isSending}
-                rows={2}
-                className="flex-1 bg-[#0E0F11] border border-[#3A3E43] rounded-md px-3 py-2 text-sm text-[#E7E9EA] placeholder-[#A9ADB1] focus:outline-none focus:border-[#4DD7E6] resize-none"
-                data-testid="chat-input"
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={isSending || !chatInput.trim()}
-                className="px-4 py-2 rounded-md bg-[#1A1C1F] border border-[#4DD7E6] text-[#4DD7E6] hover:bg-[#1E2024] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-                data-testid="chat-send-button"
-              >
-                Send
-              </button>
-            </div>
-            <div className="text-xs text-[#A9ADB1] mt-2">
-              Press Enter to send, Shift+Enter for new line
-            </div>
-          </div>
+          <div ref={chatEndRef} />
         </div>
-      );
-    };
+      </ScrollArea>
+      
+      {/* Quick Actions */}
+      {predictedFollowUp && (
+        <div className="px-4 py-2 border-t border-[#3A3E43]">
+          <button
+            onClick={() => {
+              setChatInput(predictedFollowUp);
+              setPredictedFollowUp(null);
+            }}
+            className="text-xs px-3 py-1.5 rounded-md bg-[#1A1C1F] border border-[#4DD7E6]/40 text-[#4DD7E6] hover:bg-[#1E2024] transition-colors"
+          >
+            💡 {predictedFollowUp}
+          </button>
+        </div>
+      )}
+      
+      {/* Composer */}
+      <div className="border-t border-[#3A3E43] p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <label className="flex items-center gap-2 text-xs text-[#A9ADB1]">
+            <Checkbox
+              checked={includeContext}
+              onCheckedChange={setIncludeContext}
+            />
+            <span>Include current selection</span>
+          </label>
+        </div>
+        <div className="flex gap-2">
+          <textarea
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            onKeyDown={handleChatKeyDown}
+            placeholder="Ask about aircraft, NOTAMs, or console status..."
+            disabled={isSending}
+            rows={2}
+            className="flex-1 bg-[#0E0F11] border border-[#3A3E43] rounded-md px-3 py-2 text-sm text-[#E7E9EA] placeholder-[#A9ADB1] focus:outline-none focus:border-[#4DD7E6] resize-none"
+            data-testid="chat-input"
+          />
+          <button
+            onClick={handleSendChatMessage}
+            disabled={isSending || !chatInput.trim()}
+            className="px-4 py-2 rounded-md bg-[#1A1C1F] border border-[#4DD7E6] text-[#4DD7E6] hover:bg-[#1E2024] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+            data-testid="chat-send-button"
+          >
+            Send
+          </button>
+        </div>
+        <div className="text-xs text-[#A9ADB1] mt-2">
+          Press Enter to send, Shift+Enter for new line
+        </div>
+      </div>
+    </div>
+  );
 
     const renderNotamsView = () => (
       <ScrollArea className="h-full p-4" data-testid="notam-feed">
