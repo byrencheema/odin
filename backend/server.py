@@ -652,9 +652,24 @@ async def get_current_weather():
 
 # ===== SIMPLE CHAT WITH OPENROUTER =====
 
+from simple_chat import chat_with_openrouter
+
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
 if not OPENROUTER_API_KEY:
     logger.warning("OpenRouter API key not configured - chat will be unavailable")
+
+class SimpleChatRequest(BaseModel):
+    message: str
+    history: List[Dict[str, str]] = []
+
+class SimpleChatResponse(BaseModel):
+    response: str
+
+@api_router.post("/chat", response_model=SimpleChatResponse)
+async def simple_chat(request: SimpleChatRequest):
+    """Simple chat endpoint with OpenRouter."""
+    response = await chat_with_openrouter(request.message, request.history)
+    return SimpleChatResponse(response=response)
 
 
 # Simple Chat Models
