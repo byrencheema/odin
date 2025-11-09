@@ -219,8 +219,14 @@ async def get_opensky_token() -> Optional[str]:
 
 
 async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]:
-    """Fetch aircraft data from OpenSky Network API"""
+    """Fetch aircraft data from OpenSky Network API with OAuth2 authentication"""
     try:
+        # Get valid OAuth2 token
+        access_token = await get_opensky_token()
+        if not access_token:
+            logger.error("Failed to obtain OpenSky OAuth2 token")
+            return None
+        
         url = "https://opensky-network.org/api/states/all"
         params = {
             "lamin": bbox["lamin"],
@@ -229,11 +235,21 @@ async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]
             "lomax": bbox["lomax"]
         }
         
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+        
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(url, params=params)
+            response = await client.get(url, params=params, headers=headers)
             
             if response.status_code == 200:
                 return response.json()
+            elif response.status_code == 401:
+                logger.error("OpenSky API returned 401 Unauthorized - token may have expired")
+                # Clear cached token to force refresh on next request
+                oauth_token_cache["access_token"] = None
+                oauth_token_cache["expires_at"] = None
+                return None
             else:
                 logger.error(f"OpenSky API returned status {response.status_code}")
                 return None
