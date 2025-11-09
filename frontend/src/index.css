@@ -58,6 +58,7 @@ code {
 @layer base {
     * {
         @apply border-border;
+        border-radius: 0 !important;  /* Force sharp corners globally */
     }
     body {
         @apply bg-background text-foreground;
