@@ -1437,7 +1437,7 @@ export default function App() {
       {/* AIR Bar */}
       <header className="h-12 border-b border-[#3A3E43] flex items-center justify-between px-4" data-testid="air-bar">
         <div className="flex items-center gap-3">
-          <span className="font-['Azeret_Mono',monospace] text-2xl font-bold text-[#E7E9EA] tracking-wider" data-testid="odin-logo">ODIN</span>
+          <img src="/odin-logo-white-text.png" alt="ODIN" className="h-8" data-testid="odin-logo" />
           <Separator orientation="vertical" className="h-4 bg-[#3A3E43]" />
           <span className="text-sm text-[#A9ADB1]" data-testid="region-label">Bay Area</span>
         </div>
