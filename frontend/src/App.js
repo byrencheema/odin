@@ -404,6 +404,8 @@ export default function App() {
         }
       }
       setMapReady(false);
+      setAirspaceLoaded(false);  // Reset so layers reload on remount
+      setAtcFacilitiesLoaded(false);  // Reset so layers reload on remount
     };
   }, [addAircraftLayers]);
 
