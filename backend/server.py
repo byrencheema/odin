@@ -1076,6 +1076,160 @@ async def chat_health_check():
     return health
 
 
+# ===== ODIN ATC HANDOFF - ElevenLabs Voice Integration =====
+
+ELEVENLABS_API_KEY = os.environ.get('ELEVENLABS_API_KEY', '')
+
+# Initialize ElevenLabs client
+elevenlabs_client = None
+if ELEVENLABS_API_KEY:
+    try:
+        from elevenlabs import ElevenLabs
+        elevenlabs_client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+        logger.info("ElevenLabs client initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize ElevenLabs client: {e}")
+
+
+class HandoffRequest(BaseModel):
+    """Request model for ATC handoff generation"""
+    icao24: str
+    callsign: Optional[str] = None
+    aircraft_type: str = "UNKNOWN"
+    latitude: float
+    longitude: float
+    altitude: float  # in meters
+    velocity: float  # in m/s
+    heading: float  # true track in degrees
+    destination: Optional[str] = None
+
+
+class HandoffResponse(BaseModel):
+    """Response model for ATC handoff"""
+    handoff_script: str
+    next_sector: str
+    next_frequency: str
+    audio_base64: Optional[str] = None
+    status: str
+
+
+def determine_next_sector(altitude_meters: float, latitude: float, longitude: float, heading: float) -> Tuple[str, str]:
+    """
+    Determine next ATC sector based on aircraft position and altitude.
+    Returns (sector_name, frequency)
+    """
+    altitude_ft = altitude_meters * 3.28084  # Convert meters to feet
+    
+    # Simple sector logic based on altitude
+    if altitude_ft < 3000:
+        # Low altitude - Tower/Ground
+        if altitude_ft < 500:
+            return ("San Francisco Ground", "121.8")
+        else:
+            return ("San Francisco Tower", "120.5")
+    elif altitude_ft < 10000:
+        # Mid altitude - TRACON (Terminal Radar Approach Control)
+        # Determine if arrival or departure based on heading
+        if 180 <= heading <= 360:  # Generally westbound/southbound = departure
+            return ("Bay Departure", "135.65")
+        else:  # Generally eastbound/northbound = arrival
+            return ("Bay Approach", "128.35")
+    else:
+        # High altitude - Center
+        return ("Oakland Center", "133.5")
+
+
+def generate_handoff_script(request: HandoffRequest, next_sector: str, next_frequency: str) -> str:
+    """
+    Generate professional ATC handoff script with all essential information.
+    """
+    callsign = request.callsign or request.icao24.upper()
+    altitude_ft = int(request.altitude * 3.28084)
+    speed_kts = int(request.velocity * 1.94384)
+    heading_deg = int(request.heading)
+    
+    # Format position
+    lat_dir = "North" if request.latitude >= 0 else "South"
+    lon_dir = "East" if request.longitude >= 0 else "West"
+    position = f"{abs(request.latitude):.2f} {lat_dir}, {abs(request.longitude):.2f} {lon_dir}"
+    
+    # Generate handoff script
+    script = f"{next_sector}, {callsign}. "
+    script += f"Aircraft type {request.aircraft_type}. "
+    script += f"Position {position}. "
+    script += f"Altitude {altitude_ft} feet. "
+    script += f"Speed {speed_kts} knots. "
+    script += f"Heading {heading_deg} degrees. "
+    
+    if request.destination:
+        script += f"Destination {request.destination}. "
+    
+    script += f"Contact {next_sector} on {next_frequency}."
+    
+    return script
+
+
+@api_router.post("/handoff/generate", response_model=HandoffResponse)
+async def generate_handoff(request: HandoffRequest):
+    """
+    Generate ATC handoff with voice synthesis via ElevenLabs.
+    """
+    try:
+        # Determine next sector
+        next_sector, next_frequency = determine_next_sector(
+            request.altitude, 
+            request.latitude, 
+            request.longitude, 
+            request.heading
+        )
+        
+        # Generate handoff script
+        handoff_script = generate_handoff_script(request, next_sector, next_frequency)
+        logger.info(f"Generated handoff for {request.callsign or request.icao24}: {next_sector}")
+        
+        # Generate audio with ElevenLabs (if available)
+        audio_base64 = None
+        if elevenlabs_client:
+            try:
+                # Use a professional male voice suitable for ATC (Adam voice ID)
+                # Adam is known for clear, authoritative delivery
+                voice_id = "pNInz6obpgDQGcFmaJgB"  # Adam voice
+                
+                # Generate audio
+                audio_generator = elevenlabs_client.text_to_speech.convert(
+                    text=handoff_script,
+                    voice_id=voice_id,
+                    model_id="eleven_monolingual_v1",  # Fast, clear English
+                    output_format="mp3_44100_128"
+                )
+                
+                # Collect audio data
+                audio_data = b""
+                for chunk in audio_generator:
+                    audio_data += chunk
+                
+                # Convert to base64
+                import base64
+                audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                logger.info(f"Generated {len(audio_data)} bytes of audio for handoff")
+                
+            except Exception as e:
+                logger.error(f"Failed to generate audio with ElevenLabs: {e}")
+                # Continue without audio
+        
+        return HandoffResponse(
+            handoff_script=handoff_script,
+            next_sector=next_sector,
+            next_frequency=next_frequency,
+            audio_base64=audio_base64,
+            status="ok" if audio_base64 else "no_audio"
+        )
+        
+    except Exception as e:
+        logger.error(f"Handoff generation failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Handoff generation failed: {str(e)}")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
