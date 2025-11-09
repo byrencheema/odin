@@ -1,6 +1,6 @@
 /**
  * LiveATC audio feeds for Bay Area ATC facilities
- * Maps facility IDs to their available audio streams
+ * Maps facility IDs to their available audio streams with listener counts
  */
 
 export const LIVE_ATC_FEEDS = {
@@ -9,31 +9,36 @@ export const LIVE_ATC_FEEDS = {
       name: "KSFO Tower",
       streamId: "ksfo_twr",
       frequency: "120.5",
-      type: "Tower"
+      type: "Tower",
+      listeners: 14
     },
     {
       name: "KSFO Ground",
       streamId: "ksfo_gnd",
       frequency: "121.8",
-      type: "Ground"
+      type: "Ground",
+      listeners: 4
     },
     {
       name: "KSFO Ground/Tower",
       streamId: "ksfo_gnd_twr",
       frequency: "120.5 / 121.8",
-      type: "Combined"
+      type: "Combined",
+      listeners: 4
     },
     {
       name: "KSFO Ramp",
       streamId: "ksfo_ramp",
       frequency: "121.9",
-      type: "Ramp"
+      type: "Ramp",
+      listeners: 1
     },
     {
       name: "KSFO Company Channels",
       streamId: "ksfo_co",
       frequency: "Company",
-      type: "Company"
+      type: "Company",
+      listeners: 3
     }
   ],
   KOAK: [
@@ -69,7 +74,8 @@ export const LIVE_ATC_FEEDS = {
       name: "ZOA Oakland Center (35)",
       streamId: "zoa_35",
       frequency: "133.5",
-      type: "Center"
+      type: "Center",
+      listeners: 3
     }
   ]
 };
