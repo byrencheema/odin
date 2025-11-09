@@ -35,9 +35,6 @@ export default function App() {
   const [showWeather, setShowWeather] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [mapReady, setMapReady] = useState(false);
-  const [showClouds, setShowClouds] = useState(false);
-  const [radarTileUrl, setRadarTileUrl] = useState(null);
-  const [cloudTileUrl, setCloudTileUrl] = useState(null);
   
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -226,20 +223,18 @@ export default function App() {
     };
   }, [addAircraftLayers]);
 
-  const upsertWeatherLayer = useCallback((id, tileUrl, opacity, visible) => {
-    if (!map.current) return;
+  const applyRainViewerTiles = useCallback((tileUrl) => {
+    if (!map.current || !tileUrl) return;
 
     try {
-      if (map.current.getLayer(id)) {
-        map.current.removeLayer(id);
+      if (map.current.getLayer('weather-layer')) {
+        map.current.removeLayer('weather-layer');
       }
-      if (map.current.getSource(id)) {
-        map.current.removeSource(id);
+      if (map.current.getSource('weather-tiles')) {
+        map.current.removeSource('weather-tiles');
       }
 
-      if (!tileUrl) return;
-
-      map.current.addSource(id, {
+      map.current.addSource('weather-tiles', {
         type: 'raster',
         tiles: [tileUrl],
         tileSize: 256,
@@ -247,23 +242,22 @@ export default function App() {
       });
 
       map.current.addLayer({
-        id,
+        id: 'weather-layer',
         type: 'raster',
-        source: id,
-        paint: { 'raster-opacity': opacity },
+        source: 'weather-tiles',
+        paint: {
+          'raster-opacity': 0.6
+        },
         layout: {
-          'visibility': visible ? 'visible' : 'none'
+          'visibility': showWeather ? 'visible' : 'none'
         }
       }, 'aircraft-icons');
-    } catch (error) {
-      console.error(`Failed to upsert ${id}:`, error);
-    }
-  }, []);
 
-  const setLayerVisibility = useCallback((id, visible) => {
-    if (!map.current || !map.current.getLayer(id)) return;
-    map.current.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
-  }, []);
+      console.log('🌧️ RainViewer tiles applied');
+    } catch (error) {
+      console.error('Failed to apply RainViewer tiles:', error);
+    }
+  }, [showWeather]);
 
   const fetchRainViewerTiles = useCallback(async () => {
     if (!map.current) return;
@@ -272,22 +266,20 @@ export default function App() {
       const response = await fetch('https://api.rainviewer.com/public/weather-maps.json');
       const data = await response.json();
       const host = data.host || 'https://tilecache.rainviewer.com';
-      const radarFrames = data?.radar?.past || [];
-      const satFrames = data?.satellite?.infrared || [];
-      const latestRadar = radarFrames[radarFrames.length - 1];
-      const latestCloud = satFrames[satFrames.length - 1];
+      const frames = data?.radar?.past || [];
+      const latestFrame = frames[frames.length - 1];
 
-      if (latestRadar) {
-        setRadarTileUrl(`${host}${latestRadar.path}/256/{z}/{x}/{y}/2/1_1.png`);
+      if (!latestFrame) {
+        console.warn('No RainViewer frames available');
+        return;
       }
 
-      if (latestCloud) {
-        setCloudTileUrl(`${host}${latestCloud.path}/256/{z}/{x}/{y}/2/1_1.png`);
-      }
+      const tileUrl = `${host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
+      applyRainViewerTiles(tileUrl);
     } catch (error) {
       console.error('Failed to fetch RainViewer metadata:', error);
     }
-  }, []);
+  }, [applyRainViewerTiles]);
 
   // Update aircraft layer with GeoJSON data (replaces previous canvas overlay)
   const updateAircraftLayer = useCallback(() => {
@@ -376,32 +368,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, [mapReady, fetchRainViewerTiles]);
 
-  useEffect(() => {
-    if (!mapReady) return;
-    upsertWeatherLayer('weather-layer', radarTileUrl, 0.6, showWeather);
-  }, [mapReady, radarTileUrl, showWeather, upsertWeatherLayer]);
-
-  useEffect(() => {
-    if (!mapReady) return;
-    upsertWeatherLayer('cloud-layer', cloudTileUrl, 0.4, showClouds);
-  }, [mapReady, cloudTileUrl, showClouds, upsertWeatherLayer]);
-
-  useEffect(() => {
-    setLayerVisibility('weather-layer', showWeather);
-  }, [showWeather, setLayerVisibility]);
-
-  useEffect(() => {
-    setLayerVisibility('cloud-layer', showClouds);
-  }, [showClouds, setLayerVisibility]);
-
-  useEffect(() => {
-    if (!mapReady) return;
-
-    fetchRainViewerTiles();
-    const interval = setInterval(fetchRainViewerTiles, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [mapReady, fetchRainViewerTiles]);
-
   // Fetch weather data every 10 minutes
   const fetchWeather = useCallback(async () => {
     try {
@@ -476,16 +442,14 @@ export default function App() {
               <Label className="text-sm">Weather</Label>
               <Switch 
                 checked={showWeather} 
-                onCheckedChange={setShowWeather}
+                onCheckedChange={(checked) => {
+                  setShowWeather(checked);
+                  if (map.current && map.current.getLayer('weather-layer')) {
+                    map.current.setLayoutProperty('weather-layer', 'visibility', 
+                      checked ? 'visible' : 'none');
+                  }
+                }}
                 data-testid="weather-switch" 
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label className="text-sm">Cloud Tops</Label>
-              <Switch 
-                checked={showClouds}
-                onCheckedChange={setShowClouds}
-                data-testid="cloud-switch" 
               />
             </div>
             <div className="flex items-center justify-between opacity-50">
