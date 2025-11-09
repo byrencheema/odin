@@ -926,6 +926,50 @@ export default function App() {
     if (!map.current) return;
 
     const handleClick = (e) => {
+      // Check for ATC facility clicks first
+      const facilityFeatures = map.current.queryRenderedFeatures(e.point, {
+        layers: ['atc-facilities-markers']
+      });
+
+      if (facilityFeatures.length > 0) {
+        const facility = facilityFeatures[0].properties;
+        const popupContent = `
+          <div style="font-family: 'IBM Plex Sans', sans-serif; color: #E7E9EA; padding: 8px;">
+            <div style="font-weight: 600; font-size: 14px; color: #4DD7E6; margin-bottom: 6px;">
+              ${facility.name}
+            </div>
+            <div style="font-size: 12px; margin-bottom: 4px;">
+              <span style="color: #A9ADB1;">ID:</span> <span style="font-family: 'Azeret Mono', monospace;">${facility.id}</span>
+            </div>
+            <div style="font-size: 12px; margin-bottom: 4px;">
+              <span style="color: #A9ADB1;">Type:</span> ${facility.type.toUpperCase()}
+            </div>
+            <div style="font-size: 12px; margin-bottom: 4px;">
+              <span style="color: #A9ADB1;">Frequency:</span> <span style="font-family: 'Azeret Mono', monospace;">${facility.frequency}</span>
+            </div>
+            <div style="font-size: 12px; margin-bottom: 4px;">
+              <span style="color: #A9ADB1;">Coverage:</span> ${facility.coverage_nm} NM
+            </div>
+            <div style="font-size: 12px;">
+              <span style="color: #A9ADB1;">Elevation:</span> ${facility.elevation_ft} ft
+            </div>
+          </div>
+        `;
+        
+        new maplibregl.Popup({
+          closeButton: true,
+          closeOnClick: true,
+          className: 'atc-facility-popup',
+          maxWidth: '300px'
+        })
+          .setLngLat(e.lngLat)
+          .setHTML(popupContent)
+          .addTo(map.current);
+        
+        return; // Don't check for aircraft if ATC facility was clicked
+      }
+
+      // Check for aircraft clicks
       const features = map.current.queryRenderedFeatures(e.point, {
         layers: ['aircraft-icons']
       });
