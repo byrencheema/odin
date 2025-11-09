@@ -1,38 +1,18 @@
 [
   {
-    "content": "Create ATC facilities data with coordinates and coverage radii",
-    "status": "completed"
+    "content": "Improve tower visual appearance on map",
+    "status": "in_progress"
   },
   {
-    "content": "Add backend endpoint for ATC facilities GeoJSON",
-    "status": "completed"
+    "content": "Add ATC facility details to right sidebar instead of popup",
+    "status": "pending"
   },
   {
-    "content": "Implement coverage circle generation (NM to degrees conversion)",
-    "status": "completed"
+    "content": "Fix chat rerendering on session request",
+    "status": "pending"
   },
   {
-    "content": "Add MapLibre layers for coverage circles (fill + outline)",
-    "status": "completed"
-  },
-  {
-    "content": "Add facility markers with popups",
-    "status": "completed"
-  },
-  {
-    "content": "Add click handlers for facility information",
-    "status": "completed"
-  },
-  {
-    "content": "Fix chat rerender bug",
-    "status": "completed"
-  },
-  {
-    "content": "Restart backend to load ATC facilities module",
-    "status": "completed"
-  },
-  {
-    "content": "Test ATC visualization feature",
-    "status": "completed"
+    "content": "Test improvements",
+    "status": "pending"
   }
 ]
