@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
 import { Button } from './components/ui/button';
 import { PanelLeft, Info } from 'lucide-react';
 import Aircraft3DModal from './components/Aircraft3DModal';
+import ChatView from './components/ChatView';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/ui/resizable';
 import '@/App.css';
 
@@ -51,17 +52,8 @@ export default function App() {
   const [show3DModal, setShow3DModal] = useState(false);
   const [aircraft3D, setAircraft3D] = useState(null);
 
-  // Chat states
-  const [chatSessionId, setChatSessionId] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatInput, setChatInput] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const [predictedFollowUp, setPredictedFollowUp] = useState(null);
-  const [includeContext, setIncludeContext] = useState(true);
-
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const chatEndRef = useRef(null);
 
   const handleResizePointerDown = useCallback(() => {
     if (!map.current || !map.current.dragPan) {
@@ -664,9 +656,7 @@ export default function App() {
     };
 
     const renderChatView = () => (
-      <div className="h-full flex flex-col items-center justify-center px-4 text-[#A9ADB1]">
-        <p className="text-center text-sm italic">Chat timeline will live here soon.</p>
-      </div>
+      <ChatView selectedAircraft={selectedAircraft} />
     );
 
     const renderNotamsView = () => (
