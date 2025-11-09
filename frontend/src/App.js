@@ -34,6 +34,7 @@ export default function App() {
   const [showTraffic, setShowTraffic] = useState(true);
   const [showWeather, setShowWeather] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
+  const [mapReady, setMapReady] = useState(false);
   
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -114,7 +115,7 @@ export default function App() {
     }
   }, []);
 
-  // Initialize map with FIX #1: Inline style object instead of external URL
+  // Initialize MapLibre with inline style to avoid external style fetch
   useEffect(() => {
     if (map.current) {
       console.log('Map already initialized, skipping');
@@ -133,7 +134,7 @@ export default function App() {
         throw new Error('MapLibre GL not loaded properly');
       }
 
-      // FIX #1: Use inline style object with darkmatter theme
+      // Inline style object keeps MapLibre from requesting a separate style JSON
       const styleObject = {
         version: 8,
         sources: {
@@ -165,9 +166,10 @@ export default function App() {
 
       console.log('✅ MapLibre map object created');
 
-      // FIX #6: Load aircraft icon and add layers AFTER sprite loads
+      // Load aircraft icon and add layers only after sprite is ready
       map.current.on('load', async () => {
         console.log('🗺️ Map loaded');
+        setMapReady(true);
         
         try {
           // Load aircraft icon from SVG
@@ -186,35 +188,6 @@ export default function App() {
             
             // Now add layers after sprite is ready
             addAircraftLayers();
-            
-            // Add precipitation weather layer (free, no API key)
-            if (!map.current.getSource('precipitation')) {
-              const now = new Date();
-              const utcDate = now.getUTCFullYear() + 
-                             String(now.getUTCMonth() + 1).padStart(2, '0') + 
-                             String(now.getUTCDate()).padStart(2, '0');
-              const utcHour = String(now.getUTCHours()).padStart(2, '0');
-
-              map.current.addSource('precipitation', {
-                type: 'raster',
-                tiles: [`https://weathermaps.weatherapi.com/precip/tiles/${utcDate}${utcHour}/{z}/{x}/{y}.png`],
-                tileSize: 256
-              });
-
-              map.current.addLayer({
-                id: 'precipitation-layer',
-                type: 'raster',
-                source: 'precipitation',
-                paint: {
-                  'raster-opacity': 0.6
-                },
-                layout: {
-                  'visibility': 'none'  // Hidden by default
-                }
-              }, 'aircraft-icons'); // Insert before aircraft so planes are on top
-              
-              console.log('🌧️ Weather layer added');
-            }
           };
           
           img.onerror = (err) => {
@@ -236,7 +209,7 @@ export default function App() {
       toast.error('Map initialization failed: ' + error.message);
     }
 
-    // FIX #2: Clear all refs to null in cleanup for React 19 Strict Mode
+    // Clear refs on cleanup to survive React 19 strict-mode re-mounts
     return () => {
       if (map.current) {
         try {
@@ -246,10 +219,69 @@ export default function App() {
           console.error('Error removing map:', e);
         }
       }
+      setMapReady(false);
     };
   }, [addAircraftLayers]);
 
-  // FIX #6: Update aircraft layer with GeoJSON data (replaces canvas overlay)
+  const applyRainViewerTiles = useCallback((tileUrl) => {
+    if (!map.current || !tileUrl) return;
+
+    try {
+      if (map.current.getLayer('weather-layer')) {
+        map.current.removeLayer('weather-layer');
+      }
+      if (map.current.getSource('weather-tiles')) {
+        map.current.removeSource('weather-tiles');
+      }
+
+      map.current.addSource('weather-tiles', {
+        type: 'raster',
+        tiles: [tileUrl],
+        tileSize: 256,
+        attribution: 'RainViewer'
+      });
+
+      map.current.addLayer({
+        id: 'weather-layer',
+        type: 'raster',
+        source: 'weather-tiles',
+        paint: {
+          'raster-opacity': 0.6
+        },
+        layout: {
+          'visibility': showWeather ? 'visible' : 'none'
+        }
+      }, 'aircraft-icons');
+
+      console.log('🌧️ RainViewer tiles applied');
+    } catch (error) {
+      console.error('Failed to apply RainViewer tiles:', error);
+    }
+  }, [showWeather]);
+
+  const fetchRainViewerTiles = useCallback(async () => {
+    if (!map.current) return;
+
+    try {
+      const response = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+      const data = await response.json();
+      const host = data.host || 'https://tilecache.rainviewer.com';
+      const frames = data?.radar?.past || [];
+      const latestFrame = frames[frames.length - 1];
+
+      if (!latestFrame) {
+        console.warn('No RainViewer frames available');
+        return;
+      }
+
+      const tileUrl = `${host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
+      applyRainViewerTiles(tileUrl);
+    } catch (error) {
+      console.error('Failed to fetch RainViewer metadata:', error);
+    }
+  }, [applyRainViewerTiles]);
+
+  // Update aircraft layer with GeoJSON data (replaces previous canvas overlay)
   const updateAircraftLayer = useCallback(() => {
     if (!map.current || !map.current.getSource('aircraft') || !showTraffic) {
       return;
@@ -297,7 +329,7 @@ export default function App() {
     updateAircraftLayer();
   }, [updateAircraftLayer]);
 
-  // FIX #5: Remove lastUpdate from dependency array to fix polling cycle
+  // Polling helper keeps dependency array empty so intervals stay stable
   const fetchAircraft = useCallback(async () => {
     try {
       const response = await axios.get(`${API}/air/opensky`, { timeout: 8000 });
@@ -319,7 +351,7 @@ export default function App() {
       setDataStatus('unavailable');
       toast.error('Aircraft data unavailable', { id: 'data-error' });
     }
-  }, []);  // FIX #5: Empty deps - function is stable, interval works correctly
+  }, []);  // Empty deps – function is stable so setInterval works correctly
 
   // Poll for aircraft updates
   useEffect(() => {
@@ -328,38 +360,13 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchAircraft]);
 
-  // Update weather tiles every hour
-  const updateWeatherTiles = useCallback(() => {
-    if (!map.current || !map.current.getSource('precipitation')) return;
-    
-    const now = new Date();
-    const utcDate = now.getUTCFullYear() + 
-                   String(now.getUTCMonth() + 1).padStart(2, '0') + 
-                   String(now.getUTCDate()).padStart(2, '0');
-    const utcHour = String(now.getUTCHours()).padStart(2, '0');
-    
-    const newTiles = [`https://weathermaps.weatherapi.com/precip/tiles/${utcDate}${utcHour}/{z}/{x}/{y}.png`];
-    
-    try {
-      const source = map.current.getSource('precipitation');
-      if (source && source.tiles) {
-        source.tiles = newTiles;
-        if (map.current.style.sourceCaches['precipitation']) {
-          map.current.style.sourceCaches['precipitation'].clearTiles();
-          map.current.style.sourceCaches['precipitation'].update(map.current.transform);
-          map.current.triggerRepaint();
-        }
-        console.log('🌧️ Weather tiles updated for hour:', utcHour);
-      }
-    } catch (error) {
-      console.error('Failed to update weather tiles:', error);
-    }
-  }, []);
-
   useEffect(() => {
-    const interval = setInterval(updateWeatherTiles, 3600000); // 1 hour
+    if (!mapReady) return;
+
+    fetchRainViewerTiles();
+    const interval = setInterval(fetchRainViewerTiles, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [updateWeatherTiles]);
+  }, [mapReady, fetchRainViewerTiles]);
 
   // Fetch weather data every 10 minutes
   const fetchWeather = useCallback(async () => {
@@ -379,7 +386,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchWeather]);
 
-  // FIX #3 & #6: Handle aircraft selection with MapLibre queryRenderedFeatures
+  // Handle aircraft selection via MapLibre features
   useEffect(() => {
     if (!map.current) return;
 
@@ -401,7 +408,7 @@ export default function App() {
 
     map.current.on('click', handleClick);
     
-    // FIX #3: Add null check in cleanup
+    // Guard cleanup in case map ref is already cleared
     return () => {
       if (map.current) {
         map.current.off('click', handleClick);
@@ -437,8 +444,8 @@ export default function App() {
                 checked={showWeather} 
                 onCheckedChange={(checked) => {
                   setShowWeather(checked);
-                  if (map.current && map.current.getLayer('precipitation-layer')) {
-                    map.current.setLayoutProperty('precipitation-layer', 'visibility', 
+                  if (map.current && map.current.getLayer('weather-layer')) {
+                    map.current.setLayoutProperty('weather-layer', 'visibility', 
                       checked ? 'visible' : 'none');
                   }
                 }}
@@ -553,7 +560,7 @@ export default function App() {
       {/* AIR Bar */}
       <header className="h-12 border-b border-[#3A3E43] flex items-center justify-between px-4" data-testid="air-bar">
         <div className="flex items-center gap-3">
-          <div className="text-[#E7E9EA] font-semibold tracking-tight text-lg" data-testid="odin-logo">ODIN</div>
+          <div className="text-[#E7E9EA] font-semibold tracking-tight text-lg" data-testid="odin-logo">odin</div>
           <Separator orientation="vertical" className="h-4 bg-[#3A3E43]" />
           <span className="text-sm text-[#A9ADB1]" data-testid="region-label">Bay Area</span>
         </div>
@@ -599,7 +606,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* FIX #4: Single responsive layout (not duplicate containers) */}
+      {/* Single responsive layout (no duplicate containers) */}
       <div className="flex md:grid md:grid-cols-[18rem_minmax(0,1fr)_22rem] h-[calc(100vh-48px)]">
         <aside className="hidden md:block border-r border-[#3A3E43] bg-[#0E0F11]" data-testid="filters-panel">
           <FiltersPanel />
