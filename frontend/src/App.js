@@ -582,6 +582,7 @@ export default function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
   
+  const handleSendChatMessage = async () => {
     if (!chatInput.trim() || isSending || !chatSessionId) return;
     
     const userMessage = chatInput.trim();
