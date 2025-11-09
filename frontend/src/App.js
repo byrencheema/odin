@@ -534,18 +534,11 @@ export default function App() {
       );
     };
 
-    const renderChatView = () => {
-      const [chatSessionId, setChatSessionId] = useState(null);
-      const [chatMessages, setChatMessages] = useState([]);
-      const [chatInput, setChatInput] = useState('');
-      const [isSending, setIsSending] = useState(false);
-      const [isStreaming, setIsStreaming] = useState(false);
-      const [predictedFollowUp, setPredictedFollowUp] = useState(null);
-      const [includeContext, setIncludeContext] = useState(true);
-      const chatEndRef = useRef(null);
+    // Initialize chat session
+    useEffect(() => {
+      if (infoView !== 'chat' || chatSessionId) return;
       
-      // Initialize chat session on mount
-      useEffect(() => {
+      const initSession = async () => {
         const initSession = async () => {
           // Check localStorage for existing session
           const savedSessionId = localStorage.getItem('odin_chat_session_id');
