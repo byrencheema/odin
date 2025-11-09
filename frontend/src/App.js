@@ -775,7 +775,7 @@ export default function App() {
           }
         }, 'airspace-fill');
 
-        // Add facility markers layer (circles)
+        // Add facility markers layer with better styling
         map.current.addLayer({
           id: 'atc-facilities-markers',
           type: 'circle',
@@ -783,19 +783,41 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 6,
-              ['==', ['get', 'type'], 'tracon'], 10,
-              14  // center
+              ['==', ['get', 'type'], 'tower'], 8,
+              ['==', ['get', 'type'], 'tracon'], 12,
+              16  // center
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.9,
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#0A0B0C'
+            'circle-opacity': 0.95,
+            'circle-stroke-width': 3,
+            'circle-stroke-color': '#0A0B0C',
+            'circle-stroke-opacity': 0.8
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
         });
+        
+        // Add inner glow layer for towers
+        map.current.addLayer({
+          id: 'atc-facilities-glow',
+          type: 'circle',
+          source: 'atc-facilities',
+          paint: {
+            'circle-radius': [
+              'case',
+              ['==', ['get', 'type'], 'tower'], 12,
+              ['==', ['get', 'type'], 'tracon'], 18,
+              24  // center
+            ],
+            'circle-color': ['get', 'color'],
+            'circle-opacity': 0.15,
+            'circle-blur': 1
+          },
+          layout: {
+            'visibility': showATCFacilities ? 'visible' : 'none'
+          }
+        }, 'atc-facilities-markers');
 
         // Add facility labels
         map.current.addLayer({
