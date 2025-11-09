@@ -1,18 +1,14 @@
 [
   {
-    "content": "Remove current chat backend endpoints",
-    "status": "completed"
+    "content": "Debug InfoPanel constant re-rendering issue",
+    "status": "in_progress"
   },
   {
-    "content": "Create new simple chat endpoint with OpenRouter",
-    "status": "completed"
+    "content": "Fix state causing re-renders",
+    "status": "pending"
   },
   {
-    "content": "Rebuild chat frontend component from scratch",
-    "status": "completed"
-  },
-  {
-    "content": "Restart services and test chat",
-    "status": "completed"
+    "content": "Test typing in chat without interruption",
+    "status": "pending"
   }
 ]
