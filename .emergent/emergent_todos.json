@@ -1,10 +1,22 @@
 [
   {
-    "content": "Test OpenSky API with OAuth2 authentication using curl",
-    "status": "completed"
+    "content": "Create aircraft simulation service with realistic flight patterns",
+    "status": "in_progress"
   },
   {
-    "content": "Verify aircraft data is being fetched and displayed on map",
-    "status": "completed"
+    "content": "Add ENABLE_SIMULATION flag to backend/.env",
+    "status": "pending"
+  },
+  {
+    "content": "Update backend to use simulation when OpenSky fails",
+    "status": "pending"
+  },
+  {
+    "content": "Test simulation with various aircraft counts",
+    "status": "pending"
+  },
+  {
+    "content": "Verify aircraft appear and move on map with simulation",
+    "status": "pending"
   }
 ]
