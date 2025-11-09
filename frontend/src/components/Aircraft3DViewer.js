@@ -172,7 +172,7 @@ export default function Aircraft3DViewer({ aircraft }) {
           material: Cesium.Color.CYAN.withAlpha(0.8),
         },
         model: {
-          uri: 'https://raw.githubusercontent.com/CesiumGS/cesium/main/Apps/SampleData/models/CesiumAir/Cesium_Air.glb',
+          uri: '/boeing_737.glb',
           minimumPixelSize: 128,
           maximumScale: 20000,
           scale: 1.0,
