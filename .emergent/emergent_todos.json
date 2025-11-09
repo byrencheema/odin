@@ -1,18 +1,18 @@
 [
   {
     "content": "Improve tower visual appearance on map",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Add ATC facility details to right sidebar instead of popup",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Fix chat rerendering on session request",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test improvements",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
