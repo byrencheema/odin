@@ -672,9 +672,7 @@ async def simple_chat(request: SimpleChatRequest):
     return SimpleChatResponse(response=response)
 
 
-# Simple Chat Models
-class SimpleChatRequest(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+# Simple chat endpoint added above - old code removed
     
     role: str  # "user", "assistant", "system"
     content: str
