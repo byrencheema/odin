@@ -25,6 +25,10 @@
   },
   {
     "content": "Fix chat rerender bug",
+    "status": "completed"
+  },
+  {
+    "content": "Restart backend to load ATC facilities module",
     "status": "in_progress"
   },
   {
