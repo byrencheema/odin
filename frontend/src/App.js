@@ -777,7 +777,7 @@ export default function App() {
           }
         });
 
-        // Add facility markers layer (smaller and more subtle)
+        // Add facility markers layer
         map.current.addLayer({
           id: 'atc-facilities-markers',
           type: 'circle',
@@ -785,22 +785,22 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 5,  // Smaller towers
-              ['==', ['get', 'type'], 'tracon'], 7,  // Smaller TRACON
-              9  // Smaller center
+              ['==', ['get', 'type'], 'tower'], 8,  // Larger for visibility
+              ['==', ['get', 'type'], 'tracon'], 12,
+              16  // Larger center
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.9,
-            'circle-stroke-width': 2,
+            'circle-opacity': 0.95,
+            'circle-stroke-width': 3,
             'circle-stroke-color': '#0A0B0C',
-            'circle-stroke-opacity': 0.8
+            'circle-stroke-opacity': 0.9
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
         });
         
-        // Add subtle glow layer
+        // Add glow layer
         map.current.addLayer({
           id: 'atc-facilities-glow',
           type: 'circle',
@@ -808,12 +808,12 @@ export default function App() {
           paint: {
             'circle-radius': [
               'case',
-              ['==', ['get', 'type'], 'tower'], 8,  // Smaller glow
-              ['==', ['get', 'type'], 'tracon'], 11,
-              14  // Smaller center glow
+              ['==', ['get', 'type'], 'tower'], 14,  // Larger glow
+              ['==', ['get', 'type'], 'tracon'], 18,
+              24  // Larger center glow
             ],
             'circle-color': ['get', 'color'],
-            'circle-opacity': 0.08,  // More subtle glow
+            'circle-opacity': 0.2,  // More visible glow
             'circle-blur': 1
           },
           layout: {
