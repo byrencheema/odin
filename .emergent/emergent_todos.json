@@ -1,14 +1,14 @@
 [
   {
     "content": "Remove '2s tick' from status label, keep just INIT/LIVE",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Revert ODIN logo to text-only in mono font",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test UI changes",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
