@@ -1,11 +1,11 @@
 [
   {
     "content": "Pull latest changes from remote odin repo",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Review new features (chat UI, trails, boundaries, etc.)",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Restart both backend and frontend servers",
