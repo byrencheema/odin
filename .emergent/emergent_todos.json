@@ -1,14 +1,14 @@
 [
   {
     "content": "Remove rounded corners from all UI components",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Update CSS variables for sharp corners",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test sharp tactical appearance",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
