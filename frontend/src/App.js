@@ -131,13 +131,13 @@ export default function App() {
         throw new Error('MapLibre GL not loaded properly');
       }
 
-      // FIX #1: Use inline style object instead of external style URL
+      // FIX #1: Use inline style object with darkmatter theme
       const styleObject = {
         version: 8,
         sources: {
           'raster-tiles': {
             type: 'raster',
-            tiles: [`https://api.maptiler.com/maps/voyager/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`],
+            tiles: [`https://api.maptiler.com/maps/darkmatter/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`],
             tileSize: 256,
             attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>'
           }
