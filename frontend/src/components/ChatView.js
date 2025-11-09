@@ -312,4 +312,6 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
       )}
     </div>
   );
-}
+});
+
+export default ChatView;
