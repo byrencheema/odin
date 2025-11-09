@@ -25,10 +25,10 @@
   },
   {
     "content": "Restart backend service to load new code",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Test handoff feature end-to-end",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
