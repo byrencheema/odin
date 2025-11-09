@@ -1,15 +1,11 @@
 [
   {
-    "content": "Pull latest changes from remote odin repo",
+    "content": "Review new features (chat UI, trails, boundaries, etc.)",
     "status": "completed"
   },
   {
-    "content": "Review new features (chat UI, trails, boundaries, etc.)",
-    "status": "in_progress"
-  },
-  {
     "content": "Restart both backend and frontend servers",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
