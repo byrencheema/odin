@@ -539,46 +539,43 @@ export default function App() {
       if (infoView !== 'chat' || chatSessionId) return;
       
       const initSession = async () => {
-        const initSession = async () => {
-          // Check localStorage for existing session
-          const savedSessionId = localStorage.getItem('odin_chat_session_id');
-          if (savedSessionId) {
-            // Try to fetch existing session
-            try {
-              const response = await axios.get(`${API}/chat/session/${savedSessionId}`);
-              setChatSessionId(savedSessionId);
-              setChatMessages(response.data.messages || []);
-              return;
-            } catch (error) {
-              console.log('Saved session not found, creating new session');
-            }
-          }
-          
-          // Create new session
+        // Check localStorage for existing session
+        const savedSessionId = localStorage.getItem('odin_chat_session_id');
+        if (savedSessionId) {
+          // Try to fetch existing session
           try {
-            const response = await axios.post(`${API}/chat/session`, {
-              title: 'ODIN Console Chat'
-            });
-            const sessionId = response.data.session_id;
-            setChatSessionId(sessionId);
-            localStorage.setItem('odin_chat_session_id', sessionId);
-            
-            // Add welcome message
-            setChatMessages([{
-              role: 'assistant',
-              content: 'Hello! I\'m ODIN Copilot. I can help you understand aircraft movements, NOTAMs, and console status. What would you like to know?',
-              timestamp: new Date().toISOString()
-            }]);
+            const response = await axios.get(`${API}/chat/session/${savedSessionId}`);
+            setChatSessionId(savedSessionId);
+            setChatMessages(response.data.messages || []);
+            return;
           } catch (error) {
-            console.error('Failed to create chat session:', error);
-            toast.error('Failed to initialize chat');
+            console.log('Saved session not found, creating new session');
           }
-        };
-        
-        if (infoView === 'chat' && !chatSessionId) {
-          initSession();
         }
-      }, [infoView]);
+        
+        // Create new session
+        try {
+          const response = await axios.post(`${API}/chat/session`, {
+            title: 'ODIN Console Chat'
+          });
+          const sessionId = response.data.session_id;
+          setChatSessionId(sessionId);
+          localStorage.setItem('odin_chat_session_id', sessionId);
+          
+          // Add welcome message
+          setChatMessages([{
+            role: 'assistant',
+            content: 'Hello! I\'m ODIN Copilot. I can help you understand aircraft movements, NOTAMs, and console status. What would you like to know?',
+            timestamp: new Date().toISOString()
+          }]);
+        } catch (error) {
+          console.error('Failed to create chat session:', error);
+          toast.error('Failed to initialize chat');
+        }
+      };
+      
+      initSession();
+    }, [infoView, chatSessionId]);
       
       // Auto-scroll to bottom
       useEffect(() => {
