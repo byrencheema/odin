@@ -49,9 +49,9 @@ export default function App() {
 
   // Filter states
   const [showRunways, setShowRunways] = useState(false);
-  const [showTraffic, setShowTraffic] = useState(false);
+  const [showTraffic, setShowTraffic] = useState(true);
   const [showWeather, setShowWeather] = useState(false);
-  const [showATCFacilities, setShowATCFacilities] = useState(false);
+  const [showATCFacilities, setShowATCFacilities] = useState(true);
   const [weatherData, setWeatherData] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
