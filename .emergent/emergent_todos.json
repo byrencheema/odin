@@ -1,22 +1,26 @@
 [
   {
-    "content": "Search for accurate Bay Area ATC airspace data (Class B, C, D)",
-    "status": "in_progress"
-  },
-  {
-    "content": "Replace airspace boxes with circles in airspace_data.py",
-    "status": "pending"
+    "content": "Fix aircraft SVG icon (replaced with clean simple SVG)",
+    "status": "completed"
   },
   {
     "content": "Change aircraft trails to transparent dotted lines",
+    "status": "in_progress"
+  },
+  {
+    "content": "Search for accurate Bay Area ATC airspace circles data",
     "status": "pending"
   },
   {
-    "content": "Fix aircraft SVG icon loading issue",
+    "content": "Replace airspace boxes with circles",
     "status": "pending"
   },
   {
-    "content": "Audit all API keys and identify missing ones",
+    "content": "Audit and identify missing API keys",
+    "status": "pending"
+  },
+  {
+    "content": "Restart servers and verify all features work",
     "status": "pending"
   }
 ]
