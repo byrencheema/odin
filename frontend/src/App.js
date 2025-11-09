@@ -260,6 +260,43 @@ const InfoPanel = ({
               </div>
             </CardContent>
           </Card>
+          
+          {/* Live ATC Audio Feeds */}
+          {LIVE_ATC_FEEDS[selectedATCFacility.id] && (
+            <Card className="mt-4 bg-[#0E0F11] border-[#3A3E43]">
+              <CardHeader>
+                <div className="text-sm font-medium text-[#6BEA76]">Live ATC Audio</div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {LIVE_ATC_FEEDS[selectedATCFacility.id].map((feed, idx) => (
+                  <div key={idx} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-[#E7E9EA]">{feed.name}</div>
+                        <div className="text-xs text-[#A9ADB1]">
+                          {feed.frequency} • {feed.type}
+                        </div>
+                      </div>
+                    </div>
+                    <audio
+                      controls
+                      className="w-full h-8"
+                      preload="none"
+                      style={{
+                        backgroundColor: '#0A0B0C',
+                        borderRadius: '4px',
+                        height: '32px'
+                      }}
+                    >
+                      <source src={getLiveATCUrl(feed.streamId)} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+          
           <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
             <p className="text-xs text-[#A9ADB1] italic">
               {selectedATCFacility.type === 'tower' && 'Controls aircraft on the ground and in the immediate vicinity of the airport.'}
