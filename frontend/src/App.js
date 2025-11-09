@@ -190,8 +190,9 @@ export default function App() {
             10000, '#6BEA76',    // Mid - green
             15000, '#FFC857'     // High - yellow
           ],
-          'line-width': 2,
-          'line-opacity': 0.5
+          'line-width': 1,        // Thinner line
+          'line-opacity': 0.3,    // More transparent
+          'line-dasharray': [2, 3] // Dotted line (2px dash, 3px gap)
         }
       });
 
