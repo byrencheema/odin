@@ -650,26 +650,10 @@ async def get_current_weather():
     }
 
 
-# ===== ODIN COPILOT CHAT =====
+# ===== SIMPLE CHAT WITH OPENROUTER =====
 
-# OpenRouter Configuration
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
-OPENROUTER_BASE_URL = os.environ.get('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1')
-OPENROUTER_MODEL = os.environ.get('OPENROUTER_MODEL', 'anthropic/claude-3.5-sonnet')
-OPENROUTER_TIMEOUT = float(os.environ.get('OPENROUTER_TIMEOUT_SECONDS', '15'))
-CHAT_STREAMING_ENABLED = os.environ.get('CHAT_STREAMING_ENABLED', 'true').lower() == 'true'
-
-# Initialize OpenRouter client
-openrouter_client = None
-if OPENROUTER_API_KEY:
-    openrouter_client = OpenRouterClient(
-        api_key=OPENROUTER_API_KEY,
-        base_url=OPENROUTER_BASE_URL,
-        model=OPENROUTER_MODEL,
-        timeout_seconds=OPENROUTER_TIMEOUT
-    )
-    logger.info(f"OpenRouter client initialized with model: {OPENROUTER_MODEL}")
-else:
+if not OPENROUTER_API_KEY:
     logger.warning("OpenRouter API key not configured - chat will be unavailable")
 
 
