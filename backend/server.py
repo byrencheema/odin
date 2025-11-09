@@ -229,12 +229,36 @@ async def get_opensky_token() -> Optional[str]:
 
 
 async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]:
-    """Fetch aircraft data from OpenSky Network API with OAuth2 authentication"""
+    """
+    Fetch aircraft data from OpenSky Network API with OAuth2 authentication.
+    Falls back to simulation if API is unavailable or simulation is enabled.
+    """
+    global simulation_mode_active, simulation_fail_count
+    
+    # If simulation is explicitly enabled, use it immediately
+    if ENABLE_SIMULATION and not simulation_mode_active:
+        logger.info(f"Simulation mode enabled via config - starting with {SIMULATION_AIRCRAFT_COUNT} aircraft")
+        simulation_mode_active = True
+        simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+        return simulator.get_current_state()
+    
+    # If already in simulation mode, use simulator
+    if simulation_mode_active:
+        simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+        return simulator.get_current_state()
+    
+    # Try real OpenSky API
     try:
         # Get valid OAuth2 token
         access_token = await get_opensky_token()
         if not access_token:
             logger.error("Failed to obtain OpenSky OAuth2 token")
+            simulation_fail_count += 1
+            if simulation_fail_count >= MAX_FAIL_COUNT:
+                logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} failures")
+                simulation_mode_active = True
+                simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+                return simulator.get_current_state()
             return None
         
         url = "https://opensky-network.org/api/states/all"
@@ -253,22 +277,49 @@ async def fetch_opensky_data(bbox: Dict[str, float]) -> Optional[Dict[str, Any]]
             response = await client.get(url, params=params, headers=headers)
             
             if response.status_code == 200:
+                # Success! Reset fail count
+                simulation_fail_count = 0
+                logger.info("Successfully fetched data from OpenSky API")
                 return response.json()
             elif response.status_code == 401:
                 logger.error("OpenSky API returned 401 Unauthorized - token may have expired")
                 # Clear cached token to force refresh on next request
                 oauth_token_cache["access_token"] = None
                 oauth_token_cache["expires_at"] = None
+                simulation_fail_count += 1
+                if simulation_fail_count >= MAX_FAIL_COUNT:
+                    logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} auth failures")
+                    simulation_mode_active = True
+                    simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+                    return simulator.get_current_state()
                 return None
             else:
                 logger.error(f"OpenSky API returned status {response.status_code}")
+                simulation_fail_count += 1
+                if simulation_fail_count >= MAX_FAIL_COUNT:
+                    logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} failures")
+                    simulation_mode_active = True
+                    simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+                    return simulator.get_current_state()
                 return None
                 
     except httpx.TimeoutException:
         logger.error("OpenSky API request timed out")
+        simulation_fail_count += 1
+        if simulation_fail_count >= MAX_FAIL_COUNT:
+            logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} timeouts")
+            simulation_mode_active = True
+            simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+            return simulator.get_current_state()
         return None
     except Exception as e:
         logger.error(f"OpenSky API error: {e}")
+        simulation_fail_count += 1
+        if simulation_fail_count >= MAX_FAIL_COUNT:
+            logger.warning(f"Switching to simulation mode after {MAX_FAIL_COUNT} errors")
+            simulation_mode_active = True
+            simulator = get_simulator(bbox, SIMULATION_AIRCRAFT_COUNT)
+            return simulator.get_current_state()
         return None
 
 
