@@ -754,12 +754,12 @@ export default function App() {
           source: 'atc-coverage',
           paint: {
             'fill-color': ['get', 'color'],
-            'fill-opacity': 0.02  // Much more transparent
+            'fill-opacity': 0.08  // More visible for debugging
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
-        }, 'airspace-fill');
+        });
 
         // Add coverage circle outline layer (thinner and more transparent)
         map.current.addLayer({
@@ -768,14 +768,14 @@ export default function App() {
           source: 'atc-coverage',
           paint: {
             'line-color': ['get', 'color'],
-            'line-width': 1,  // Thinner line
-            'line-opacity': 0.3,  // More transparent
-            'line-dasharray': [3, 3]  // Shorter dashes
+            'line-width': 2,  // Thicker for visibility
+            'line-opacity': 0.6,  // More visible
+            'line-dasharray': [4, 2]  // More visible dashes
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
-        }, 'airspace-fill');
+        });
 
         // Add facility markers layer (smaller and more subtle)
         map.current.addLayer({
