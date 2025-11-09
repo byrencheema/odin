@@ -14,6 +14,7 @@ import { Button } from './components/ui/button';
 import { PanelLeft, Info } from 'lucide-react';
 import Aircraft3DModal from './components/Aircraft3DModal';
 import SimpleChatView from './components/SimpleChatView';
+import { LIVE_ATC_FEEDS, getLiveATCUrl } from './data/liveATCFeeds';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/ui/resizable';
 import '@/App.css';
 
