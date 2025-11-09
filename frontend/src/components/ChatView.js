@@ -312,6 +312,9 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
       )}
     </div>
   );
+}, (prevProps, nextProps) => {
+  // Only re-render if selectedAircraft actually changes
+  return prevProps.selectedAircraft?.icao24 === nextProps.selectedAircraft?.icao24;
 });
 
 export default ChatView;
