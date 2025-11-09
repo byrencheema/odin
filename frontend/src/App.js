@@ -510,6 +510,30 @@ export default function App() {
     updateAircraftLayer();
   }, [updateAircraftLayer]);
 
+  // Control aircraft layer visibility when showTraffic changes
+  useEffect(() => {
+    if (!map.current) return;
+
+    try {
+      if (map.current.getLayer('aircraft-icons')) {
+        map.current.setLayoutProperty(
+          'aircraft-icons',
+          'visibility',
+          showTraffic ? 'visible' : 'none'
+        );
+      }
+      if (map.current.getLayer('aircraft-labels')) {
+        map.current.setLayoutProperty(
+          'aircraft-labels',
+          'visibility',
+          showTraffic ? 'visible' : 'none'
+        );
+      }
+    } catch (error) {
+      console.error('Failed to toggle aircraft visibility:', error);
+    }
+  }, [showTraffic]);
+
   // Polling helper keeps dependency array empty so intervals stay stable
   const fetchAircraft = useCallback(async () => {
     try {
