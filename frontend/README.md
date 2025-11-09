@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+## Odin Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This Create React App powers the Odin ATC console. It renders the MapLibre tactical map plus an on-demand Cesium 3D chase camera for any aircraft in the feed.
 
-## Available Scripts
+### Prerequisites
 
-In the project directory, you can run:
+1. Install dependencies
+   ```bash
+   yarn install
+   ```
+2. Copy `.env.example` to `.env.local` (or export the env vars another way) and set:
+   - `REACT_APP_BACKEND_URL` – FastAPI base URL (e.g., `http://localhost:8000`)
+   - `REACT_APP_MAPTILER_KEY` – MapTiler API key for the MapLibre raster layer
+   - `REACT_APP_CESIUM_ION_TOKEN` – Cesium ion access token for imagery, terrain, and OSM Buildings. You can use the default token shared in the project notes, but storing it in `.env.local` keeps secrets out of source control.
 
-### `npm start`
+### Available Scripts
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+yarn start   # run CRA dev server on http://localhost:3000
+yarn build   # produce production bundle
+yarn test    # CRA test runner
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 3D Viewer Notes
 
-### `npm test`
+- Cesium assets are served from `/cesium`, configured via `craco.config.js`.
+- The 3D modal disables MapLibre’s double-click zoom so the gesture exclusively opens the Cesium viewer.
+- If the modal opens without terrain/imagery, confirm the ion token is valid and not rate-limited.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Troubleshooting
 
-### `npm run build`
+- **White globe / ocean only** – ion token missing or invalid.
+- **Modal doesn’t open** – be sure you double-click the aircraft glyph; map double-click zoom is disabled to avoid conflicts.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
