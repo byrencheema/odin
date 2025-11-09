@@ -594,6 +594,50 @@ export default function App() {
     return () => clearInterval(interval);
   }, [mapReady, showTrails, fetchTrails]);
 
+  // Generate ATC handoff with voice
+  const generateHandoff = async () => {
+    if (!selectedAircraft) return;
+    
+    setHandoffLoading(true);
+    setHandoffData(null);
+    
+    try {
+      const handoffRequest = {
+        icao24: selectedAircraft.icao24,
+        callsign: selectedAircraft.callsign,
+        aircraft_type: "B737", // Default, can be enhanced
+        latitude: selectedAircraft.latitude,
+        longitude: selectedAircraft.longitude,
+        altitude: selectedAircraft.baro_altitude || selectedAircraft.geo_altitude || 0,
+        velocity: selectedAircraft.velocity || 0,
+        heading: selectedAircraft.true_track || 0,
+        destination: null // Can be enhanced with flight plan data
+      };
+      
+      const response = await axios.post(`${API}/handoff/generate`, handoffRequest, { timeout: 15000 });
+      const data = response.data;
+      
+      setHandoffData(data);
+      
+      // Auto-play audio if available
+      if (data.audio_base64 && audioRef.current) {
+        const audioSrc = `data:audio/mpeg;base64,${data.audio_base64}`;
+        audioRef.current.src = audioSrc;
+        audioRef.current.play().catch(err => {
+          console.error('Audio playback failed:', err);
+          toast.error('Failed to play handoff audio');
+        });
+      }
+      
+      toast.success('Handoff generated successfully');
+    } catch (error) {
+      console.error('Failed to generate handoff:', error);
+      toast.error('Failed to generate handoff');
+    } finally {
+      setHandoffLoading(false);
+    }
+  };
+
   // Phase 1: Load airspace boundaries once
   useEffect(() => {
     if (!mapReady || airspaceLoaded) return;
