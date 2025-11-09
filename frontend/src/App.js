@@ -820,7 +820,7 @@ export default function App() {
           }
         }, 'atc-facilities-markers');
 
-        // Add facility labels
+        // Add facility labels (smaller and more subtle)
         map.current.addLayer({
           id: 'atc-facilities-labels',
           type: 'symbol',
@@ -828,16 +828,16 @@ export default function App() {
           layout: {
             'text-field': ['concat', ['get', 'id'], '\n', ['get', 'coverage_nm'], 'NM'],
             'text-font': ['Open Sans Regular'],
-            'text-size': 11,
-            'text-offset': [0, -1.5],
+            'text-size': 9,  // Smaller text
+            'text-offset': [0, -1.2],
             'text-anchor': 'bottom',
             'visibility': showATCFacilities ? 'visible' : 'none'
           },
           paint: {
             'text-color': ['get', 'color'],
             'text-halo-color': '#0A0B0C',
-            'text-halo-width': 2,
-            'text-opacity': 1
+            'text-halo-width': 1.5,
+            'text-opacity': 0.7  // More subtle
           }
         });
 
