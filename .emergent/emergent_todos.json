@@ -1,18 +1,10 @@
 [
   {
-    "content": "Add ENABLE_SIMULATION flag to backend/.env",
-    "status": "completed"
-  },
-  {
-    "content": "Update backend to use simulation when OpenSky fails",
-    "status": "completed"
-  },
-  {
     "content": "Test simulation with various aircraft counts",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Verify aircraft appear and move on map with simulation",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
