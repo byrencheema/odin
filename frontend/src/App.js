@@ -746,30 +746,30 @@ export default function App() {
           data: pointsData
         });
 
-        // Add coverage circle fill layer
+        // Add coverage circle fill layer (very subtle)
         map.current.addLayer({
           id: 'atc-coverage-fill',
           type: 'fill',
           source: 'atc-coverage',
           paint: {
             'fill-color': ['get', 'color'],
-            'fill-opacity': 0.08
+            'fill-opacity': 0.02  // Much more transparent
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
           }
         }, 'airspace-fill');
 
-        // Add coverage circle outline layer
+        // Add coverage circle outline layer (thinner and more transparent)
         map.current.addLayer({
           id: 'atc-coverage-outline',
           type: 'line',
           source: 'atc-coverage',
           paint: {
             'line-color': ['get', 'color'],
-            'line-width': 2,
-            'line-opacity': 0.6,
-            'line-dasharray': [4, 2]
+            'line-width': 1,  // Thinner line
+            'line-opacity': 0.3,  // More transparent
+            'line-dasharray': [3, 3]  // Shorter dashes
           },
           layout: {
             'visibility': showATCFacilities ? 'visible' : 'none'
