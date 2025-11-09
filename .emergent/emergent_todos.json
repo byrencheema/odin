@@ -1,14 +1,10 @@
 [
   {
-    "content": "Test all filters and toggles (aircraft, weather, trails, boundaries)",
+    "content": "Test chat UI functionality",
     "status": "completed"
   },
   {
-    "content": "Test chat UI functionality",
-    "status": "in_progress"
-  },
-  {
     "content": "Verify no bugs or errors in console",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
