@@ -416,6 +416,57 @@ async def get_aircraft_details(icao24: str):
     
     raise HTTPException(status_code=404, detail=f"Aircraft {icao24} not found")
 
+
+# ===== Weather API Integration =====
+
+@api_router.get("/weather/current")
+async def get_current_weather():
+    """
+    Fetch current weather for KSFO, KOAK, KSJC airports.
+    Updates every 10 minutes to minimize API usage.
+    """
+    airports = [
+        {"code": "KSFO", "q": "37.6213,-122.3790"},  # SFO
+        {"code": "KOAK", "q": "37.7214,-122.2208"},  # Oakland
+        {"code": "KSJC", "q": "37.3639,-121.9289"}   # San Jose
+    ]
+    
+    weather_data = {}
+    api_key = os.environ.get('WEATHERAPI_KEY')
+    
+    if not api_key:
+        logger.error("WEATHERAPI_KEY not configured")
+        return {"airports": {}, "status": "unavailable"}
+    
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        for airport in airports:
+            try:
+                url = "https://api.weatherapi.com/v1/current.json"
+                params = {"key": api_key, "q": airport["q"], "aqi": "no"}
+                response = await client.get(url, params=params)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    weather_data[airport["code"]] = {
+                        "temp_c": data["current"]["temp_c"],
+                        "condition": data["current"]["condition"]["text"],
+                        "wind_kph": data["current"]["wind_kph"],
+                        "wind_dir": data["current"]["wind_dir"],
+                        "visibility_km": data["current"]["vis_km"]
+                    }
+                else:
+                    logger.error(f"Weather API returned {response.status_code} for {airport['code']}")
+                    weather_data[airport["code"]] = {"condition": "—"}
+            except Exception as e:
+                logger.error(f"Failed to fetch weather for {airport['code']}: {e}")
+                weather_data[airport["code"]] = {"condition": "—"}
+    
+    return {
+        "airports": weather_data,
+        "timestamp": int(datetime.now(timezone.utc).timestamp()),
+        "status": "ok" if weather_data else "unavailable"
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 

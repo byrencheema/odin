@@ -32,6 +32,8 @@ export default function App() {
   // Filter states
   const [showRunways, setShowRunways] = useState(true);
   const [showTraffic, setShowTraffic] = useState(true);
+  const [showWeather, setShowWeather] = useState(false);
+  const [weatherData, setWeatherData] = useState(null);
   
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -184,6 +186,35 @@ export default function App() {
             
             // Now add layers after sprite is ready
             addAircraftLayers();
+            
+            // Add precipitation weather layer (free, no API key)
+            if (!map.current.getSource('precipitation')) {
+              const now = new Date();
+              const utcDate = now.getUTCFullYear() + 
+                             String(now.getUTCMonth() + 1).padStart(2, '0') + 
+                             String(now.getUTCDate()).padStart(2, '0');
+              const utcHour = String(now.getUTCHours()).padStart(2, '0');
+
+              map.current.addSource('precipitation', {
+                type: 'raster',
+                tiles: [`https://weathermaps.weatherapi.com/precip/tiles/${utcDate}${utcHour}/{z}/{x}/{y}.png`],
+                tileSize: 256
+              });
+
+              map.current.addLayer({
+                id: 'precipitation-layer',
+                type: 'raster',
+                source: 'precipitation',
+                paint: {
+                  'raster-opacity': 0.6
+                },
+                layout: {
+                  'visibility': 'none'  // Hidden by default
+                }
+              }, 'aircraft-icons'); // Insert before aircraft so planes are on top
+              
+              console.log('🌧️ Weather layer added');
+            }
           };
           
           img.onerror = (err) => {
@@ -297,6 +328,57 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchAircraft]);
 
+  // Update weather tiles every hour
+  const updateWeatherTiles = useCallback(() => {
+    if (!map.current || !map.current.getSource('precipitation')) return;
+    
+    const now = new Date();
+    const utcDate = now.getUTCFullYear() + 
+                   String(now.getUTCMonth() + 1).padStart(2, '0') + 
+                   String(now.getUTCDate()).padStart(2, '0');
+    const utcHour = String(now.getUTCHours()).padStart(2, '0');
+    
+    const newTiles = [`https://weathermaps.weatherapi.com/precip/tiles/${utcDate}${utcHour}/{z}/{x}/{y}.png`];
+    
+    try {
+      const source = map.current.getSource('precipitation');
+      if (source && source.tiles) {
+        source.tiles = newTiles;
+        if (map.current.style.sourceCaches['precipitation']) {
+          map.current.style.sourceCaches['precipitation'].clearTiles();
+          map.current.style.sourceCaches['precipitation'].update(map.current.transform);
+          map.current.triggerRepaint();
+        }
+        console.log('🌧️ Weather tiles updated for hour:', utcHour);
+      }
+    } catch (error) {
+      console.error('Failed to update weather tiles:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(updateWeatherTiles, 3600000); // 1 hour
+    return () => clearInterval(interval);
+  }, [updateWeatherTiles]);
+
+  // Fetch weather data every 10 minutes
+  const fetchWeather = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API}/weather/current`, { timeout: 8000 });
+      setWeatherData(response.data);
+      console.log('🌤️ Weather data updated');
+    } catch (error) {
+      console.error('Failed to fetch weather:', error);
+      setWeatherData(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWeather();
+    const interval = setInterval(fetchWeather, 600000); // 10 minutes
+    return () => clearInterval(interval);
+  }, [fetchWeather]);
+
   // FIX #3 & #6: Handle aircraft selection with MapLibre queryRenderedFeatures
   useEffect(() => {
     if (!map.current) return;
@@ -347,17 +429,27 @@ export default function App() {
         </div>
         <Separator className="bg-[#3A3E43]" />
         <div>
-          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Layers (Future)</h3>
-          <div className="space-y-3 opacity-50">
+          <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Layers</h3>
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm">Weather</Label>
-              <Switch disabled data-testid="weather-switch" />
+              <Switch 
+                checked={showWeather} 
+                onCheckedChange={(checked) => {
+                  setShowWeather(checked);
+                  if (map.current && map.current.getLayer('precipitation-layer')) {
+                    map.current.setLayoutProperty('precipitation-layer', 'visibility', 
+                      checked ? 'visible' : 'none');
+                  }
+                }}
+                data-testid="weather-switch" 
+              />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between opacity-50">
               <Label className="text-sm">Incidents</Label>
               <Switch disabled data-testid="incidents-switch" />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between opacity-50">
               <Label className="text-sm">Heatmap</Label>
               <Switch disabled data-testid="heatmap-switch" />
             </div>
@@ -477,8 +569,11 @@ export default function App() {
           </span>
         </div>
         <div className="hidden md:flex items-center gap-3 text-xs text-[#A9ADB1]">
-          <span data-testid="weather-summary">METAR: —</span>
-          <span data-testid="active-runways">RWY: —</span>
+          <span data-testid="weather-summary">
+            {weatherData && weatherData.airports?.KSFO 
+              ? `KSFO: ${Math.round(weatherData.airports.KSFO.temp_c)}°C ${weatherData.airports.KSFO.condition}`
+              : 'KSFO: —'}
+          </span>
         </div>
         <div className="md:hidden flex items-center gap-2">
           <Sheet>
