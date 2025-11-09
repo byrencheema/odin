@@ -265,21 +265,35 @@ const InfoPanel = ({
           {LIVE_ATC_FEEDS[selectedATCFacility.id] && (
             <Card className="mt-4 bg-[#0E0F11] border-[#3A3E43]">
               <CardHeader>
-                <div className="text-sm font-medium text-[#6BEA76]">Live ATC Audio</div>
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-medium text-[#6BEA76]">Live ATC Audio Feeds</div>
+                  <div className="text-xs text-[#A9ADB1]">{LIVE_ATC_FEEDS[selectedATCFacility.id].length} channels</div>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 {LIVE_ATC_FEEDS[selectedATCFacility.id].map((feed, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm text-[#E7E9EA]">{feed.name}</div>
-                        <div className="text-xs text-[#A9ADB1]">
-                          {feed.frequency} • {feed.type}
+                  <div key={idx} className="space-y-2 p-3 bg-[#0A0B0C] rounded-lg border border-[#3A3E43]">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className="text-sm font-medium text-[#E7E9EA]">{feed.name}</div>
+                          {feed.listeners && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-[#4DD7E6]/10 text-[#4DD7E6]">
+                              {feed.listeners} live
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-[#A9ADB1] mt-1">
+                          <span className="font-['Azeret_Mono',monospace]">{feed.frequency}</span>
+                          {' • '}
+                          <span>{feed.type}</span>
                         </div>
                       </div>
                     </div>
                     <audio
+                      id={`${selectedATCFacility.id.toLowerCase()}_${feed.streamId}`}
                       controls
+                      autoPlay={false}
                       className="w-full h-8"
                       preload="none"
                       style={{
@@ -287,6 +301,7 @@ const InfoPanel = ({
                         borderRadius: '4px',
                         height: '32px'
                       }}
+                      data-testid={`audio-${feed.streamId}`}
                     >
                       <source src={getLiveATCUrl(feed.streamId)} type="audio/mpeg" />
                       Your browser does not support the audio element.
