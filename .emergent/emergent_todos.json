@@ -1,18 +1,18 @@
 [
   {
     "content": "Debug ATC facilities disappearing after few minutes",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Check useEffect cleanup and dependencies",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Fix layer persistence issue",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test layer stability over time",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
