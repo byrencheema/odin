@@ -433,7 +433,7 @@ Goal: Add interactive features and polish to create full MVP per PRD.
 - **Demo-ready with all features operational**
 
 ### Current Deployment:
-- Preview URL: https://skywatcher-7.preview.emergentagent.com
+- Preview URL: https://odin-radar.preview.emergentagent.com
 - Backend: FastAPI on port 8001
 - Frontend: React on port 3000
 - Database: MongoDB (not yet used)

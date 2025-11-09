@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Any, List
 
 class ODINBackendTester:
-    def __init__(self, base_url="https://skywatcher-7.preview.emergentagent.com"):
+    def __init__(self, base_url="https://odin-radar.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
