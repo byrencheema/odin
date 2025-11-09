@@ -1,18 +1,18 @@
 [
   {
     "content": "Fix aircraft trails to show only historical path",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Make trails thinner and more transparent",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Change trails to dotted lines",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "content": "Test trail improvements",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
