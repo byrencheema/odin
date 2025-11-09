@@ -58,6 +58,7 @@ export default function App() {
   const [showTrails, setShowTrails] = useState(true);
   const [showAirspace, setShowAirspace] = useState(true);
   const [airspaceLoaded, setAirspaceLoaded] = useState(false);
+  const [atcFacilitiesLoaded, setAtcFacilitiesLoaded] = useState(false);
 
   // 3D modal state
   const [show3DModal, setShow3DModal] = useState(false);
