@@ -700,11 +700,29 @@ class HandoffRequest(BaseModel):
     destination: Optional[str] = None
 
 
+class ShiftHandoffRequest(BaseModel):
+    """Request model for shift handoff briefing"""
+    facility_id: str = "KSFO"
+    facility_name: str = "San Francisco Tower"
+    outgoing_controller: str = "Controller"
+    incoming_controller: str = "Relief"
+    aircraft_count: int = 0
+    console_context: Optional[dict] = None
+
+
 class HandoffResponse(BaseModel):
     """Response model for ATC handoff"""
     handoff_script: str
     next_sector: str
     next_frequency: str
+    audio_base64: Optional[str] = None
+    status: str
+
+
+class ShiftHandoffResponse(BaseModel):
+    """Response model for shift handoff briefing"""
+    briefing_script: str
+    facility: str
     audio_base64: Optional[str] = None
     status: str
 
@@ -761,6 +779,40 @@ def generate_handoff_script(request: HandoffRequest, next_sector: str, next_freq
         script += f"Destination {request.destination}. "
     
     script += f"Contact {next_sector} on {next_frequency}."
+    
+    return script
+
+
+def generate_shift_briefing(request: ShiftHandoffRequest) -> str:
+    """
+    Generate shift handoff briefing using WEST checklist (Weather, Equipment, Situation, Traffic).
+    Keep it brief - under 15 seconds.
+    """
+    # Brief ATC-style shift handoff
+    script = f"{request.facility_name}, shift briefing. "
+    
+    # Weather - assume clear/good conditions as requested
+    script += "Weather is VFR, winds light and variable, altimeter three zero one two. "
+    
+    # Equipment - assume all operational
+    script += "All equipment operational. "
+    
+    # Situation - sector config, special considerations
+    script += "Standard sector configuration. "
+    
+    # Traffic - current count and activity level
+    if request.aircraft_count > 0:
+        if request.aircraft_count < 5:
+            traffic_level = "light"
+        elif request.aircraft_count < 15:
+            traffic_level = "moderate"
+        else:
+            traffic_level = "heavy"
+        script += f"Traffic {traffic_level}, {request.aircraft_count} aircraft on frequency. "
+    else:
+        script += "No traffic. "
+    
+    script += "No pending issues or conflicts. Position relieved."
     
     return script
 
