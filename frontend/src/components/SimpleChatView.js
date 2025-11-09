@@ -121,6 +121,51 @@ const SimpleChatView = ({
     }
   };
 
+  const handleShiftHandoff = async () => {
+    setHandoffLoading(true);
+    
+    try {
+      // Determine facility from selected ATC or default to KSFO
+      const facilityId = selectedATCFacility?.id || 'KSFO';
+      const facilityName = selectedATCFacility?.name || 'San Francisco Tower';
+      
+      const response = await axios.post(`${API}/api/handoff/shift`, {
+        facility_id: facilityId,
+        facility_name: facilityName,
+        outgoing_controller: 'Controller',
+        incoming_controller: 'Relief',
+        aircraft_count: aircraftCount,
+        console_context: consoleContext
+      });
+      
+      const data = response.data;
+      
+      // Add briefing to chat as assistant message
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: `📻 Shift Handoff Briefing:\n\n${data.briefing_script}`
+      }]);
+      
+      // Auto-play audio if available
+      if (data.audio_base64 && audioRef.current) {
+        const audioSrc = `data:audio/mpeg;base64,${data.audio_base64}`;
+        audioRef.current.src = audioSrc;
+        audioRef.current.play().catch(err => {
+          console.error('Audio playback failed:', err);
+        });
+      }
+      
+    } catch (error) {
+      console.error('Shift handoff error:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, I encountered an error generating the shift handoff. Please try again.'
+      }]);
+    } finally {
+      setHandoffLoading(false);
+    }
+  };
+
   return (
     <div className="h-full flex flex-col bg-[#0E0F11]" data-testid="simple-chat-view">
       <ScrollArea className="flex-1 p-4" ref={scrollRef}>
