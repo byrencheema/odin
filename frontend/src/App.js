@@ -1134,10 +1134,72 @@ export default function App() {
 
   const InfoPanel = () => {
     const renderFlightsView = () => {
+      // Show ATC facility details if selected
+      if (selectedATCFacility) {
+        const typeLabel = selectedATCFacility.type === 'tower' ? 'Tower' : 
+                         selectedATCFacility.type === 'tracon' ? 'TRACON' : 'Center';
+        const typeColor = selectedATCFacility.type === 'tower' ? '#4DD7E6' : 
+                         selectedATCFacility.type === 'tracon' ? '#FF6B6B' : '#6BEA76';
+        
+        return (
+          <ScrollArea className="h-full p-4" data-testid="atc-facility-info">
+            <Card className="bg-[#0E0F11] border-[#3A3E43]">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="font-['Azeret_Mono',monospace] text-lg" style={{color: typeColor}} data-testid="facility-id">
+                    {selectedATCFacility.id}
+                  </div>
+                  <div className="text-xs px-2 py-1 rounded" style={{backgroundColor: typeColor, color: '#0A0B0C'}}>
+                    {typeLabel.toUpperCase()}
+                  </div>
+                </div>
+                <div className="text-sm text-[#E7E9EA] mt-2">{selectedATCFacility.name}</div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <div className="text-[#A9ADB1] text-xs mb-1">FREQUENCY</div>
+                    <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-frequency">
+                      {selectedATCFacility.frequency}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[#A9ADB1] text-xs mb-1">COVERAGE</div>
+                    <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="facility-coverage">
+                      {selectedATCFacility.coverage_nm} NM
+                    </div>
+                  </div>
+                </div>
+                <Separator className="bg-[#3A3E43]" />
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">ELEVATION</div>
+                  <div className="text-sm text-[#E7E9EA]" data-testid="facility-elevation">
+                    {selectedATCFacility.elevation_ft} ft MSL
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">TYPE</div>
+                  <div className="text-sm text-[#E7E9EA]" data-testid="facility-type">
+                    {typeLabel} ({selectedATCFacility.type.toUpperCase()})
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
+              <p className="text-xs text-[#A9ADB1] italic">
+                {selectedATCFacility.type === 'tower' && 'Controls aircraft on the ground and in the immediate vicinity of the airport.'}
+                {selectedATCFacility.type === 'tracon' && 'Provides radar services to aircraft arriving and departing within terminal airspace.'}
+                {selectedATCFacility.type === 'center' && 'Provides en-route air traffic control services for aircraft at higher altitudes.'}
+              </p>
+            </div>
+          </ScrollArea>
+        );
+      }
+      
       if (!selectedAircraft) {
         return (
           <div className="h-full flex items-center justify-center text-[#A9ADB1] px-4" data-testid="info-empty">
-            <p className="text-center text-sm">Click an aircraft to view details</p>
+            <p className="text-center text-sm">Click an aircraft or ATC facility to view details</p>
           </div>
         );
       }
