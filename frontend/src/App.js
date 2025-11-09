@@ -204,10 +204,7 @@ const InfoPanel = ({
   selectedATCFacility,
   notams,
   notamMeta,
-  generateHandoff,
-  handoffLoading,
-  handoffData,
-  audioRef,
+  aircraft,
 }) => {
   const renderFlightsView = () => {
     if (selectedATCFacility) {
