@@ -29,10 +29,10 @@
   },
   {
     "content": "Restart backend to load ATC facilities module",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Test ATC visualization feature",
-    "status": "pending"
+    "status": "in_progress"
   }
 ]
