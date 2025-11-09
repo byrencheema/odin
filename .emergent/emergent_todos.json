@@ -1,10 +1,6 @@
 [
   {
-    "content": "Test chat UI functionality",
-    "status": "completed"
-  },
-  {
     "content": "Verify no bugs or errors in console",
-    "status": "in_progress"
+    "status": "completed"
   }
 ]
