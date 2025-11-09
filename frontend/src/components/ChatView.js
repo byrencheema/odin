@@ -52,11 +52,11 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
   }, [hydratePredictedFollowUp]);
 
   // Initialize chat session on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (hasBootstrappedRef.current) return;
     hasBootstrappedRef.current = true;
     initializeSession();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - only run once on mount, ref guards against double-init
 
   // Auto-scroll to bottom
