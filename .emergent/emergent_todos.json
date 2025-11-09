@@ -1,14 +1,10 @@
 [
   {
-    "content": "Remove '2s tick' from status label, keep just INIT/LIVE",
-    "status": "completed"
+    "content": "Set all layer toggles to default off (unchecked)",
+    "status": "in_progress"
   },
   {
-    "content": "Revert ODIN logo to text-only in mono font",
-    "status": "completed"
-  },
-  {
-    "content": "Test UI changes",
-    "status": "completed"
+    "content": "Test all toggle buttons work correctly",
+    "status": "pending"
   }
 ]
