@@ -1130,7 +1130,7 @@ export default function App() {
     </ScrollArea>
   );
 
-  const InfoPanel = React.memo(() => {
+  const InfoPanel = () => {
     const renderFlightsView = () => {
       // Show ATC facility details if selected
       if (selectedATCFacility) {
