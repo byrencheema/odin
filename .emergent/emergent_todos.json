@@ -1,18 +1,14 @@
 [
   {
-    "content": "Fix aircraft trails to show only historical path",
-    "status": "completed"
+    "content": "Remove '2s tick' from status label, keep just INIT/LIVE",
+    "status": "in_progress"
   },
   {
-    "content": "Make trails thinner and more transparent",
-    "status": "completed"
+    "content": "Revert ODIN logo to text-only in mono font",
+    "status": "pending"
   },
   {
-    "content": "Change trails to dotted lines",
-    "status": "completed"
-  },
-  {
-    "content": "Test trail improvements",
-    "status": "completed"
+    "content": "Test UI changes",
+    "status": "pending"
   }
 ]
