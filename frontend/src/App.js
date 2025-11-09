@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet';
 import { Button } from './components/ui/button';
 import { PanelLeft, Info } from 'lucide-react';
 import Aircraft3DModal from './components/Aircraft3DModal';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './components/ui/resizable';
 import '@/App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -29,6 +30,15 @@ export default function App() {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [localTime, setLocalTime] = useState('');
   const [utcTime, setUtcTime] = useState('');
+  const [infoView, setInfoView] = useState('flights');
+  const [notams, setNotams] = useState([]);
+  const [notamMeta, setNotamMeta] = useState({
+    sequence: 0,
+    lastUpdated: null,
+    cadenceSeconds: 0,
+    totalCatalog: 0,
+    windowSize: 0,
+  });
 
   // Filter states
   const [showRunways, setShowRunways] = useState(true);
@@ -44,6 +54,32 @@ export default function App() {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
+  const handleResizePointerDown = useCallback(() => {
+    if (!map.current || !map.current.dragPan) {
+      return;
+    }
+
+    try {
+      map.current.dragPan.disable();
+    } catch (error) {
+      console.error('Failed to disable map drag during resize:', error);
+    }
+
+    const restoreDrag = () => {
+      if (!map.current || !map.current.dragPan) {
+        return;
+      }
+
+      try {
+        map.current.dragPan.enable();
+      } catch (error) {
+        console.error('Failed to re-enable map drag after resize:', error);
+      }
+    };
+
+    window.addEventListener('pointerup', restoreDrag, { once: true });
+    window.addEventListener('pointercancel', restoreDrag, { once: true });
+  }, []);
   // Clock updates
   useEffect(() => {
     const updateClocks = () => {
@@ -57,6 +93,30 @@ export default function App() {
     const interval = setInterval(updateClocks, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const formatTimestamp = (value) => {
+    if (!value) {
+      return '—';
+    }
+
+    try {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return '—';
+      }
+      return date.toLocaleString('en-US', {
+        hour12: false,
+        month: '2-digit',
+        day: '2-digit',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch (error) {
+      console.error('Failed to format timestamp', error);
+      return '—';
+    }
+  };
 
   // Helper function to add aircraft layers after sprite loads
   const addAircraftLayers = useCallback(() => {
@@ -390,11 +450,42 @@ export default function App() {
     }
   }, []);
 
+  const fetchNotams = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API}/notams`, { timeout: 5000 });
+      const data = response.data || {};
+
+      setNotams(Array.isArray(data.notams) ? data.notams : []);
+      setNotamMeta({
+        sequence: data.sequence || 0,
+        lastUpdated: data.last_updated || null,
+        cadenceSeconds: data.cadence_seconds || 0,
+        totalCatalog: data.total_catalog || 0,
+        windowSize: data.window_size || 0,
+      });
+    } catch (error) {
+      console.error('Failed to fetch NOTAMs:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchWeather();
     const interval = setInterval(fetchWeather, 600000); // 10 minutes
     return () => clearInterval(interval);
   }, [fetchWeather]);
+
+  useEffect(() => {
+    fetchNotams();
+  }, [fetchNotams]);
+
+  useEffect(() => {
+    const intervalMs = Math.max(
+      (notamMeta.cadenceSeconds ? notamMeta.cadenceSeconds * 1000 : 5000),
+      3500
+    );
+    const interval = setInterval(fetchNotams, intervalMs);
+    return () => clearInterval(interval);
+  }, [fetchNotams, notamMeta.cadenceSeconds]);
 
   // Handle aircraft selection via MapLibre features
   useEffect(() => {
@@ -444,7 +535,7 @@ export default function App() {
   }, [aircraft]);
 
   const FiltersPanel = () => (
-    <ScrollArea className="h-[calc(100vh-48px)] p-4" data-testid="filters-panel-scroll">
+    <ScrollArea className="h-full p-4" data-testid="filters-panel-scroll">
       <div className="space-y-6">
         <div>
           <h3 className="text-xs uppercase tracking-widest text-[#A9ADB1] mb-3">Airports / Runways</h3>
@@ -494,71 +585,165 @@ export default function App() {
   );
 
   const InfoPanel = () => {
-    if (!selectedAircraft) {
+    const renderFlightsView = () => {
+      if (!selectedAircraft) {
+        return (
+          <div className="h-full flex items-center justify-center text-[#A9ADB1] px-4" data-testid="info-empty">
+            <p className="text-center text-sm">Click an aircraft to view details</p>
+          </div>
+        );
+      }
+
+      const callsign = (selectedAircraft.callsign || selectedAircraft.icao24).trim();
+      const alt = selectedAircraft.baro_altitude ? Math.round(selectedAircraft.baro_altitude * 3.28084) : '---';
+      const spd = selectedAircraft.velocity ? Math.round(selectedAircraft.velocity * 1.94384) : '---';
+      const hdg = selectedAircraft.true_track ? Math.round(selectedAircraft.true_track) : '---';
+      const vspd = selectedAircraft.vertical_rate ? Math.round(selectedAircraft.vertical_rate * 196.85) : '---';
+
       return (
-        <div className="h-[calc(100vh-48px)] flex items-center justify-center text-[#A9ADB1] px-4" data-testid="info-empty">
-          <p className="text-center text-sm">Click an aircraft to view details</p>
-        </div>
-      );
-    }
-
-    const callsign = (selectedAircraft.callsign || selectedAircraft.icao24).trim();
-    const alt = selectedAircraft.baro_altitude ? Math.round(selectedAircraft.baro_altitude * 3.28084) : '---';
-    const spd = selectedAircraft.velocity ? Math.round(selectedAircraft.velocity * 1.94384) : '---';
-    const hdg = selectedAircraft.true_track ? Math.round(selectedAircraft.true_track) : '---';
-    const vspd = selectedAircraft.vertical_rate ? Math.round(selectedAircraft.vertical_rate * 196.85) : '---';
-
-    return (
-      <ScrollArea className="h-[calc(100vh-48px)] p-4" data-testid="aircraft-info">
-        <Card className="bg-[#0E0F11] border-[#3A3E43]">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="font-['Azeret_Mono',monospace] text-lg text-[#4DD7E6]" data-testid="info-callsign">
-                {callsign}
+        <ScrollArea className="h-full p-4" data-testid="aircraft-info">
+          <Card className="bg-[#0E0F11] border-[#3A3E43]">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="font-['Azeret_Mono',monospace] text-lg text-[#4DD7E6]" data-testid="info-callsign">
+                  {callsign}
+                </div>
+                <div className="text-xs text-[#A9ADB1]" data-testid="info-icao">{selectedAircraft.icao24.toUpperCase()}</div>
               </div>
-              <div className="text-xs text-[#A9ADB1]" data-testid="info-icao">{selectedAircraft.icao24.toUpperCase()}</div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">ALTITUDE</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-alt">{alt} ft</div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">SPEED</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-spd">{spd} kts</div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">HEADING</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-hdg">{hdg}°</div>
+                </div>
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">V/S</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-vspd">{vspd} fpm</div>
+                </div>
+              </div>
+              <Separator className="bg-[#3A3E43]" />
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ORIGIN</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="info-origin">{selectedAircraft.origin_country}</div>
+              </div>
+              <div>
+                <div className="text-[#A9ADB1] text-xs mb-1">ON GROUND</div>
+                <div className="text-sm text-[#E7E9EA]" data-testid="info-ground">{selectedAircraft.on_ground ? 'Yes' : 'No'}</div>
+              </div>
+              {selectedAircraft.squawk && (
+                <div>
+                  <div className="text-[#A9ADB1] text-xs mb-1">SQUAWK</div>
+                  <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-squawk">{selectedAircraft.squawk}</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
+            <p className="text-xs text-[#A9ADB1] italic">Future: AI copilot insights will appear here</p>
+          </div>
+        </ScrollArea>
+      );
+    };
+
+    const renderChatView = () => (
+      <div className="h-full flex items-center justify-center px-4 text-[#A9ADB1]">
+        <p className="text-center text-sm italic">Chat timeline will live here soon.</p>
+      </div>
+    );
+
+    const renderNotamsView = () => (
+      <ScrollArea className="h-full p-4" data-testid="notam-feed">
+        <Card className="bg-[#0E0F11] border-[#3A3E43]">
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-xs uppercase tracking-[0.25em] text-[#A9ADB1] mb-1">NOTAM Feed</div>
+                <div className="font-['Azeret_Mono',monospace] text-[#4DD7E6] text-lg">Bay Area Cluster</div>
+              </div>
+              <div className="text-xs text-right text-[#A9ADB1] font-['Azeret_Mono',monospace]">
+                #{String(notamMeta.sequence || 0).padStart(4, '0')}
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#A9ADB1]">
+              <span>Last update {formatTimestamp(notamMeta.lastUpdated)}</span>
+              <span>Cadence ~{notamMeta.cadenceSeconds ? notamMeta.cadenceSeconds.toFixed(1) : '5.0'}s</span>
+              <span>Catalog {notamMeta.totalCatalog || notams.length}</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">ALTITUDE</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-alt">{alt} ft</div>
-              </div>
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">SPEED</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-spd">{spd} kts</div>
-              </div>
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">HEADING</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-hdg">{hdg}°</div>
-              </div>
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">V/S</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-vspd">{vspd} fpm</div>
-              </div>
-            </div>
-            <Separator className="bg-[#3A3E43]" />
-            <div>
-              <div className="text-[#A9ADB1] text-xs mb-1">ORIGIN</div>
-              <div className="text-sm text-[#E7E9EA]" data-testid="info-origin">{selectedAircraft.origin_country}</div>
-            </div>
-            <div>
-              <div className="text-[#A9ADB1] text-xs mb-1">ON GROUND</div>
-              <div className="text-sm text-[#E7E9EA]" data-testid="info-ground">{selectedAircraft.on_ground ? 'Yes' : 'No'}</div>
-            </div>
-            {selectedAircraft.squawk && (
-              <div>
-                <div className="text-[#A9ADB1] text-xs mb-1">SQUAWK</div>
-                <div className="font-['Azeret_Mono',monospace] text-[#E7E9EA]" data-testid="info-squawk">{selectedAircraft.squawk}</div>
-              </div>
+            {notams.length === 0 ? (
+              <div className="text-sm text-[#A9ADB1] italic">Waiting for NOTAM activity...</div>
+            ) : (
+              notams.map((item) => (
+                <div
+                  key={`${item.id}-${item.emission}`}
+                  className="border-l-2 border-[#4DD7E6]/40 pl-3"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="font-['Azeret_Mono',monospace] text-sm text-[#E7E9EA]">
+                      {item.location} · {item.number}
+                    </span>
+                    <span className="text-xs text-[#A9ADB1] uppercase tracking-wide">{item.classification}</span>
+                  </div>
+                  <div className="mt-1 text-xs text-[#A9ADB1] uppercase tracking-wide">
+                    {item.category}
+                  </div>
+                  <div className="mt-2 text-sm text-[#E7E9EA] leading-5">{item.condition}</div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-[#A9ADB1] font-['Azeret_Mono',monospace]">
+                    <div>Start {item.start || '—'}</div>
+                    <div>End {item.end || '—'}</div>
+                    <div className={item.is_new ? 'text-[#6BEA76]' : ''}>
+                      Emission #{String(item.emission || 0).padStart(4, '0')}
+                    </div>
+                    <div>{formatTimestamp(item.received_at)}</div>
+                  </div>
+                </div>
+              ))
             )}
           </CardContent>
         </Card>
-        <div className="mt-4 p-3 bg-[#0E0F11] border border-[#3A3E43] rounded-lg">
-          <p className="text-xs text-[#A9ADB1] italic">Future: AI copilot insights will appear here</p>
-        </div>
       </ScrollArea>
+    );
+
+    const tabs = [
+      { id: 'flights', label: 'Flights' },
+      { id: 'chat', label: 'Chat' },
+      { id: 'notams', label: 'NOTAMs' },
+    ];
+
+    return (
+      <div className="flex h-full flex-col">
+        <div className="flex items-center gap-2 border-b border-[#3A3E43] px-4 py-3">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setInfoView(tab.id)}
+              className={`rounded-md px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+                infoView === tab.id
+                  ? 'bg-[#1A1C1F] text-[#E7E9EA] border border-[#4DD7E6]/60'
+                  : 'text-[#A9ADB1] hover:text-[#E7E9EA]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex-1">
+          {infoView === 'flights' && renderFlightsView()}
+          {infoView === 'chat' && renderChatView()}
+          {infoView === 'notams' && renderNotamsView()}
+        </div>
+      </div>
     );
   };
 
@@ -616,46 +801,56 @@ export default function App() {
               : 'KSFO: —'}
           </span>
         </div>
-        <div className="md:hidden flex items-center gap-2">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="sm" variant="ghost" data-testid="open-filters-button">
-                <PanelLeft size={16} />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-80 bg-[#0E0F11] text-[#E7E9EA] border-[#3A3E43]">
-              <FiltersPanel />
-            </SheetContent>
-          </Sheet>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="sm" variant="ghost" data-testid="open-info-button">
-                <Info size={16} />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-[#0E0F11] text-[#E7E9EA] border-[#3A3E43]">
-              <InfoPanel />
-            </SheetContent>
-          </Sheet>
-        </div>
       </header>
 
-      {/* Single responsive layout (no duplicate containers) */}
-      <div className="flex md:grid md:grid-cols-[18rem_minmax(0,1fr)_22rem] h-[calc(100vh-48px)]">
-        <aside className="hidden md:block border-r border-[#3A3E43] bg-[#0E0F11]" data-testid="filters-panel">
-          <FiltersPanel />
-        </aside>
-        <main className="relative flex-1" data-testid="map-canvas-area">
-          <div ref={mapContainer} className="w-full h-full" style={{ width: '100%', height: '100%' }} />
-          {aircraft.length === 0 && showTraffic && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <p className="text-[#A9ADB1] text-sm opacity-60">Loading aircraft data...</p>
-            </div>
-          )}
-        </main>
-        <aside className="hidden md:block border-l border-[#3A3E43] bg-[#0E0F11]" data-testid="info-panel">
-          <InfoPanel />
-        </aside>
+      <div className="relative h-[calc(100vh-48px)]" data-testid="map-canvas-area">
+        <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
+        {aircraft.length === 0 && showTraffic && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+            <p className="text-[#A9ADB1] text-sm opacity-60">Loading aircraft data...</p>
+          </div>
+        )}
+
+        <div className="absolute inset-y-4 inset-x-4 z-20 pointer-events-none">
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="h-full w-full flex items-stretch pointer-events-none"
+          >
+            <ResizablePanel defaultSize={22} minSize={14} maxSize={40} className="pointer-events-none">
+              <div
+                className="h-full overflow-hidden rounded-lg border border-[#3A3E43] bg-[#0E0F11] shadow-xl pointer-events-auto"
+                data-testid="filters-panel"
+              >
+                <FiltersPanel />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle
+              withHandle
+              onPointerDown={handleResizePointerDown}
+              className="pointer-events-auto w-1 bg-[#3A3E43] hover:bg-[#4DD7E6]/70 transition-colors"
+            />
+
+            <ResizablePanel defaultSize={52} minSize={20} className="pointer-events-none">
+              <div className="h-full pointer-events-none" aria-hidden="true" />
+            </ResizablePanel>
+
+            <ResizableHandle
+              withHandle
+              onPointerDown={handleResizePointerDown}
+              className="pointer-events-auto w-1 bg-[#3A3E43] hover:bg-[#4DD7E6]/70 transition-colors"
+            />
+
+            <ResizablePanel defaultSize={26} minSize={16} maxSize={45} className="pointer-events-none">
+              <div
+                className="h-full overflow-hidden rounded-lg border border-[#3A3E43] bg-[#0E0F11] shadow-xl pointer-events-auto"
+                data-testid="info-panel"
+              >
+                <InfoPanel />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
       </div>
     </div>
   );

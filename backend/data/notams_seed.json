@@ -1,0 +1,1199 @@
+[
+  {
+    "category": "Construction",
+    "location": "SFO",
+    "number": "N/A",
+    "classification": "Aerodrome",
+    "start": "06/24/2025 0049",
+    "end": "PERM",
+    "condition": "ON AIRPORT - SEE CONSTRUCTION GRAPHIC"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/1249",
+    "classification": "Procedure",
+    "start": "08/21/2025 1704",
+    "end": "08/21/2027 1704EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (RNP) Z RWY 10R, AMDT 2A... TDZE 8. RNP 0.20 DA 422/ HAT 414 ALL CATS. RNP 0.30 DA 1106 ALL CATS. 2508211704-2708211704EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "09/122",
+    "classification": "Obstruction",
+    "start": "09/15/2025 1500",
+    "end": "03/05/2027 0100",
+    "condition": "OBST CRANE (ASN 2025-AWP-3454-NRA) 373721N1222349W (1.0NM WNW SFO) 161FT (150FT AGL) FLAGGED AND LGTD 2509151500-2703050100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/155",
+    "classification": "Obstruction",
+    "start": "10/21/2025 0500",
+    "end": "02/21/2027 0200",
+    "condition": "OBST CRANE (ASN 2025-AWP-3457-NRA) 373702N1222321W (0.7NM W SFO) 160FT (150FT AGL) FLAGGED AND LGTD 2510210500-2702210200"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/074",
+    "classification": "Obstruction",
+    "start": "07/09/2025 1844",
+    "end": "11/14/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-2417-NRA) 373709N1222316W (0.6NM W SFO) 199FT (190FT AGL) FLAGGED AND LGTD 2507091844-2611142359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/075",
+    "classification": "Obstruction",
+    "start": "07/09/2025 1845",
+    "end": "11/14/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-2418-NRA) 373707N1222310W (0.5NM W SFO) 199FT (190FT AGL) FLAGGED AND LGTD 2507091845-2611142359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/076",
+    "classification": "Obstruction",
+    "start": "07/09/2025 1846",
+    "end": "11/14/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-2419-NRA) 373705N1222318W (0.6NM W SFO) 199FT (190FT AGL) FLAGGED AND LGTD 2507091846-2611142359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/077",
+    "classification": "Obstruction",
+    "start": "07/09/2025 1850",
+    "end": "11/14/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-2420-NRA) 373703N1222313W (0.6NM W SFO) 199FT (190FT AGL) FLAGGED AND LGTD 2507091850-2611142359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "11/022",
+    "classification": "Airspace",
+    "start": "11/05/2025 0000",
+    "end": "11/04/2026 2359",
+    "condition": "AIRSPACE SEE SAU 11/023 UAS DLY 0000-2359 2511050000-2611042359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "11/013",
+    "classification": "Obstruction",
+    "start": "11/04/2025 1400",
+    "end": "10/01/2026 1300",
+    "condition": "OBST CRANE (ASN UNKNOWN) 374259N1221424W (.25NM SSE APCH END RWY 12) 104FT (90FT AGL) FLAGGED AND LGTD 2511041400-2610011300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/055",
+    "classification": "Obstruction",
+    "start": "12/03/2024 2109",
+    "end": "08/22/2026 2359",
+    "condition": "OBST CRANE (ASN 2023-AWP-6491-NRA) 373658N1222318W (0.6NM WSW SFO) 210FT (200FT AGL) FLAGGED AND LGTD 2412032109-2608222359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/183",
+    "classification": "Obstruction",
+    "start": "10/28/2025 1500",
+    "end": "08/20/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-150-NRA) 373816N1222307W (1.2NM NNW SFO) 150FT (140FT AGL) FLAGGED 2510281500-2608202359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/184",
+    "classification": "Obstruction",
+    "start": "10/28/2025 1500",
+    "end": "08/20/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-151-NRA) 373818N1222300W (1.2NM NNW SFO) 150FT (140FT AGL) FLAGGED 2510281500-2608202359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/185",
+    "classification": "Obstruction",
+    "start": "10/28/2025 1500",
+    "end": "08/20/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-152-NRA) 373812N1222304W (1.2NM NNW SFO) 150FT (140FT AGL) FLAGGED 2510281500-2608202359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/186",
+    "classification": "Obstruction",
+    "start": "10/28/2025 1500",
+    "end": "08/20/2026 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-153-NRA) 373814N1222259W (1.2NM NNW SFO) 150FT (140FT AGL) FLAGGED 2510281500-2608202359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/072",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1728",
+    "end": "08/08/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-8552-NRA) 373725N1222357W (1.2NM WNW SFO) 34FT (25FT AGL) FLAGGED 2503071728-2608080100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/073",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1729",
+    "end": "08/08/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-8553-NRA) 373724N1222358W (1.2NM WNW SFO) 121FT (110FT AGL) FLAGGED 2503071729-2608080100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/074",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1730",
+    "end": "08/08/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-8554-NRA) 373724N1222356W (1.2NM WNW SFO) 121FT (110FT AGL) FLAGGED 2503071730-2608080100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/075",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1731",
+    "end": "08/08/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-8555-NRA) 373725N1222358W (1.2NM WNW SFO) 121FT (110FT AGL) FLAGGED 2503071731-2608080100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "04/151",
+    "classification": "Obstruction",
+    "start": "04/15/2025 1400",
+    "end": "07/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-8205-NRA) 373816N1222302W (1.2NM NNW SFO) 137FT (126FT AGL) FLAGGED 2504151400-2607300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/218",
+    "classification": "Obstruction",
+    "start": "07/22/2025 1549",
+    "end": "07/22/2026 2359",
+    "condition": "OBST POLE LGT (ASN 2025-AWP-5059-OE) 373703N1222604W (2.8NM W SFO) 402FT (68FT AGL) U/S 2507221549-2607222359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/093",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2103",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7776-NRA) 373735N1222350W (1.1NM WNW SFO) 54FT (45FT AGL) FLAGGED 2501092103-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/094",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2104",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7777-NRA) 373735N1222350W (1.1NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092104-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/095",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2109",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7778-NRA) 373737N1222354W (1.2NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092109-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/096",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2110",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7779-NRA) 373738N1222357W (1.2NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092110-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/097",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2111",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7780-NRA) 373737N1222403W (1.3NM WNW SFO) 54FT (45FT AGL) FLAGGED 2501092111-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/098",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2112",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7781-NRA) 373732N1222402W (1.3NM WNW SFO) 56FT (45FT AGL) FLAGGED 2501092112-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/099",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2113",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7782-NRA) 373736N1222353W (1.2NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092113-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/100",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2114",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7783-NRA) 373736N1222356W (1.2NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092114-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/101",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2115",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7784-NRA) 373737N1222357W (1.2NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092115-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/102",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2116",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7785-NRA) 373733N1222358W (1.2NM WNW SFO) 54FT (45FT AGL) FLAGGED 2501092116-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/103",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2117",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7786-NRA) 373733N1222360W (1.2NM WNW SFO) 54FT (45FT AGL) FLAGGED 2501092117-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/104",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2121",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7787-NRA) 373736N1222359W (1.3NM WNW SFO) 55FT (45FT AGL) FLAGGED 2501092121-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/105",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2122",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7788-NRA) 373733N1222401W (1.3NM WNW SFO) 55FT (45FT AGL) FLAGGED 2501092122-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/106",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2123",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7789-NRA) 373734N1222402W (1.3NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092123-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "01/107",
+    "classification": "Obstruction",
+    "start": "01/09/2025 2124",
+    "end": "06/21/2026 0100",
+    "condition": "OBST RIG (ASN 2024-AWP-7790-NRA) 373736N1222403W (1.3NM WNW SFO) 53FT (45FT AGL) FLAGGED 2501092124-2606210100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/242",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1436",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7279-NRA) 373717N1222353W (1.1NM W SFO) 39FT (28FT AGL) FLAGGED 2412191436-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/243",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1437",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7280-NRA) 373718N1222347W (1.0NM W SFO) 39FT (28FT AGL) FLAGGED 2412191437-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/244",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1437",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7281-NRA) 373716N1222347W (1.0NM W SFO) 39FT (28FT AGL) FLAGGED 2412191437-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/245",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1438",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7282-NRA) 373715N1222352W (1.1NM W SFO) 39FT (28FT AGL) FLAGGED 2412191438-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/246",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1439",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7283-NRA) 373717N1222349W (1.0NM W SFO) 39FT (28FT AGL) FLAGGED 2412191439-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/247",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1440",
+    "end": "06/12/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-7284-NRA) 373716N1222353W (1.1NM W SFO) 39FT (28FT AGL) FLAGGED 2412191440-2606122359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/7107",
+    "classification": "Procedure",
+    "start": "10/27/2025 1441",
+    "end": "06/08/2026 1441EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. RNAV (RNP) Z RWY 30L, AMDT 4... RNP 0.10 DA 476/HAT 419 ALL CATS, VIS ALL CATS RVR 4000. RNP 0.20 DA 538/HAT 481 ALL CATS, VIS ALL CATS RVR 5000. CHA..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/7092",
+    "classification": "Procedure",
+    "start": "10/27/2025 1439",
+    "end": "06/08/2026 1439EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. RNAV (RNP) Z RWY 30R, AMDT 3... RNP 0.20 DA 483/HAT 428 ALL CATS, VIS ALL CATS 1 1/4. TEMPORARY CRANES UP TO 322 MSL BEGINNING 4049FT S OF RWY 30R (20..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/3601",
+    "classification": "Procedure",
+    "start": "09/15/2025 2000",
+    "end": "05/29/2026 1354EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. ILS RWY 12 (SA CAT I), AMDT 8B ... PROCEDURE NA, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. TEMPORARY CRANES STARTING AT 510FT SW OF RWY 12, 90FT AGL, UP TO 108FT MSL...."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/3602",
+    "classification": "Procedure",
+    "start": "09/15/2025 2000",
+    "end": "05/29/2026 1354EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. ILS OR LOC RWY 12, AMDT 8B... S-ILS 12 DA 259/HAT 250 ALL CATS, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. TEMPORARY CRANES STARTING AT 510FT SW OF RWY 12, 90FT AGL, UP..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/3603",
+    "classification": "Procedure",
+    "start": "09/15/2025 2000",
+    "end": "05/29/2026 1354EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. RNAV (GPS) Y RWY 12, AMDT 3A... LPV DA 259/HAT 250 ALL CATS, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. TEMPORARY CRANES STARTING AT 510FT SW OF RWY 12, 90FT AGL, UP TO..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/1751",
+    "classification": "Procedure",
+    "start": "09/29/2025 1442",
+    "end": "05/11/2026 2355EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. RNAV (GPS) Y RWY 12L, AMDT 3A... LNAV/VNAV DA 445/HAT 401 ALL CATS, VIS 1 1/8 ALL CATS. LNAV MDA 740/HAT 696 ALL CATS, VIS CATS C/D 1 1/2. VDP AT 1.97N..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/1771",
+    "classification": "Procedure",
+    "start": "09/29/2025 1444",
+    "end": "05/11/2026 2355EST",
+    "condition": "ODP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. TAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 6C... RWYS 30L/R, 400-2 3/4 OR STANDARD WITH A MINIMUM CLIMB OF 238FT PER NM TO 600. TEMPORAR..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/1773",
+    "classification": "Procedure",
+    "start": "09/29/2025 1446",
+    "end": "05/11/2026 2355EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. ILS OR LOC RWY 12R, AMDT 8A... S-LOC 12R MDA 740/HAT 694 ALL CATS, VIS CATS C/D 1 1/2. SIDESTEP 12L MDA 740/HAT 696 ALL CATS. DISREGARD STEPDOWN FIX JU..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/1775",
+    "classification": "Procedure",
+    "start": "09/29/2025 1448",
+    "end": "05/11/2026 2355EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. RNAV (GPS) Y RWY 12R, AMDT 3A... LNAV MDA 740/HAT 694 ALL CATS, VIS CATS C/D 1 1/2. SIDESTEP 12L MDA 740/HAT 696 ALL CATS. VDP 1.96NM TO RW12R. TEMPORA..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "5/1790",
+    "classification": "Procedure",
+    "start": "09/29/2025 1449",
+    "end": "05/11/2026 2355EST",
+    "condition": "IAP NORMAN Y MINETA SAN JOSE INTL, SAN JOSE, CA. RNAV (GPS) Y RWY 30R, AMDT 4B... CIRCLING CAT C/D MDA 800/HAA 738, VIS CAT C 2 1/4, CAT D 2 1/2. TEMPORARY CRANE 435 MSL 3.1NM NW OF SJC AIRPORT (2024-..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "06/254",
+    "classification": "Obstruction",
+    "start": "06/24/2025 1300",
+    "end": "05/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2024-AWP-6831-NRA) 373711N1222317W (0.6NM W SFO) 329FT (320FT AGL) FLAGGED AND LGTD 2506241300-2605072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "06/255",
+    "classification": "Obstruction",
+    "start": "06/24/2025 1300",
+    "end": "05/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2024-AWP-6832-NRA) 373711N1222314W (0.6NM W SFO) 329FT (320FT AGL) FLAGGED AND LGTD 2506241300-2605072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "06/256",
+    "classification": "Obstruction",
+    "start": "06/24/2025 1300",
+    "end": "05/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2024-AWP-6833-NRA) 373705N1222312W (0.5NM W SFO) 329FT (320FT AGL) FLAGGED AND LGTD 2506241300-2605072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "06/257",
+    "classification": "Obstruction",
+    "start": "06/24/2025 1300",
+    "end": "05/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2024-AWP-6834-NRA) 373702N1222316W (0.6NM W SFO) 329FT (320FT AGL) FLAGGED AND LGTD 2506241300-2605072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "06/258",
+    "classification": "Obstruction",
+    "start": "06/24/2025 1300",
+    "end": "05/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2024-AWP-6835-NRA) 373703N1222320W (0.6NM W SFO) 329FT (320FT AGL) FLAGGED AND LGTD 2506241300-2605072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/237",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1425",
+    "end": "05/06/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-6959-NRA) 373814N1222304W (1.2NM NNW SFO) 45FT (33FT AGL) FLAGGED 2412191425-2605062359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/238",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1426",
+    "end": "05/06/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-6958-NRA) 373815N1222308W (1.2NM NNW SFO) 45FT (33FT AGL) FLAGGED 2412191426-2605062359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/239",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1427",
+    "end": "05/06/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-6960-NRA) 373816N1222302W (1.2NM NNW SFO) 45FT (33FT AGL) FLAGGED 2412191427-2605062359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/240",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1429",
+    "end": "05/06/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-6961-NRA) 373812N1222304W (1.2NM NNW SFO) 45FT (33FT AGL) FLAGGED 2412191429-2605062359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/241",
+    "classification": "Obstruction",
+    "start": "12/19/2024 1430",
+    "end": "05/06/2026 2359",
+    "condition": "OBST RIG (ASN 2024-AWP-6962-NRA) 373814N1222300W (1.2NM NNW SFO) 45FT (33FT AGL) FLAGGED 2412191430-2605062359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9675",
+    "classification": "Procedure",
+    "start": "09/08/2025 1655",
+    "end": "04/20/2026 1655EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. RNAV (GPS) Y RWY 30, AMDT 6... LNAV/VNAV DA 317/HAT 308 ALL CATS, VIS RVR 5000 ALL CATS. TEMPORARY CRANE 106 MSL 3438FT NE OF RWY 30 (2024-AWP-6722-NRA). 2509081655-2604..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/1252",
+    "classification": "Procedure",
+    "start": "08/21/2025 1707",
+    "end": "04/02/2026 1707EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (GPS) Y RWY 10R, AMDT 2A... TDZE 8. LNAV HAT 1192 ALL CATS. 2508211707-2604021707EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "05/304",
+    "classification": "Obstruction",
+    "start": "05/22/2025 2229",
+    "end": "03/22/2026 2359",
+    "condition": "OBST TOWER LGT (ASR UNKNOWN) 374037.58N1222429.16W (3.6NM NNW SFO) 895.3FT (89.5FT AGL) U/S 2505222229-2603222359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/053",
+    "classification": "Obstruction",
+    "start": "12/03/2024 2047",
+    "end": "03/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2023-AWP-3179-NRA) 373654N1222318W (0.6NM WSW SFO) 220FT (210FT AGL) FLAGGED AND LGTD 2412032047-2603072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "12/054",
+    "classification": "Obstruction",
+    "start": "12/03/2024 2107",
+    "end": "03/07/2026 2359",
+    "condition": "OBST CRANE (ASN 2023-AWP-3178-NRA) 373660N1222320W (0.6NM WSW SFO) 210FT (200FT AGL) FLAGGED AND LGTD 2412032107-2603072359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "07/297",
+    "classification": "Obstruction",
+    "start": "08/01/2025 1900",
+    "end": "02/28/2026 2359",
+    "condition": "OBST STACK (ASN UNKNOWN) 374521N1222254W (7NM WNW OAK) 314FT (300FT AGL) NOT LGTD 2508011900-2602282359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "02/311",
+    "classification": "Obstruction",
+    "start": "02/27/2025 2333",
+    "end": "02/27/2026 2359",
+    "condition": "OBST TOWER LGT (ASN 2024-AWP-16366-OE) 373701N1222708W (3.6NM W SFO) 818FT (220FT AGL) U/S 2502272333-2602272359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/2088",
+    "classification": "Procedure",
+    "start": "11/05/2025 1545",
+    "end": "02/27/2026 1545EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (RNP) Z RWY 10R, AMDT 2A... RNP 0.20 DA 436/HAT 426 ALL CATS, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0700-1600L. TEMPORARY CRANE 235 MSL, 176..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/2070",
+    "classification": "Procedure",
+    "start": "11/05/2025 1544",
+    "end": "02/27/2026 1543EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. ILS RWY 28L (SA CAT II), AMDT 27C ... PROCEDURE NA, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0700-1600L. TEMPORARY CRANE 235 MSL, 1.9NM W OF RWY 28L..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/160",
+    "classification": "Obstruction",
+    "start": "10/18/2025 0659",
+    "end": "02/15/2026 0658",
+    "condition": "SFO OBST TOWER LGT (ASR 1010563) 374122.20N1222615.60W (5.2NM NW SFO) 1483.3FT (262.1FT AGL) U/S 2510180659-2602150658"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/090",
+    "classification": "Obstruction",
+    "start": "10/09/2025 1654",
+    "end": "02/06/2026 1654",
+    "condition": "SFO OBST TOWER LGT (ASR 1010565) 374116.80N1222610.90W (5.1NM NW SFO) 1487.2FT (261.2FT AGL) U/S 2510091654-2602061654"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/234",
+    "classification": "Aerodrome",
+    "start": "10/27/2025 1322",
+    "end": "01/31/2026 2359",
+    "condition": "TWY H LOCATION SIGN BTN TWY A AND TWY B NOT STD 2510271322-2601312359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/235",
+    "classification": "Aerodrome",
+    "start": "10/27/2025 1324",
+    "end": "01/31/2026 2359",
+    "condition": "TWY A TWY DIRECTION SIGN FOR TWY H NOT STD 2510271324-2601312359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/066",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1705",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5533-NRA) 373701N1222319W (0.6NM W SFO) 179FT (170FT AGL) FLAGGED 2503071705-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/067",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1706",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5534-NRA) 373702N1222320W (0.6NM W SFO) 179FT (170FT AGL) FLAGGED 2503071706-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/068",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1706",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5535-NRA) 373707N1222319W (0.6NM W SFO) 179FT (170FT AGL) FLAGGED 2503071706-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/069",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1707",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5536-NRA) 373709N1222317W (0.6NM W SFO) 179FT (170FT AGL) FLAGGED 2503071707-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/070",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1708",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5537-NRA) 373711N1222314W (0.6NM W SFO) 179FT (170FT AGL) FLAGGED 2503071708-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "03/071",
+    "classification": "Obstruction",
+    "start": "03/07/2025 1709",
+    "end": "01/30/2026 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-5538-NRA) 373705N1222312W (0.5NM W SFO) 179FT (170FT AGL) FLAGGED 2503071709-2601300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "11/090",
+    "classification": "Aerodrome",
+    "start": "11/08/2025 0454",
+    "end": "01/03/2026 0100",
+    "condition": "TWY B HLDG PSN MARKINGS AT RWY 28R NOT STD 2511080454-2601030100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "09/021",
+    "classification": "Airspace",
+    "start": "09/09/2025 1426",
+    "end": "01/02/2026 0102",
+    "condition": "AIRSPACE UAS WI AN AREA DEFINED AS 2.5NM RADIUS OF 372322N1220310W (6NM WNW SJC) SFC-400FT AGL TUE WED THU FRI MON 1426-0102 2509091426-2601020102"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "10/066",
+    "classification": "Airspace",
+    "start": "10/18/2025 0000",
+    "end": "01/01/2026 2359",
+    "condition": "AIRSPACE UAS WI AN AREA DEFINED AS 371830N1220006W (4.8NM SW SJC) TO 371830N1215600W (3.3NM S SJC) TO 371800N1215600W (3.8NM S SJC) TO 371800N1215500W (3.8NM SSE SJC) TO 371700N1215500W (4.8NM SSE ..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/151",
+    "classification": "Aerodrome",
+    "start": "10/16/2025 1822",
+    "end": "12/31/2025 2359",
+    "condition": "RWY 10L/28R SAFETY AREA NOT STD N SIDE BTN RWY 01R/19L AND RWY 01L/19R 2510161822-2512312359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/128",
+    "classification": "Obstruction",
+    "start": "10/14/2025 1600",
+    "end": "12/31/2025 2359",
+    "condition": "OBST CRANE (ASN 2025-AWP-3008-NRA) 373720N1222347W (1.0NM WNW SFO) 235FT (225FT AGL) FLAGGED 2510141600-2512312359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/076",
+    "classification": "Airspace",
+    "start": "10/08/2025 1825",
+    "end": "12/31/2025 2359",
+    "condition": "AIRSPACE NUMEROUS UAS WI AN AREA DEFINED AS 2.6NM RADIUS OF 373251N1221852W (3.6NM WNW SQL) SFC-400FT AGL 2510081825-2512312359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/092",
+    "classification": "Airspace",
+    "start": "10/09/2025 2322",
+    "end": "12/31/2025 2022",
+    "condition": "AIRSPACE UAS WI AN AREA DEFINED AS 2.4NM RADIUS OF 374210.20N1222519.10W (5.5NM NW SFO) SFC-400FT AGL 2510092322-2512312022"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/091",
+    "classification": "Airspace",
+    "start": "10/09/2025 2320",
+    "end": "12/31/2025 2005",
+    "condition": "AIRSPACE UAS WI AN AREA DEFINED AS 2.6NM RADIUS OF 374108.00N1222818.70W (6.1NM WNW SFO) SFC-400FT AGL 2510092320-2512312005"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/3258",
+    "classification": "Procedure",
+    "start": "10/20/2025 1855",
+    "end": "12/31/2025 1855EST",
+    "condition": "ODP SAN FRANCISCO INTL, SAN FRANCISCO, CA. TAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 9... TAKEOFF OBSTACLE NOTES: RWY 19L, CRANE 3420FT FROM DER, 606FT LEFT OF CENTERLINE, 135FT AGL/15..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/010",
+    "classification": "Aerodrome",
+    "start": "10/01/2025 0800",
+    "end": "12/31/2025 0800",
+    "condition": "TWY F CL LGT BTN RWY 01R/19L AND TWY L NOT STD 2510010800-2512310800"
+  },
+  {
+    "category": "Closed",
+    "location": "SFO",
+    "number": "06/304",
+    "classification": "Aerodrome",
+    "start": "06/24/2025 0049",
+    "end": "12/31/2025 0700",
+    "condition": "TWY N BTN TWY F AND RWY 10R/28L CLSD 2506240049-2512310700"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/0075",
+    "classification": "Procedure",
+    "start": "06/28/2025 2100",
+    "end": "12/26/2025 1949EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (GPS) RWY 10L, AMDT 3... LNAV/VNAV DA 714/HAT 707 ALL CATS, VIS 2 ALL CATS, UNLESS ADVISED BY ATC THE CRANE DOWN. TEMPORARY CRANE 1.2NM WEST OF RWY 10L,..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "10/099",
+    "classification": "Obstruction",
+    "start": "10/23/2025 1300",
+    "end": "12/24/2025 0030",
+    "condition": "OBST CRANE LGT (ASN 2025-AWP-12811-OE) 372417N1220132W (5.3NM WNW SJC) 244FT (224FT AGL) U/S 2510231300-2512240030"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SJC",
+    "number": "10/110",
+    "classification": "Obstruction",
+    "start": "11/03/2025 1300",
+    "end": "12/13/2025 0300",
+    "condition": "OBST CRANE (ASN 2025-AWP-12811-OE) 372417N1220132W (5.3NM WNW SJC) 244FT (224FT AGL) FLAGGED NOT LGTD DLY 1300-0300 2511031300-2512130300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/051",
+    "classification": "Obstruction",
+    "start": "07/11/2024 1400",
+    "end": "12/10/2025 2300",
+    "condition": "OBST CRANE (ASN 2024-AWP-4431-NRA) 373711N1222313W (0.5NM W SFO) 119FT (110FT AGL) FLAGGED 2407111400-2512102300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/052",
+    "classification": "Obstruction",
+    "start": "07/11/2024 1400",
+    "end": "12/10/2025 2300",
+    "condition": "OBST CRANE (ASN 2024-AWP-4432-NRA) 373710N1222311W (0.5NM W SFO) 119FT (110FT AGL) FLAGGED 2407111400-2512102300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/053",
+    "classification": "Obstruction",
+    "start": "07/11/2024 1400",
+    "end": "12/10/2025 2300",
+    "condition": "OBST CRANE (ASN 2024-AWP-4433-NRA) 373707N1222311W (0.5NM W SFO) 119FT (110FT AGL) FLAGGED 2407111400-2512102300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "07/054",
+    "classification": "Obstruction",
+    "start": "07/11/2024 1400",
+    "end": "12/10/2025 2300",
+    "condition": "OBST CRANE (ASN 2024-AWP-4434-NRA) 373707N1222311W (0.5NM W SFO) 119FT (110FT AGL) FLAGGED 2407111400-2512102300"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/0727",
+    "classification": "Procedure",
+    "start": "10/14/2025 1719",
+    "end": "12/10/2025 1719",
+    "condition": "SID OAKLAND INTL, OAKLAND, CA. COAST NINE DEPARTURE... SANTA CATALINA TRANSITION NA EXCEPT FOR ACFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, SXC VOR OUT OF SERVICE. 2510141719-2512101719EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/213",
+    "classification": "Aerodrome",
+    "start": "10/17/2025 2036",
+    "end": "12/02/2025 0001",
+    "condition": "TWY B RWY GUARD LGT AT APCH END RWY 28R U/S 2510172036-2512020001"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/214",
+    "classification": "Aerodrome",
+    "start": "10/17/2025 2037",
+    "end": "12/02/2025 0001",
+    "condition": "TWY B ELEVATED RWY GUARD LGT AT APCH END RWY 28R U/S 2510172037-2512020001"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/385",
+    "classification": "Aerodrome",
+    "start": "10/31/2025 1758",
+    "end": "12/01/2025 2359",
+    "condition": "TWY B RWY GUARD LGT AT APCH END RWY 28L U/S 2510311758-2512012359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9086",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "SID OAKLAND INTL, OAKLAND, CA. SILENT THREE DEPARTURE... DEPARTURE PROCEDURE NA EXCEPT FOR ACFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, SFO VOR OUT OF SERVICE. 2509231438-2512011438EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9087",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. VOR RWY 10R, AMDT 10A... DME REQUIRED EXCEPT FOR ACFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, SFO VOR OUT OF SERVICE. 2509231438-2512011438EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9089",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "ODP SAN FRANCISCO INTL, SAN FRANCISCO, CA. TAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 9... DEPARTURE PROCEDURE: RWYS 10L, 10R, 19L, 19R NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNA..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9090",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "SID SAN FRANCISCO INTL, SAN FRANCISCO, CA. GAP SEVEN DEPARTURE... MOLEN NINE DEPARTURE... SAN FRANCISCO FOUR DEPARTURE... DEPARTURE PROCEDURE NA EXCEPT FOR ACFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9091",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. ILS OR LOC RWY 28R, AMDT 15B... ILS RWY 28R (SA CAT I), AMDT 15B... ILS RWY 28R (CAT II-III), AMDT 15B... MISSED APPROACH: CLIMB TO 2600 ON HEADING 284 THEN ..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9092",
+    "classification": "Procedure",
+    "start": "09/23/2025 1438",
+    "end": "12/01/2025 1438",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. ILS OR LOC RWY 28L, AMDT 27C... ILS RWY 28L (SA CAT II), AMDT 27C... MISSED APPROACH: CLIMB TO 2400 THEN CLIMBING LEFT TURN TO 5000 DIRECT SJC VOR/DME AND HO..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/3642",
+    "classification": "Procedure",
+    "start": "06/12/2025 2015",
+    "end": "12/01/2025 0754EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. RNAV (RNP) Z RWY 28R, AMDT 3... RNP 0.11 DA 314/HAT 307 ALL CATS. TEMPORARY CRANE 179 MSL 920FT SE OF OAK AIRPORT (2025-AWP-411-NRA). 2506122015-2512010754EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9772",
+    "classification": "Procedure",
+    "start": "09/24/2025 1536",
+    "end": "11/30/2025 1536EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (RNP) Z RWY 10R, AMDT 2A... RNP 0.20 DA 458/HAT 450, VIS 1 3/8 ALL CATS, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0600-1900L TEMPORARY CRANES S..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9765",
+    "classification": "Procedure",
+    "start": "09/24/2025 1535",
+    "end": "11/30/2025 1535EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. RNAV (RNP) Y RWY 28R, AMDT 5... RNP 0.11 DA 268/HAT 255 ALL CATS, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0600-1900L TEMPORARY CRANES STARTING AT 1..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9762",
+    "classification": "Procedure",
+    "start": "09/24/2025 1535",
+    "end": "11/30/2025 1534EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. ILS RWY 28L (SA CAT II), AMDT 27C ... PROCEDURE NA, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0600-1900L TEMPORARY CRANES STARTING AT 1.40NM W OF RW..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "5/9758",
+    "classification": "Procedure",
+    "start": "09/24/2025 1533",
+    "end": "11/30/2025 1533EST",
+    "condition": "IAP SAN FRANCISCO INTL, SAN FRANCISCO, CA. ILS RWY 28R (SA CAT I), AMDT 15B ... ILS RWY 28R (CAT II AND III), AMDT 15B ... PROCEDURE NA, UNLESS ADVISED BY ATC THAT CRANES ARE DOWN. DAILY 0600-1900L T..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9131",
+    "classification": "Procedure",
+    "start": "09/23/2025 1520",
+    "end": "11/30/2025 1520EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. ILS OR LOC RWY 28R, AMDT 38... S-ILS 28R DA* 257/HAT 250 ALL CATS. DISREGARD NOTE: *RVR 1800 AUTHORIZED WITH USE OF FD OR AP OR HUD TO DA. TEMPORARY CONSTRUCTION EQUIPME..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9127",
+    "classification": "Procedure",
+    "start": "09/23/2025 1518",
+    "end": "11/30/2025 1518EST",
+    "condition": "ODP OAKLAND INTL, OAKLAND, CA. TAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 7... ADD TAKEOFF OBSTACLE NOTES: RWY 15, TEMPORARY CRANE 4226FT FROM DER, 823FT RIGHT OF CENTERLINE, 125FT AGL/..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "5/9129",
+    "classification": "Procedure",
+    "start": "09/23/2025 1519",
+    "end": "11/30/2025 1518EST",
+    "condition": "IAP OAKLAND INTL, OAKLAND, CA. RNAV (GPS) Y RWY 28R, AMDT 4... LPV DA* 257/HAT 250 ALL CATS. DISREGARD NOTE: *RVR 1800 AUTHORIZED WITH USE OF FD OR AP OR HUD TO DA. TEMPORARY CONSTRUCTION EQUIPMENT U..."
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/179",
+    "classification": "Aerodrome",
+    "start": "10/22/2025 1623",
+    "end": "11/30/2025 0800",
+    "condition": "TWY L CL LGT BTN TWY F1 AND TWY G U/S 2510221623-2511300800"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "11/021",
+    "classification": "Aerodrome",
+    "start": "11/04/2025 1413",
+    "end": "11/30/2025 0800",
+    "condition": "APRON TXL B ABEAM GATE 14 CL LGT U/S 2511041413-2511300800"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "09/284",
+    "classification": "Obstruction",
+    "start": "09/27/2024 1941",
+    "end": "11/30/2025 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-4417-NRA) 373712N1222317W (0.6NM W SFO) 119FT (110FT AGL) FLAGGED AND LGTD 2409271941-2511300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "09/285",
+    "classification": "Obstruction",
+    "start": "09/27/2024 1942",
+    "end": "11/30/2025 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-4418-NRA) 373711N1222316W (0.6NM W SFO) 119FT (110FT AGL) FLAGGED AND LGTD 2409271942-2511300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "09/286",
+    "classification": "Obstruction",
+    "start": "09/27/2024 1943",
+    "end": "11/30/2025 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-4419-NRA) 373711N1222317W (0.6NM W SFO) 119FT (110FT AGL) FLAGGED AND LGTD 2409271943-2511300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "09/287",
+    "classification": "Obstruction",
+    "start": "09/27/2024 1944",
+    "end": "11/30/2025 0100",
+    "condition": "OBST CRANE (ASN 2024-AWP-4420-NRA) 373710N1222316W (0.6NM W SFO) 119FT (110FT AGL) FLAGGED AND LGTD 2409271944-2511300100"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/255",
+    "classification": "Aerodrome",
+    "start": "10/29/2025 1700",
+    "end": "11/29/2025 1700",
+    "condition": "RWY 01R HLDG PSN SIGN AT RWY 28L RIGHT SIDE LGT U/S 2510291700-2511291700"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/347",
+    "classification": "Aerodrome",
+    "start": "10/29/2025 1330",
+    "end": "11/28/2025 2359EST",
+    "condition": "RWY 30 SEQUENCED FLG LGT U/S 2510291330-2511282359EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/348",
+    "classification": "Aerodrome",
+    "start": "10/29/2025 1334",
+    "end": "11/28/2025 2359EST",
+    "condition": "RWY 30 ALSF-2 NOW SSALR 2510291334-2511282359EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/286",
+    "classification": "Navaid",
+    "start": "10/31/2025 0606",
+    "end": "11/26/2025 2000EST",
+    "condition": "NAV VOR U/S 2510310606-2511262000EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/329",
+    "classification": "Obstruction",
+    "start": "10/28/2025 1151",
+    "end": "11/26/2025 1200",
+    "condition": "OBST TOWER LGT (ASR 1023628) 374820.20N1221609.50W (5.6NM NNW OAK) 388.5FT (349.7FT AGL) U/S 2510281151-2511261200"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SAU",
+    "number": "10/276",
+    "classification": "Navaid",
+    "start": "10/24/2025 1855",
+    "end": "11/24/2025 2359",
+    "condition": "NAV VORTAC U/S 2510241855-2511242359"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "OAK",
+    "number": "10/371",
+    "classification": "Services",
+    "start": "10/30/2025 1916",
+    "end": "11/21/2025 2359EST",
+    "condition": "RWY 28R RVRT U/S 2510301916-2511212359EST"
+  },
+  {
+    "category": "Digital NOTAM",
+    "location": "SFO",
+    "number": "10/158",
+    "classification": "Aerodrome",
+    "start": "10/17/2025 1435",
+    "end": "11/17/2025 1400",
+    "condition": "TWY F CL MARKINGS AT TWY L TRANSITION TO TWY F NOT STD 2510171435-2511171400"
+  },
+  {
+    "category": "Closed",
+    "location": "OAK",
+    "number": "11/084",
+    "classification": "Aerodrome",
+    "start": "11/14/2025 0200",
+    "end": "11/16/2025 0100",
+    "condition": "RWY 10L/28R CLSD DLY 0200-0100 2511140200-2511160100"
+  },
+  {
+    "category": "Closed",
+    "location": "OAK",
+    "number": "11/083",
+    "classification": "Aerodrome",
+    "start": "11/14/2025 0200",
+    "end": "11/16/2025 0100",
+    "condition": "TWY B BTN TWY A AND TWY C CLSD 2511140200-2511160100"
+  }
+]
