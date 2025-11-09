@@ -24,12 +24,6 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
   const chatEndRef = useRef(null);
   const hasBootstrappedRef = useRef(false);
 
-  const hydratePredictedFollowUp = useCallback((messages = []) => {
-    if (!messages.length) return null;
-    const latestAssistant = [...messages].reverse().find((msg) => msg.role === 'assistant');
-    return latestAssistant?.metadata?.predicted_follow_up || null;
-  }, []);
-
   const initializeSession = useCallback(async () => {
     setIsInitializing(true);
     setSessionError(null);
@@ -39,9 +33,17 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
         title: 'ODIN Console Chat'
       });
       const sessionId = response.data.session_id;
+      const responseMessages = response.data.messages || [];
       setChatSessionId(sessionId);
-      setChatMessages(response.data.messages || []);
-      setPredictedFollowUp(hydratePredictedFollowUp(response.data.messages));
+      setChatMessages(responseMessages);
+      
+      // Hydrate predicted follow up inline to avoid dependency
+      if (responseMessages.length) {
+        const latestAssistant = [...responseMessages].reverse().find((msg) => msg.role === 'assistant');
+        setPredictedFollowUp(latestAssistant?.metadata?.predicted_follow_up || null);
+      } else {
+        setPredictedFollowUp(null);
+      }
     } catch (error) {
       console.error('Failed to create chat session:', error);
       setSessionError('Failed to initialize chat');
@@ -49,7 +51,7 @@ const ChatView = React.memo(function ChatView({ selectedAircraft }) {
     } finally {
       setIsInitializing(false);
     }
-  }, [hydratePredictedFollowUp]);
+  }, []);
 
   // Initialize chat session on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
