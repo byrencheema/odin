@@ -1,11 +1,11 @@
 [
   {
     "content": "Set ATC facilities and boundaries to default ON for debugging",
-    "status": "in_progress"
+    "status": "completed"
   },
   {
     "content": "Take screenshots and verify layers visible",
-    "status": "pending"
+    "status": "in_progress"
   },
   {
     "content": "Debug layer loading issues",
