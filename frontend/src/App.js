@@ -666,12 +666,12 @@ export default function App() {
           source: 'airspace',
           paint: {
             'fill-color': ['get', 'color'],
-            'fill-opacity': 0.12
+            'fill-opacity': 0.15  // More visible
           },
           layout: {
             'visibility': showAirspace ? 'visible' : 'none'
           }
-        }, 'aircraft-trails');
+        });
 
         // Add outline layer
         map.current.addLayer({
@@ -680,14 +680,14 @@ export default function App() {
           source: 'airspace',
           paint: {
             'line-color': ['get', 'label_color'],
-            'line-width': 1.5,
-            'line-opacity': 0.6,
-            'line-dasharray': [3, 2]
+            'line-width': 2,  // Thicker
+            'line-opacity': 0.8,  // More visible
+            'line-dasharray': [4, 2]
           },
           layout: {
             'visibility': showAirspace ? 'visible' : 'none'
           }
-        }, 'aircraft-trails');
+        });
 
         // Add labels
         map.current.addLayer({
